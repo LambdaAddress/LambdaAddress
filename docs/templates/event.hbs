@@ -1,0 +1,37 @@
+<br />
+<font size="3">
+
+```solidity
+{{signature}}
+```
+</font>
+
+<blockquote style="margin-top: -8px;">
+
+{{{natspec.notice}}}
+
+{{#if natspec.dev}}
+{{{natspec.dev}}}
+{{/if}}
+
+</blockquote>
+
+<div style="padding-left: 20px; margin-bottom: 24px">
+
+{{#if natspec.params}}
+*Parameters:*
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+{{#each params}}
+| **{{name}}** | `{{type}}` | {{{joinLines natspec}}} |
+{{/each}}
+{{/if}}
+
+{{#if natspec.returns}}
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+{{#each returns}}
+| {{#if name}}{{name}}{{else}}[{{@index}}]{{/if}} | {{type}} | {{{joinLines natspec}}} |
+{{/each}}
+{{/if}}
+</div>

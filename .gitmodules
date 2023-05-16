@@ -1,0 +1,7 @@
+[submodule "lib/forge-std"]
+	path = lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+	branch = v1.4.0
+[submodule "lib/mock-contract"]
+	path = lib/mock-contract
+	url = https://github.com/gnosis/mock-contract

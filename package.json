@@ -1,0 +1,128 @@
+{
+  "name": "LambdaAddress",
+  "version": "0.0.1",
+  "homepage": "./",
+  "license": "MIT",
+  "scripts": {
+    "blockchain": "hardhat node",
+    "frontend:build:workerLogic": "webpack --config webpack.config.js",
+    "contracts:compile": "hardhat compile",
+    "start": "export REACT_APP_ETH_ENV=development && yarn frontend:build:workerLogic && react-scripts start",
+    "console": "hardhat console",
+    "test": "yarn core:test && yarn contracts:test && yarn integration:test",
+    "docgen": "hardhat docgen",
+    "prettier:check": "prettier -c 'src/contracts/**/*.sol'",
+    "prettier:write": "prettier --write 'src/contracts/**/*.sol' 'test/**/*.sol'",
+    "contracts:coverage": "forge coverage",
+    "contracts:coverage:lcov": "forge coverage --report lcov",
+    "contracts:test": "forge test",
+    "contracts:deploy": "hardhat run script/deploy.mjs --network localhost",
+    "contracts:deploy:sepolia": "hardhat run script/deploy.mjs --network sepolia",
+    "contracts:deploy:goerli": "hardhat run script/deploy.mjs --network goerli",
+    "contracts:deploy:mumbai": "hardhat run script/deploy.mjs --network mumbai",
+    "contracts:deploy:arbitrum_goerli": "hardhat run script/deploy.mjs --network arbitrum_goerli",
+    "core:test": "hardhat test test/core.test.mjs",
+    "integration:test": "hardhat test test/integration.test.mjs",
+    "frontend:start:mainnet": "export REACT_APP_ETH_ENV=mainnet && yarn frontend:build:workerLogic && react-scripts start",
+    "frontend:build": "export REACT_APP_ETH_ENV=mainnet && yarn frontend:build:workerLogic && react-scripts build",
+    "frontend:build:rinkeby": "export REACT_APP_ETH_ENV=rinkeby && yarn frontend:build:workerLogic && react-scripts build",
+    "frontend:lint": "eslint --fix src/frontend",
+    "frontend:prettier:check": "prettier -c 'src/frontend/**/*.js'",
+    "frontend:prettier:write": "prettier --write 'src/frontend/**/*.js'",
+    "frontend:serve": "python3 -m http.server"
+  },
+  "devDependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/providers": "^5.7.1",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.4",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@nomiclabs/hardhat-ethers": "^2.2.0",
+    "@nomiclabs/hardhat-etherscan": "^3.1.1",
+    "@typechain/ethers-v5": "^10.1.0",
+    "@typechain/hardhat": "^6.1.5",
+    "chai": "^4.3.6",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "ethers": "^5.7.1",
+    "hardhat": "^2.13.0",
+    "hardhat-gas-reporter": "^1.0.9",
+    "prettier": "^2.8.3",
+    "prettier-plugin-solidity": "^1.1.2",
+    "solc": "^0.8.17",
+    "solidity-coverage": "^0.8.2",
+    "solidity-docgen": "^0.6.0-beta.34",
+    "solmate": "^6.7.0",
+    "ts-node": ">=8.0.0",
+    "typechain": "^8.1.0",
+    "typescript": ">=4.5.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "@emotion/cache": "11.4.0",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@mui/icons-material": "5.2.0",
+    "@mui/material": "5.2.0",
+    "@mui/styled-engine": "5.2.0",
+    "@openzeppelin/contracts": "^4.7.3",
+    "@openzeppelin/contracts-upgradeable": "4.7.3",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "@web3-react/core": "^6.1.9",
+    "@web3-react/injected-connector": "^6.0.7",
+    "babel-loader": "8.1.0",
+    "chroma-js": "2.1.2",
+    "dotenv": "^10.0.0",
+    "flatpickr": "4.6.9",
+    "framer-motion": "^4",
+    "lodash": "^4.17.21",
+    "react": "^17.0.1",
+    "react-countup": "^4.3.3",
+    "react-dom": "^17.0.1",
+    "react-flatpickr": "3.10.7",
+    "react-jazzicon": "^1.0.4",
+    "react-router-dom": "6.0.2",
+    "react-scripts": "4.0.3",
+    "react-syntax-highlighter": "15.4.5",
+    "svg-gauge": "^1.0.7",
+    "web-vitals": "^1.0.1",
+    "web-worker": "^1.2.0",
+    "web3-react": "^5.0.5",
+    "webpack": "4.44.2",
+    "webpack-cli": "^4.6.0"
+  },
+  "packageManager": "yarn@1.17.3",
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "rules": {
+      "default-case": 0,
+      "import/no-anonymous-default-export": 0
+    }
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
+  }
+}

@@ -1,0 +1,55 @@
+/.yarn/*
+!/.yarn/releases
+!/.yarn/plugins
+!/.yarn/sdks
+.vscode
+
+# Swap the comments on the following lines if you don't wish to use zero-installs
+# Documentation here: https://yarnpkg.com/features/zero-installs
+#!/.yarn/cache
+#/.pnp.*
+
+node_modules
+build/contracts
+cache
+artifacts
+forge-artifacts
+
+.vscode/
+lcov.info
+
+
+# development.json may be regenerated frequently
+src/config/development.json
+
+#########
+
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+/public/lib_bundle.js
+/public/workerLogic_bundle.js
+/typechain-types
+
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
