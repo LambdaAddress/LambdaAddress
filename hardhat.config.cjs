@@ -20,6 +20,9 @@ module.exports = {
   solidity: {
     version: "0.8.18",
     settings: {
+      metadata: {
+        appendCBOR: false
+      },
       optimizer: {
         enabled: true,
         runs: 100
