@@ -1,0 +1,26 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Registrar
+    network: sepolia
+    source:
+      address: "0x5eddF9220a2356751211FAf51fab5BF129020E12"
+      abi: Registrar
+      startBlock: 3425505
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - LambdaAddress
+      abis:
+        - name: Registrar
+          file: ./src/abi/Registrar.json
+      eventHandlers:
+        - event: Deploy(indexed address,indexed uint256)
+          handler: handleDeploy      
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/registrar.ts
