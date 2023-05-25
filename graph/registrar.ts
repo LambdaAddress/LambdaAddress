@@ -3,8 +3,8 @@ import {
   Deploy as DeployEvent,
   Transfer as TransferEvent,
   Registrar
-} from "../generated/Registrar/Registrar"
-import { LambdaAddress } from "../generated/schema"
+} from "./generated/Registrar/Registrar"
+import { LambdaAddress } from "./generated/schema"
 
 
 export function handleDeploy(event: DeployEvent): void {
@@ -23,7 +23,6 @@ export function handleTransfer(event: TransferEvent): void {
 
   if (!lambdaAddress) {
     lambdaAddress = new LambdaAddress(event.params.tokenId.toString())
-    lambdaAddress.tokenId = tokenId
     lambdaAddress.address = Bytes.fromByteArray(Bytes.fromBigInt(tokenId))
     lambdaAddress.isDeployed = false
     

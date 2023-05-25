@@ -29,7 +29,10 @@
     "frontend:lint": "eslint --fix src/frontend",
     "frontend:prettier:check": "prettier -c 'src/frontend/**/*.js'",
     "frontend:prettier:write": "prettier --write 'src/frontend/**/*.js'",
-    "frontend:serve": "python3 -m http.server"
+    "frontend:serve": "python3 -m http.server",
+    "graph:codegen": "graph codegen --output-dir=graph/generated",
+    "graph:build": "graph build --output-dir=graph/build",
+    "graph:deploy": "graph deploy --studio test-lambda-address --network-file=graph/networks.json"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
