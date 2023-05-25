@@ -23,4 +23,4 @@ dataSources:
           handler: handleDeploy      
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/registrar.ts
+      file: ./graph/registrar.ts
