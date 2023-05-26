@@ -20,6 +20,7 @@
     "contracts:deploy:sepolia": "hardhat run script/deploy.mjs --network sepolia",
     "contracts:deploy:goerli": "hardhat run script/deploy.mjs --network goerli",
     "contracts:deploy:mumbai": "hardhat run script/deploy.mjs --network mumbai",
+    "contracts:newMetadata:mumbai": "hardhat run script/newMetadata.mjs --network mumbai",
     "contracts:deploy:arbitrum_goerli": "hardhat run script/deploy.mjs --network arbitrum_goerli",
     "core:test": "hardhat test test/core.test.mjs",
     "integration:test": "hardhat test test/integration.test.mjs",
