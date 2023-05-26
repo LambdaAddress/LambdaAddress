@@ -25,6 +25,7 @@ export function handleTransfer(event: TransferEvent): void {
     lambdaAddress = new LambdaAddress(event.params.tokenId.toString())
     lambdaAddress.address = Bytes.fromHexString(tokenId.toHexString())
     lambdaAddress.isDeployed = false
+    lambdaAddress.mintTime = event.block.timestamp
     
     const registrar = Registrar.bind(event.address)
     lambdaAddress.tokenURI = registrar.tokenURI(tokenId)

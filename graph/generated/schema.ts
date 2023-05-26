@@ -91,6 +91,19 @@ export class LambdaAddress extends Entity {
     this.set("tokenURI", Value.fromString(value));
   }
 
+  get mintTime(): BigInt {
+    let value = this.get("mintTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set mintTime(value: BigInt) {
+    this.set("mintTime", Value.fromBigInt(value));
+  }
+
   get isDeployed(): boolean {
     let value = this.get("isDeployed");
     if (!value || value.kind == ValueKind.NULL) {

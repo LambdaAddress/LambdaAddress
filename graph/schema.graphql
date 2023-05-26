@@ -3,5 +3,6 @@ type LambdaAddress @entity(immutable: false) {
   address: Bytes!
   owner: Bytes! # address
   tokenURI: String!
+  mintTime: BigInt!
   isDeployed: Boolean!
 }

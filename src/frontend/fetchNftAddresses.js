@@ -14,13 +14,14 @@ async function fetchNftAddressesFromGraph(owner, network) {
         id
         address
         owner
+        mintTime
         tokenURI
       }
     }`
 
   const client = createClient({ url: network.graphUrl, exchanges: [cacheExchange, fetchExchange], })
   const result = await client.query(query).toPromise()
-  return result?.data?.lambdaAddresses.map(convertGraphData) || []
+  return result?.data?.lambdaAddresses || []
 }
 
 async function fallBack(owner, registrarImpl) {
@@ -36,9 +37,4 @@ function convertToAddress(event) {
   }
 }
 
-function convertGraphData(data) {
-  return {
-    ...data,
-    address: `0x${BigInt(data.id).toString(16)}`
-  }
-}
+
