@@ -17,10 +17,10 @@ dataSources:
         - LambdaAddress
       abis:
         - name: Registrar
-          file: ./src/abi/Registrar.json
+          file: ../src/abi/Registrar.json
       eventHandlers:
         - event: Deploy(indexed address,indexed uint256)
           handler: handleDeploy      
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./graph/registrar.ts
+      file: ./registrar.ts

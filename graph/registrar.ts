@@ -1,4 +1,4 @@
-import { Bytes } from "@graphprotocol/graph-ts"
+import { Bytes, BigInt } from "@graphprotocol/graph-ts"
 import {
   Deploy as DeployEvent,
   Transfer as TransferEvent,
@@ -23,7 +23,7 @@ export function handleTransfer(event: TransferEvent): void {
 
   if (!lambdaAddress) {
     lambdaAddress = new LambdaAddress(event.params.tokenId.toString())
-    lambdaAddress.address = Bytes.fromByteArray(Bytes.fromBigInt(tokenId))
+    lambdaAddress.address = Bytes.fromHexString(tokenId.toHexString())
     lambdaAddress.isDeployed = false
     
     const registrar = Registrar.bind(event.address)
