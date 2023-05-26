@@ -28,6 +28,7 @@ const supportedNetworks = {
         nativeCurrency: { name: "ETH", decimals: 18, symbol: "ETH" },
         blockExplorerUrls: ['https://sepolia.etherscan.io'],
         isTestnet: true,
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/test-lambda-address/version/latest',
         contracts: sepolia
     }
 }

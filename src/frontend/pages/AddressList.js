@@ -19,7 +19,7 @@ import useTransactionSender from '../hooks/useTransactionSender'
 
 export default function AddressList() {
   const { library, account } = useWeb3React()
-  const { contracts } = useContext(MainContext)
+  const { contracts, network } = useContext(MainContext)
   const { registrar } = contracts || {}
   window.registrar = registrar
 
@@ -30,7 +30,7 @@ export default function AddressList() {
   const [editedAddress, setEditedAddress] = useState()
   const [editedBytecode, setBytecode] = useState()
 
-  const addressList = useAddresses(account, registrar)
+  const addressList = useAddresses(account, registrar, network)
   const transaction = useTransactionSender(txToSend)
 
   const clearState = () => {

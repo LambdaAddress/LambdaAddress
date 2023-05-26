@@ -29,7 +29,10 @@
     "frontend:lint": "eslint --fix src/frontend",
     "frontend:prettier:check": "prettier -c 'src/frontend/**/*.js'",
     "frontend:prettier:write": "prettier --write 'src/frontend/**/*.js'",
-    "frontend:serve": "python3 -m http.server"
+    "frontend:serve": "python3 -m http.server",
+    "graph:codegen": "graph codegen graph/subgraph.yaml --output-dir=graph/generated",
+    "graph:build": "graph build graph/subgraph.yaml --output-dir=graph/build",
+    "graph:deploy": "graph deploy test-lambda-address graph/subgraph.yaml --studio --network-file=graph/networks.json --output-dir=graph/build"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
@@ -47,6 +50,7 @@
     "ethers": "^5.7.1",
     "hardhat": "^2.13.0",
     "hardhat-gas-reporter": "^1.0.9",
+    "matchstick-as": "0.5.0",
     "prettier": "^2.8.3",
     "prettier-plugin-solidity": "^1.1.2",
     "solc": "^0.8.17",
@@ -63,6 +67,8 @@
     "@emotion/cache": "11.4.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@graphprotocol/graph-cli": "^0.50.1",
+    "@graphprotocol/graph-ts": "^0.30.0",
     "@mui/icons-material": "5.2.0",
     "@mui/material": "5.2.0",
     "@mui/styled-engine": "5.2.0",
@@ -78,6 +84,7 @@
     "dotenv": "^10.0.0",
     "flatpickr": "4.6.9",
     "framer-motion": "^4",
+    "graphql": "^16.6.0",
     "lodash": "^4.17.21",
     "react": "^17.0.1",
     "react-countup": "^4.3.3",
@@ -88,6 +95,7 @@
     "react-scripts": "4.0.3",
     "react-syntax-highlighter": "15.4.5",
     "svg-gauge": "^1.0.7",
+    "urql": "^4.0.2",
     "web-vitals": "^1.0.1",
     "web-worker": "^1.2.0",
     "web3-react": "^5.0.5",
@@ -113,6 +121,9 @@
     ]
   },
   "eslintConfig": {
+    "env": {
+      "es2020": true
+    },
     "extends": [
       "react-app",
       "react-app/jest"

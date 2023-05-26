@@ -18,6 +18,7 @@ forge-artifacts
 .vscode/
 lcov.info
 
+graph/build
 
 # development.json may be regenerated frequently
 src/config/development.json
