@@ -32,7 +32,7 @@
     "frontend:serve": "python3 -m http.server",
     "graph:codegen": "graph codegen --output-dir=graph/generated",
     "graph:build": "graph build --output-dir=graph/build",
-    "graph:deploy": "graph deploy --studio test-lambda-address --network-file=graph/networks.json"
+    "graph:deploy": "graph deploy --studio test-lambda-address --network-file=graph/networks.json --output-dir=graph/build"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
