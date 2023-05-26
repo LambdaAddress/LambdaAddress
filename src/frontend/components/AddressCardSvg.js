@@ -17,12 +17,12 @@ export default function AddressCardSvg({ address, className, highlightAddress = 
       xmlns="http://www.w3.org/2000/svg"
     >
       <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Sofia+Sans+Extra+Condensed:wght@300;400;500');
+                @font-face { font-family: 'Sofia Sans Extra Condensed'; src: url(https://fonts.gstatic.com/s/sofiasansextracondensed/v2/raxoHjafvdAIOju4GcIfJH0i7zi50X3zRtuLNiMS0fSuJk4.woff2) format('woff2'); }
                 .badge { font-size: 38px; font-weight: bold; }
                 .address { font-family: 'Sofia Sans Extra Condensed', sans-serif; font-size: 22px; font-weight: 300; text-transform: lowercase; filter: drop-shadow(2px 1px 3px rgb(0,0,0,0.75)); }
                 .logo { filter: drop-shadow(1px 3px 2px rgb(0,0,0,0.75)); }
                 .nft-address { filter: drop-shadow(2px 1px 7px rgb(0, 0, 0, 0.5)) }
-            `}</style>
+      `}</style>
       <defs>
         <linearGradient id="grad1" x1="0%" y1="0%" x2="74%" y2="100%">
           <stop offset="0%" style={{ stopColor: 'rgba(86,111,149,1)' }} />
