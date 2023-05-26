@@ -1,5 +1,6 @@
 import development from './development'
 import sepolia from './sepolia'
+import mumbai from './mumbai'
 
 const supportedNetworks = {
     31337: {
@@ -30,6 +31,16 @@ const supportedNetworks = {
         isTestnet: true,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/test-lambda-address/version/latest',
         contracts: sepolia
+    },
+    80001: { 
+        name: 'Polygon Mumbai',
+        chainId: 80001,
+        rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
+        nativeCurrency: { name: "MATIC", decimals: 18, symbol: "MATIC" },
+        blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
+        isTestnet: true,
+        //graphUrl: '',
+        contracts: mumbai
     }
 }
 
