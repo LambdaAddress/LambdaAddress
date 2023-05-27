@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import Alert from '@mui/material/Alert'
 import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Stack from '@mui/material/Stack'
@@ -78,6 +79,8 @@ export default function Mint() {
   const [matchStartOfAddress, setMatchStartOfAddress] = useState(false) 
   // Advanced options visibility
   const [isAdvancedOptionsVisible, setIsAdvancedOptionsVisible] = useState(false)
+  // Display warning message or not
+  const [isWarningVisible, setIsWarningVisible] = useState(true) 
 
   const [tryAgain, setTryAgain] = useState(false)
   // Current error
@@ -149,7 +152,12 @@ export default function Mint() {
   return (
     <MainPage>
       <Header />
-
+      
+      <AlertBox
+        style={{ display: isWarningVisible ? 'flex' : 'none' }} 
+        onClose={() => setIsWarningVisible(false)}>
+          This app is in beta and has not been audited yet.
+      </AlertBox>
       <MainBox>
         <TitleContainer>
           <MKTypography variant="body1" color="white">
@@ -315,6 +323,20 @@ function openseaUrl(contractAddress, nftId) {
   const nftIdBN = ethers.BigNumber.from(nftId)
   return `https://opensea.io/assets/ethereum/${contractAddress}/${nftIdBN.toString()}`
 }
+
+const AlertBox = styled(Alert)({
+  margin: 'auto',
+  marginTop: 80,
+  [`@media ${breakpoints.up.xs}`]: {
+    width: 'calc(100% - 40px)',
+    marginBottom: -58,
+  },
+  [`@media ${breakpoints.up.sm}`]: {
+    width: 460,
+    marginBottom: -48,
+  },
+})
+AlertBox.defaultProps = { severity: 'warning' }
 
 const MainPage = styled(MKBox)({
   backgroundImage: 'linear-gradient(135deg, #6f5eef, #20123c)',
