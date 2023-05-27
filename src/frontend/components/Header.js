@@ -78,6 +78,7 @@ const MenuLink = styled.a({
   color: 'white',
   opacity: 0.85,
   lineHeight: '36px',
+  paddingTop: 3,
   transition: 'opacity 0.25s ease-out',
 
   [`@media ${breakpoints.up.xs}`]: {
