@@ -7,11 +7,12 @@ import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useRef } from 'react'
 
-import AddressShuffle from '../components/AddressShuffle'
 import breakpoints from '../breakpoints.js'
+import AddressShuffle from '../components/AddressShuffle'
 import MKBox from '../components/MKBox'
 import MKButton from '../components/MKButton'
 import MKTypography from '../components/MKTypography'
+import config from '../config'
 import logo from '../images/logo.svg'
 import mobileImg from '../images/phone-tilted.png'
 import underTheHoodImg from '../images/under-the-hood.svg'
@@ -108,7 +109,7 @@ export default function Home() {
             <SectionH2>Under the hood</SectionH2>
             <p>Alpha Address uses Solmate's <a href="https://github.com/transmissions11/solmate/blob/main/src/utils/CREATE3.sol">CREATE3</a> under the hood. Therefore letting you deploy any smart contract at your address seemlessly.</p>
             <p>Since EOA accounts require a private key, they are not supported.</p>
-            <p><a href="#/">Learn more</a></p>
+            <p><a href={config.docUrl} target="_blank">Learn more</a></p>
             <ButtonsContainer>
               <WhiteButton href="#/mint">Get Started</WhiteButton>
               <TextButton onClick={() => handleScrollClick(3)}>Keep reading</TextButton>
@@ -124,7 +125,7 @@ export default function Home() {
           <LeftSection>
             <SectionH2>Earn royalties</SectionH2>
             <p>Each Lambda Address sale includes a 5% royalty, with 2.5% going to the project's DAO and the remaining 2.5% given to the original minter.</p>
-            <p><a href="#/">Learn more</a></p>
+            <p><a href={`${config.docUrl}/royalties`} target="_blank">Learn more</a></p>
             <ButtonsContainer>
               <WhiteButton href="#/mint">Get Started</WhiteButton>
             </ButtonsContainer>
