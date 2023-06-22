@@ -27,8 +27,8 @@ describe("Integration tests", function () {
           const SampleContract = await ethers.getContractFactory("SampleContract")
           const [owner] = await hre.ethers.getSigners()
           const deployer = await getDeployer()
-
-          const metaData = await create2Deploy(deployer, MetaData, SALT)
+          const metaData = await create2Deploy(deployer, MetaData, SALT, [], { gasLimit: 30000000 })
+          
           const registrar = await create2Deploy(deployer, Registrar, SALT)
           const utx = await registrar.populateTransaction.initialize(
             MINT_PRICE, 
@@ -37,8 +37,8 @@ describe("Integration tests", function () {
             metaData.address, 
             owner.address
           )  
-          const proxy = await create2Deploy(deployer, RegistrarProxy, SALT, registrar.address, utx.data)
-          const nftAddressFactory = await create2Deploy(deployer, NFTAddressFactory, SALT, proxy.address)
+          const proxy = await create2Deploy(deployer, RegistrarProxy, SALT, [registrar.address, utx.data])
+          const nftAddressFactory = await create2Deploy(deployer, NFTAddressFactory, SALT, [proxy.address])
           const sampleContract = await deploy(SampleContract, "6")
 
           
@@ -48,20 +48,24 @@ describe("Integration tests", function () {
           await send(registrarProxy.allowFactory(nftAddressFactory.address, true))
       
           return { registrar, nftAddressFactory, proxy, registrarProxy, sampleContract }
+          
         } catch(err) {
           console.log('Error deploying contracts', err)
         }
+
     }
       
     it("should mint the right address and deploy the right bytecode", async function () {
       const { registrar, nftAddressFactory, proxy, registrarProxy, sampleContract } = await loadFixture(deployContracts)
+      //const contracts = await loadFixture(deployContracts)
+      
       const [account1] = await ethers.getSigners()
       const salt = '0x000000000000000000000000000000000000000000000000000000000000007B'
 
       const sampleContractBytecode = await ethers.provider.getCode(sampleContract.address)
       const nftAddress = generateNFTAddress(nftAddressFactory.address, account1.address, salt)
       
-
+      
       const tx = await send(registrarProxy.mint(nftAddressFactory.address, salt, { value: MINT_PRICE, from: account1.address }))
 
       const event = tx.events.find(e => e.event === 'Transfer')

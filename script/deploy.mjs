@@ -48,11 +48,11 @@ async function main() {
       metaData.address, 
       owner.address
     )    
-    const proxy = await create2Deploy(deployer, RegistrarProxy, SALT, registrar.address, utx.data)
+    const proxy = await create2Deploy(deployer, RegistrarProxy, SALT, [registrar.address, utx.data])
     console.log(`${proxy.address} ✅`)
 
     process.stdout.write('Deploying NFTAddressFactory... ')
-    const nftAddressFactory = await create2Deploy(deployer, NFTAddressFactory, SALT, proxy.address)
+    const nftAddressFactory = await create2Deploy(deployer, NFTAddressFactory, SALT, [proxy.address])
     console.log(`${nftAddressFactory.address} ✅`)
 
     const registrarProxy = Registrar.attach(proxy.address)
