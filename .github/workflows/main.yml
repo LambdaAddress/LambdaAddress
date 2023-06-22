@@ -30,7 +30,7 @@ jobs:
       - name: Run hardhat compile
         run: yarn contracts:compile 
       - name: Run prettier check
-        run: yarn prettier:check                  
+        run: yarn contracts:prettier:check                  
       - name: Run contracts tests
         run: yarn contracts:test
       - name: Run contracts coverage
