@@ -1,5 +1,7 @@
 [![Build](https://github.com/LambdaAddress/LambdaAddress/actions/workflows/main.yml/badge.svg)](https://github.com/LambdaAddress/LambdaAddress/actions/workflows/main.yml)
 
+[![Coverage Status](https://coveralls.io/repos/github/LambdaAddress/LambdaAddress/badge.svg?branch=master)](https://coveralls.io/github/LambdaAddress/LambdaAddress?branch=master)
+
 # <img src="src/frontend/images/logo.svg" height="34" style="vertical-align: bottom;" /> Lambda Address
 
 # Pre-requisites
