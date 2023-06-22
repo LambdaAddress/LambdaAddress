@@ -1,0 +1,39 @@
+name: Build
+
+on:   
+  push:
+    branches: [master,dev]
+  pull_request:
+    branches: [master,dev]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+      - name: Install dependencies
+        run: yarn install
+      - name: Run Forge build
+        run: |
+          forge --version
+          forge build --sizes
+      - name: Run hardhat compile
+        run: yarn contracts:compile 
+      - name: Run prettier check
+        run: yarn contracts:prettier:check                  
+      - name: Run contracts tests
+        run: yarn contracts:test
+      - name: Run contracts coverage
+        run: yarn contracts:coverage:lcov
+      - name: Run integration tests
+        run: yarn integration:test 
