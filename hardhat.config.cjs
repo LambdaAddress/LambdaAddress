@@ -36,6 +36,8 @@ module.exports = {
     noColors: true
   },
   networks: {
+    hardhat: {
+    },
     sepolia: {
       url: NODE_URL || 'https://rpc2.sepolia.org',
       chainId: 11155111,

@@ -62,11 +62,18 @@ library SafeCreate3 {
       ).fromLast20Bytes();
   }
 
-  // TODO: Add POP 0x01
-  /// @notice Adds "PUSH20 `createdBy`" to solmate's CREATE3 deploy bytecode
+  //--------------------------------------------------------------------------------//
+  // Opcode     | Opcode + Arguments    | Description      | Stack View             //
+  //--------------------------------------------------------------------------------//
+  // 0x73       |  0x73 createdBy       | PUSH20           | createdBy              //
+  // 0x50       |  0x50                 | POP              |                        //
+  // ... See CREATE3's bytecode
+  //
+  /// @notice Adds "PUSH20 `createdBy`" and POP to solmate's CREATE3 deploy bytecode
+  /// to prevent frontrunning.
   /// @param createdBy Address of the account that creates the smart contract
   function getBytecode(address createdBy) internal pure returns (bytes memory) {
-    return abi.encodePacked(hex"73", createdBy, CREATE3.PROXY_BYTECODE);
+    return abi.encodePacked(hex"73", createdBy, hex"50", CREATE3.PROXY_BYTECODE);
   }
 
   function getBytecodeHash(address createdBy) internal pure returns (bytes32) {

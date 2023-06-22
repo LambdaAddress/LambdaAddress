@@ -49,7 +49,7 @@ describe('core', function() {
         it("should return the right bytecode", function () {
             const deployBytecode = getDeployCode('0x0123456789ABCDEF0123456789ABCDEF01234567', '0x0123456789ABCDEF0123456789ABCDEF01234567')
 
-            expect(deployBytecode).equal('0x730123456789ABCDEF0123456789ABCDEF0123456767363d3d37363d34f03d5260086018f3')
+            expect(deployBytecode).equal('0x730123456789ABCDEF0123456789ABCDEF012345675067363d3d37363d34f03d5260086018f3')
         })
 
     }) 
@@ -63,7 +63,7 @@ describe('core', function() {
         
             const address = generateNFTAddress(FACTORY_ADDRESS, OWNER_ADDRESS, SALT)
         
-            expect(address).equal('0x309663a0ca6d28208Bd78f85952b7952b8bBBb6B')
+            expect(address).equal('0xda771dc2861Ec7Eba2F587f05162b07D4F52c2D1')
         })
 
     })     
