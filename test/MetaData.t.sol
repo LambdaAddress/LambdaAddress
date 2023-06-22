@@ -27,10 +27,10 @@ contract MetaDataTest is Test {
     metaData = new MetaData();
     registrarLogic = new Registrar();
     bytes memory data = abi.encodeWithSelector(
-      registrar.initialize.selector, 
-      MINT_PRICE, 
-      _ROYALTIES, 
-      payable(address(this)), 
+      registrar.initialize.selector,
+      MINT_PRICE,
+      _ROYALTIES,
+      payable(address(this)),
       metaData,
       address(this)
     );

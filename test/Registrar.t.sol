@@ -30,10 +30,10 @@ contract RegistrarTest is Test {
     metaData = new MetaData();
     registrarLogic = new Registrar();
     bytes memory data = abi.encodeWithSelector(
-      registrar.initialize.selector, 
-      MINT_PRICE, 
-      _ROYALTIES, 
-      payable(address(this)), 
+      registrar.initialize.selector,
+      MINT_PRICE,
+      _ROYALTIES,
+      payable(address(this)),
       metaData,
       address(this)
     );
@@ -196,10 +196,10 @@ contract RegistrarTest is Test {
     console.log("Should set the right mint price, royalties, recipient and MetaData address");
 
     bytes memory data = abi.encodeWithSelector(
-      registrar.initialize.selector, 
-      mintPrice, 
-      royalties, 
-      royaltiesRecipient, 
+      registrar.initialize.selector,
+      mintPrice,
+      royalties,
+      royaltiesRecipient,
       MetaData(metaDataTest),
       address(this)
     );
