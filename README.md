@@ -1,8 +1,9 @@
-[![Build](https://github.com/LambdaAddress/LambdaAddress/actions/workflows/main.yml/badge.svg)](https://github.com/LambdaAddress/LambdaAddress/actions/workflows/main.yml)
+[![Build](https://github.com/LambdaAddress/LambdaAddress/actions/workflows/main.yml/badge.svg)](https://github.com/LambdaAddress/LambdaAddress/actions/workflows/main.yml) [![Coverage Status](https://coveralls.io/repos/github/LambdaAddress/LambdaAddress/badge.svg?branch=master)](https://coveralls.io/github/LambdaAddress/LambdaAddress?branch=master)
 
-[![Coverage Status](https://coveralls.io/repos/github/LambdaAddress/LambdaAddress/badge.svg?branch=master)](https://coveralls.io/github/LambdaAddress/LambdaAddress?branch=master)
 
 # <img src="src/frontend/images/logo.svg" height="34" style="vertical-align: bottom;" /> Lambda Address
+
+> **Important**: The smart contracts are currently undergoing an auditing process. In the meantime, please consider the app to be in an experimental state.
 
 # Pre-requisites
 
@@ -26,7 +27,7 @@ yarn blockchain
 ### 2. Compile and deploy smart contracts
 
 ```
-yarn deploy
+yarn contracts:deploy
 ```
 
 ### 3. Run the frontend
