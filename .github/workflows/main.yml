@@ -37,3 +37,5 @@ jobs:
         run: yarn contracts:coverage:lcov
       - name: Run integration tests
         run: yarn integration:test 
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
