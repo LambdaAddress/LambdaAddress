@@ -4,5 +4,17 @@
       "address": "0x5eddF9220a2356751211FAf51fab5BF129020E12",
       "startBlock": 3425505
     }
+  },
+  "goerli": {
+    "Registrar": {
+      "address": "0x4EC36cd860dffDB3891c776c14678eb8d3580C00",
+      "startBlock": 9228731
+    }
+  },
+  "mumbai": {
+    "Registrar": {
+      "address": "0x5eddF9220a2356751211FAf51fab5BF129020E12",
+      "startBlock": 37261175
+    }
   }
 }

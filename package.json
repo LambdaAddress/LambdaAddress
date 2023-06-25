@@ -35,7 +35,10 @@
     "frontend:serve": "python3 -m http.server",
     "graph:codegen": "graph codegen graph/subgraph.yaml --output-dir=graph/generated",
     "graph:build": "graph build graph/subgraph.yaml --output-dir=graph/build",
-    "graph:deploy": "graph deploy test-lambda-address graph/subgraph.yaml --studio --network-file=graph/networks.json --output-dir=graph/build"
+    "graph:deploy:sepolia": "graph deploy lambdaaddress-sepolia graph/subgraph.sepolia.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
+    "graph:deploy:goerli": "graph deploy lambdaaddress-goerli graph/subgraph.goerli.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
+    "graph:deploy:mumbai": "graph deploy lambdaaddress-mumbai graph/subgraph.mumbai.yaml --studio --network-file=graph/networks.json --output-dir=graph/build"
+
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",

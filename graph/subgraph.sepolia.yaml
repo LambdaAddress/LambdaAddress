@@ -6,9 +6,9 @@ dataSources:
     name: Registrar
     network: sepolia
     source:
-      address: "0x5eddF9220a2356751211FAf51fab5BF129020E12"
+      address: "0x4EC36cd860dffDB3891c776c14678eb8d3580C00"
       abi: Registrar
-      startBlock: 3425505
+      startBlock: 3753135
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
