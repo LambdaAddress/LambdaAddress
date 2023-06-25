@@ -1,6 +1,7 @@
 import development from './development'
 import sepolia from './sepolia'
 import mumbai from './mumbai'
+import goerli from './goerli'
 
 const supportedNetworks = {
     31337: {
@@ -41,7 +42,17 @@ const supportedNetworks = {
         isTestnet: true,
         //graphUrl: '',
         contracts: mumbai
-    }
+    },
+    5: { 
+        name: 'Goerli',
+        chainId: 5,
+        rpcUrls: ['https://gateway.tenderly.co/public/goerli'],
+        nativeCurrency: { name: "ETH", decimals: 18, symbol: "ETH" },
+        blockExplorerUrls: ['https://goerli.etherscan.io'],
+        isTestnet: true,
+        //graphUrl: '',
+        contracts: goerli
+    }    
 }
 
 const UnsupportedNetwork = {
