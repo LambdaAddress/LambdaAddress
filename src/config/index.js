@@ -1,6 +1,7 @@
 import development from './development'
 import sepolia from './sepolia'
 import mumbai from './mumbai'
+import goerli from './goerli'
 
 const supportedNetworks = {
     31337: {
@@ -29,7 +30,7 @@ const supportedNetworks = {
         nativeCurrency: { name: "ETH", decimals: 18, symbol: "ETH" },
         blockExplorerUrls: ['https://sepolia.etherscan.io'],
         isTestnet: true,
-        graphUrl: 'https://api.studio.thegraph.com/query/47325/test-lambda-address/version/latest',
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-sepolia/version/latest',
         contracts: sepolia
     },
     80001: { 
@@ -39,9 +40,19 @@ const supportedNetworks = {
         nativeCurrency: { name: "MATIC", decimals: 18, symbol: "MATIC" },
         blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
         isTestnet: true,
-        //graphUrl: '',
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-mumbai/version/latest',
         contracts: mumbai
-    }
+    },
+    5: { 
+        name: 'Goerli',
+        chainId: 5,
+        rpcUrls: ['https://gateway.tenderly.co/public/goerli'],
+        nativeCurrency: { name: "ETH", decimals: 18, symbol: "ETH" },
+        blockExplorerUrls: ['https://goerli.etherscan.io'],
+        isTestnet: true,
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-goerli/version/latest',
+        contracts: goerli
+    }    
 }
 
 const UnsupportedNetwork = {

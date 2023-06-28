@@ -22,18 +22,23 @@
     "contracts:deploy:mumbai": "hardhat run script/deploy.mjs --network mumbai",
     "contracts:newMetadata:mumbai": "hardhat run script/newMetadata.mjs --network mumbai",
     "contracts:deploy:arbitrum_goerli": "hardhat run script/deploy.mjs --network arbitrum_goerli",
+    "contracts:deploy:alpha": "hardhat run script/deployAlpha.mjs",
     "core:test": "hardhat test test/core.test.mjs",
     "integration:test": "hardhat test test/integration.test.mjs",
     "frontend:start:mainnet": "export REACT_APP_ETH_ENV=mainnet && yarn frontend:build:workerLogic && react-scripts start",
+    "frontend:start:testnet": "export REACT_APP_ETH_ENV=testnet && yarn frontend:build:workerLogic && react-scripts start",
     "frontend:build": "export REACT_APP_ETH_ENV=mainnet && yarn frontend:build:workerLogic && react-scripts build",
-    "frontend:build:rinkeby": "export REACT_APP_ETH_ENV=rinkeby && yarn frontend:build:workerLogic && react-scripts build",
+    "frontend:build:testnet": "export REACT_APP_ETH_ENV=testnet && yarn frontend:build:workerLogic && react-scripts build",
     "frontend:lint": "eslint --fix src/frontend",
     "frontend:prettier:check": "prettier -c 'src/frontend/**/*.js'",
     "frontend:prettier:write": "prettier --write 'src/frontend/**/*.js'",
     "frontend:serve": "python3 -m http.server",
     "graph:codegen": "graph codegen graph/subgraph.yaml --output-dir=graph/generated",
     "graph:build": "graph build graph/subgraph.yaml --output-dir=graph/build",
-    "graph:deploy": "graph deploy test-lambda-address graph/subgraph.yaml --studio --network-file=graph/networks.json --output-dir=graph/build"
+    "graph:deploy:sepolia": "graph deploy lambdaaddress-sepolia graph/subgraph.sepolia.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
+    "graph:deploy:goerli": "graph deploy lambdaaddress-goerli graph/subgraph.goerli.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
+    "graph:deploy:mumbai": "graph deploy lambdaaddress-mumbai graph/subgraph.mumbai.yaml --studio --network-file=graph/networks.json --output-dir=graph/build"
+
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
