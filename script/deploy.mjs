@@ -8,7 +8,8 @@ import RegistrarProxyAbi from '../artifacts/src/contracts/RegistrarProxy.sol/Reg
 import NFTAddressFactoryAbi from '../artifacts/src/contracts/NFTAddressFactory.sol/NFTAddressFactory.json' assert { type: "json" }
 
 const CREATE2_DEPLOYER_ADDRESS = '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2'
-const SALT = hre.ethers.utils.id('0x0000000001')
+//const SALT = hre.ethers.utils.id('0x0000000001')
+const SALT = '0x0000000000000000000000000000000000000000000000000000000000000001'
 
 /**
  * If running locally, deploy and return a new instance of the Create2Deployer contract,
@@ -24,11 +25,11 @@ async function getCreate2Deployer(address) {
 }
 
 async function create3Deploy(create2Deployer, factory, salt, args) {
-  const create3DeployerSalt = hre.ethers.utils.id('0x0000000001')
+  const create3DeployerSalt = hre.ethers.utils.id('Create3Deployer')
   const Create3Deployer = await hre.ethers.getContractFactory("Create3Deployer")
   const create3DeployerAddress = await create2Deployer.computeAddress(create3DeployerSalt, hre.ethers.utils.keccak256(Create3Deployer.bytecode))
 
-  const code = await hre.ethers.getDefaultProvider().getCode(create3DeployerAddress)
+  const code = await hre.ethers.provider.getCode(create3DeployerAddress)
   
   // Check if contract is already deployed
   const create3Deployer = code === '0x' || code === ''
@@ -47,50 +48,72 @@ async function create3Deploy(create2Deployer, factory, salt, args) {
   return factory.attach(computedContractAddress)
 }
 
+async function deployContracts({ salt, mintPrice, royalties, royaltiesRecipient, owner, verbose = false}) {
+  const MetaData = await hre.ethers.getContractFactory("MetaData")
+  const Registrar = await hre.ethers.getContractFactory("Registrar")
+  const RegistrarProxy = await hre.ethers.getContractFactory("RegistrarProxy")
+  const NFTAddressFactory = await hre.ethers.getContractFactory("NFTAddressFactory")
+  const deployer = await getCreate2Deployer(CREATE2_DEPLOYER_ADDRESS)
+
+  verbose && process.stdout.write('Deploying MetaData... ')
+  const metaData = await create2Deploy(deployer, MetaData, salt)
+  verbose && console.log(`${metaData.address} ✅`)
+    
+  verbose && process.stdout.write('Deploying Registrar... ')
+  const registrar = await create2Deploy(deployer, Registrar, salt)
+  verbose && console.log(`${registrar.address} ✅`)
+
+  verbose && process.stdout.write(`Deploying RegistrarProxy(${registrar.address})... `)
+    
+  const utx = await registrar.populateTransaction.initialize(
+    mintPrice, 
+    royalties, 
+    royaltiesRecipient, 
+    metaData.address, 
+    owner
+  )
+  
+  const registrarSalt = hre.ethers.BigNumber
+    .from(hre.ethers.utils.id('RegistrarProxy'))
+    .add(salt)
+  
+  const proxy = await create3Deploy(deployer, RegistrarProxy, registrarSalt, [registrar.address, utx.data])
+  verbose && console.log(`${proxy.address} ✅`)
+
+
+  verbose && process.stdout.write('Deploying NFTAddressFactory... ')
+
+  const nftAddressFactorySalt = hre.ethers.BigNumber
+    .from(hre.ethers.utils.id('NFTAddressFactory'))
+    .add(salt)
+
+  const nftAddressFactory = await create3Deploy(deployer, NFTAddressFactory, nftAddressFactorySalt, [proxy.address])
+  verbose && console.log(`${nftAddressFactory.address} ✅`)
+
+  const registrarProxy = Registrar.attach(proxy.address)
+
+  verbose && process.stdout.write(`RegistrarProxy.allowFactory(${nftAddressFactory.address}, true)... `)
+  await send(registrarProxy.allowFactory(nftAddressFactory.address, true))
+  verbose && console.log('✅')
+
+  return {
+    registrar, proxy, nftAddressFactory, metaData
+  }
+}
+
 
 async function main() {
   try {
-    // const MINT_PRICE = '10000000000000000'
-    const MINT_PRICE = '0'
-    const ROYALTIES = '500' // 5%
-    const ROYALTIES_RECIPIENT = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
-    const MetaData = await hre.ethers.getContractFactory("MetaData")
-    const Registrar = await hre.ethers.getContractFactory("Registrar")
-    const RegistrarProxy = await hre.ethers.getContractFactory("RegistrarProxy")
-    const NFTAddressFactory = await hre.ethers.getContractFactory("NFTAddressFactory")
-    const deployer = await getCreate2Deployer(CREATE2_DEPLOYER_ADDRESS)
     const [owner] = await hre.ethers.getSigners()
 
-    process.stdout.write('Deploying MetaData... ')
-    const metaData = await create2Deploy(deployer, MetaData, SALT)
-    console.log(`${metaData.address} ✅`)
-      
-    process.stdout.write('Deploying Registrar... ')
-    const registrar = await create2Deploy(deployer, Registrar, SALT)
-    console.log(`${registrar.address} ✅`)
-
-    process.stdout.write(`Deploying RegistrarProxy(${registrar.address})... `)
-    
-    const utx = await registrar.populateTransaction.initialize(
-      MINT_PRICE, 
-      ROYALTIES, 
-      ROYALTIES_RECIPIENT, 
-      metaData.address, 
-      owner.address
-    )
-    
-    const proxy = await create3Deploy(deployer, RegistrarProxy, SALT, [registrar.address, utx.data])
-    console.log(`${proxy.address} ✅`)
-
-    process.stdout.write('Deploying NFTAddressFactory... ')
-    const nftAddressFactory = await create2Deploy(deployer, NFTAddressFactory, SALT, [proxy.address])
-    console.log(`${nftAddressFactory.address} ✅`)
-
-    const registrarProxy = Registrar.attach(proxy.address)
-
-    process.stdout.write(`RegistrarProxy.allowFactory(${nftAddressFactory.address}, true)... `)
-    await send(registrarProxy.allowFactory(nftAddressFactory.address, true))
-    console.log('✅')
+    const { registrar, proxy, nftAddressFactory } = await deployContracts({
+      salt: SALT,
+      mintPrice: '0',
+      royalties: '500',
+      royaltiesRecipient: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      owner: owner.address,
+      verbose: true
+    })
 
     process.stdout.write('Creating config file... ')
     createConfig({
