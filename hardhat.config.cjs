@@ -53,6 +53,12 @@ module.exports = {
       chainId: 5,
       accounts: [KEY]
     },
+    optimism_goerli: {
+      url: NODE_URL || 'https://optimism-goerli.publicnode.com',
+      chainId: 420,
+      accounts: [KEY],
+      gasPrice: 500000000
+    },
     mumbai: {
       url: NODE_URL || 'https://rpc-mumbai.maticvigil.com',
       chainId: 80001,

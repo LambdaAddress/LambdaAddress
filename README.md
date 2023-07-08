@@ -88,16 +88,12 @@ It's possible to run a local server to test the build with the following command
 
 ### 1. Set the 3 following enviroment variables:
   - `NODE_URL`: URL of the Ethereum node
-  - `GAS_PRICE`: Gas price (in wei)
   - `KEY`: Private key of the wallet used for the deployment
 
 Example:
 
 ```bash
 export NODE_URL="https://rinkeby.infura.io/v3/0123456789abcdef0123456789abcdef"
-
-# 40 gwei
-export GAS_PRICE=40000000000
 export KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
 ```
 

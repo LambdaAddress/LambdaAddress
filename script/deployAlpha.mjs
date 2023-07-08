@@ -17,7 +17,7 @@ async function main() {
 
     const { registrar, proxy, nftAddressFactory } = await deployContracts({
       salt: '0x0000000000000000000000000000000000000000000000000000000000000003',
-      mintPrice: '10000000000000', // 0.00001 ETH
+      mintPrice: '1000000000000', // 0.000001 ETH
       royalties: '500', // 5%
       royaltiesRecipient: '0x9CF33ca0A779171d82f33203e6601bE925c7D3eA',
       owner: owner.address,
