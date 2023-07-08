@@ -2,6 +2,7 @@ import development from './development'
 import sepolia from './sepolia'
 import mumbai from './mumbai'
 import goerli from './goerli'
+import optimismGoerli from './optimism_goerli'
 
 const supportedNetworks = {
     31337: {
@@ -52,6 +53,16 @@ const supportedNetworks = {
         isTestnet: true,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-goerli/version/latest',
         contracts: goerli
+    },
+    420: { 
+        name: 'Optimism Goerli',
+        chainId: 420,
+        rpcUrls: ['https://optimism-goerli.publicnode.com'],
+        nativeCurrency: { name: "ETH", decimals: 18, symbol: "ETH" },
+        blockExplorerUrls: ['https://goerli-optimism.etherscan.io'],
+        isTestnet: true,
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-optimism-goerli/version/latest',
+        contracts: optimismGoerli
     }    
 }
 

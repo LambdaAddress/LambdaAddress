@@ -37,7 +37,8 @@
     "graph:build": "graph build graph/subgraph.yaml --output-dir=graph/build",
     "graph:deploy:sepolia": "graph deploy lambdaaddress-sepolia graph/subgraph.sepolia.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
     "graph:deploy:goerli": "graph deploy lambdaaddress-goerli graph/subgraph.goerli.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
-    "graph:deploy:mumbai": "graph deploy lambdaaddress-mumbai graph/subgraph.mumbai.yaml --studio --network-file=graph/networks.json --output-dir=graph/build"
+    "graph:deploy:mumbai": "graph deploy lambdaaddress-mumbai graph/subgraph.mumbai.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
+    "graph:deploy:optimism-goerli": "graph deploy lambdaaddress-optimism-goerli graph/subgraph.optimism-goerli.yaml --studio --network-file=graph/networks.json --output-dir=graph/build"
 
   },
   "devDependencies": {

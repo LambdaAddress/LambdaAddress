@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Registrar
-    network: mumbai
+    network: optimism-goerli
     source:
       address: "0x4c310c3159A97a8aFFa73380D874E7F6c5774E8C"
       abi: Registrar
-      startBlock: 37708203
+      startBlock: 11713130
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
