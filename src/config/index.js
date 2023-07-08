@@ -61,7 +61,7 @@ const supportedNetworks = {
         nativeCurrency: { name: "ETH", decimals: 18, symbol: "ETH" },
         blockExplorerUrls: ['https://goerli-optimism.etherscan.io'],
         isTestnet: true,
-        //graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-goerli/version/latest',
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-optimism-goerli/version/latest',
         contracts: optimismGoerli
     }    
 }

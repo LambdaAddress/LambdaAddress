@@ -16,5 +16,11 @@
       "address": "0x4c310c3159A97a8aFFa73380D874E7F6c5774E8C",
       "startBlock": 37708203
     }
+  },
+  "optimism-goerli": {
+    "Registrar": {
+      "address": "0x4c310c3159A97a8aFFa73380D874E7F6c5774E8C",
+      "startBlock": 11713130
+    }
   }
 }
