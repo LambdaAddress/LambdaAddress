@@ -9,7 +9,7 @@ import {CREATE3} from "solmate/src/utils/CREATE3.sol";
 contract Create3Deployer {
   /**
    * @dev Deploys a contract using solmate's `CREATE3`. The address where the
-   * contract will be deployed can be known in advance via {computeAddress}.  
+   * contract will be deployed can be known in advance via {computeAddress}.
    */
   function deploy(uint256 value, bytes32 salt, bytes memory code) public {
     CREATE3.deploy(salt, code, value);
@@ -21,5 +21,4 @@ contract Create3Deployer {
   function computeAddress(bytes32 salt) public view returns (address) {
     return CREATE3.getDeployed(salt);
   }
-
 }
