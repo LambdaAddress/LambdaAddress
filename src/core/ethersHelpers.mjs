@@ -1,3 +1,5 @@
+import hre from "hardhat"
+
 async function deploy(factory, ...params) {
     return (await factory.deploy(...params)).deployed()
 }
@@ -8,7 +10,6 @@ async function send(tx) {
 
 async function create2Deploy(deployer, factory, salt, args = [], options = {}) {
     const initcode = factory.getDeployTransaction(...args)
-    //console.log('transaction: ', initcode)
     
     const computedContractAddress = await deployer.computeAddress(
       salt,
@@ -16,8 +17,32 @@ async function create2Deploy(deployer, factory, salt, args = [], options = {}) {
     )
   
     const receipt = await deployer.deploy(0, salt, initcode.data, options)
-    const result = await receipt.wait()
+    await receipt.wait()
     return factory.attach(computedContractAddress)
-  }
+}
 
-export { create2Deploy, deploy, send }
+async function create3Deploy(create2Deployer, factory, salt, args) {
+    const create3DeployerSalt = hre.ethers.utils.id('Create3Deployer')
+    const Create3Deployer = await hre.ethers.getContractFactory("Create3Deployer")
+    const create3DeployerAddress = await create2Deployer.computeAddress(create3DeployerSalt, hre.ethers.utils.keccak256(Create3Deployer.bytecode))
+  
+    const code = await hre.ethers.provider.getCode(create3DeployerAddress)
+    
+    // Check if contract is already deployed
+    const create3Deployer = code === '0x' || code === ''
+      ? await create2Deploy(create2Deployer, Create3Deployer, create3DeployerSalt)
+      : Create3Deployer.attach(create3DeployerAddress)
+  
+    if (create3Deployer.address !== create3DeployerAddress) {
+      throw "Wrong Create3Deployer address."
+    }
+  
+    const initcode = factory.getDeployTransaction(...args)
+  
+    const computedContractAddress = await create3Deployer.computeAddress(salt)
+    await create3Deployer.deploy(0, salt, initcode.data)
+  
+    return factory.attach(computedContractAddress)
+}
+
+export { create2Deploy, create3Deploy, deploy, send }

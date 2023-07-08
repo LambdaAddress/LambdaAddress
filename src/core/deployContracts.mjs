@@ -1,9 +1,9 @@
 import hre from "hardhat"
-import { create2Deploy, deploy, send } from './ethersHelpers.mjs'
+import { create2Deploy, create3Deploy, deploy, send } from './ethersHelpers.mjs'
 
 const CREATE2_DEPLOYER_ADDRESS = '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2'
 
-export default async function deployContracts({ salt, mintPrice, royalties, royaltiesRecipient, owner, verbose = false}) {
+export default async function deployContracts({ salt, mintPrice, royalties, royaltiesRecipient, owner, verbose = false, local = false}) {
     const MetaData = await hre.ethers.getContractFactory("MetaData")
     const Registrar = await hre.ethers.getContractFactory("Registrar")
     const RegistrarProxy = await hre.ethers.getContractFactory("RegistrarProxy")
@@ -11,7 +11,12 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     const deployer = await getCreate2Deployer(CREATE2_DEPLOYER_ADDRESS)
   
     verbose && process.stdout.write('Deploying MetaData... ')
-    const metaData = await create2Deploy(deployer, MetaData, salt)
+
+    // Workaround for the hardhat gas estimate problem 
+    const metaData = local 
+        ? await create2Deploy(deployer, MetaData, salt, [], { gasLimit: 30000000 })
+        : await create2Deploy(deployer, MetaData, salt)
+
     verbose && console.log(`${metaData.address} ✅`)
       
     verbose && process.stdout.write('Deploying Registrar... ')
@@ -69,26 +74,3 @@ async function getCreate2Deployer(address) {
       return Create2DeployerFactory.attach(address)
 }
   
-async function create3Deploy(create2Deployer, factory, salt, args) {
-    const create3DeployerSalt = hre.ethers.utils.id('Create3Deployer')
-    const Create3Deployer = await hre.ethers.getContractFactory("Create3Deployer")
-    const create3DeployerAddress = await create2Deployer.computeAddress(create3DeployerSalt, hre.ethers.utils.keccak256(Create3Deployer.bytecode))
-  
-    const code = await hre.ethers.provider.getCode(create3DeployerAddress)
-    
-    // Check if contract is already deployed
-    const create3Deployer = code === '0x' || code === ''
-      ? await create2Deploy(create2Deployer, Create3Deployer, create3DeployerSalt)
-      : Create3Deployer.attach(create3DeployerAddress)
-  
-    if (create3Deployer.address !== create3DeployerAddress) {
-      throw "Wrong Create3Deployer address."
-    }
-  
-    const initcode = factory.getDeployTransaction(...args)
-  
-    const computedContractAddress = await create3Deployer.computeAddress(salt)
-    await create3Deployer.deploy(0, salt, initcode.data)
-  
-    return factory.attach(computedContractAddress)
-}
