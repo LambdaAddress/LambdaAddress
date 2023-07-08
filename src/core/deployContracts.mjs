@@ -12,7 +12,7 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
   
     verbose && process.stdout.write('Deploying MetaData... ')
 
-    // Workaround for the hardhat gas estimate problem 
+    // Workaround for the hardhat gas estimate problem
     const metaData = local 
         ? await create2Deploy(deployer, MetaData, salt, [], { gasLimit: 30000000 })
         : await create2Deploy(deployer, MetaData, salt)
@@ -23,7 +23,15 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     const registrar = await create2Deploy(deployer, Registrar, salt)
     verbose && console.log(`${registrar.address} ✅`)
   
-    verbose && process.stdout.write(`Deploying RegistrarProxy(${registrar.address})... `)
+    verbose && console.log(`Deploying RegistrarProxy(${registrar.address})`)
+    verbose && console.log(' Initialization params:', {
+      mintPrice,
+      royalties,
+      royaltiesRecipient,
+      metaData: metaData.address,
+      owner
+    })
+    verbose && process.stdout.write('... ')
       
     const utx = await registrar.populateTransaction.initialize(
       mintPrice, 
@@ -53,7 +61,7 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     const registrarProxy = Registrar.attach(proxy.address)
   
     verbose && process.stdout.write(`RegistrarProxy.allowFactory(${nftAddressFactory.address}, true)... `)
-    await send(registrarProxy.allowFactory(nftAddressFactory.address, true))
+    await send(registrarProxy.allowFactory(nftAddressFactory.address, true, { gasLimit: 55000 }))
     verbose && console.log('✅')
   
     return {
