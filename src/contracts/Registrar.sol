@@ -49,6 +49,8 @@ contract Registrar is IERC2981Upgradeable, ERC721Upgradeable, OwnableUpgradeable
   /// @notice Initializes the registrar
   /// @dev Function is invoked by the proxy contract during main deployment
   /// @param mintPrice Price in wei to mint a new NFT address
+  /// @param royalties Sales royalties in basis points
+  /// @param royaltiesRecipient Royalties recipient address
   /// @param metaData IMetaData contract to handle metadata generation
   /// @param owner Contract's owner
   function initialize(

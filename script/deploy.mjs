@@ -1,65 +1,25 @@
 import hre from "hardhat"
 import createConfig from '../src/core/createConfig.mjs'
 import exportAbi from '../src/core/exportAbi.mjs'
-import { create2Deploy, deploy, send } from '../src/core/ethersHelpers.mjs'
+import deployContracts from "../src/core/deployContracts.mjs"
 
 import RegistrarAbi from '../artifacts/src/contracts/Registrar.sol/Registrar.json' assert { type: "json" }
 import RegistrarProxyAbi from '../artifacts/src/contracts/RegistrarProxy.sol/RegistrarProxy.json' assert { type: "json" }
 import NFTAddressFactoryAbi from '../artifacts/src/contracts/NFTAddressFactory.sol/NFTAddressFactory.json' assert { type: "json" }
 
-const CREATE2_DEPLOYER_ADDRESS = '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2'
-const SALT = hre.ethers.utils.id('0x0000000001')
-
-async function getDeployer() {
-  const Create2DeployerFactory = await hre.ethers.getContractFactory("Create2Deployer")
-
-  if (hre.network.name === 'hardhat' || hre.network.name === 'localhost')  
-    return await deploy(Create2DeployerFactory)
-  else
-    return Create2DeployerFactory.attach(CREATE2_DEPLOYER_ADDRESS)
-}
 
 async function main() {
   try {
-    // const MINT_PRICE = '10000000000000000'
-    const MINT_PRICE = '0'
-    const ROYALTIES = '500' // 5%
-    const ROYALTIES_RECIPIENT = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
-    const MetaData = await hre.ethers.getContractFactory("MetaData")
-    const Registrar = await hre.ethers.getContractFactory("Registrar")
-    const RegistrarProxy = await hre.ethers.getContractFactory("RegistrarProxy")
-    const NFTAddressFactory = await hre.ethers.getContractFactory("NFTAddressFactory")
-    const deployer = await getDeployer()
     const [owner] = await hre.ethers.getSigners()
 
-    process.stdout.write('Deploying MetaData... ')
-    const metaData = await create2Deploy(deployer, MetaData, SALT)
-    console.log(`${metaData.address} ✅`)
-
-    process.stdout.write('Deploying Registrar... ')
-    const registrar = await create2Deploy(deployer, Registrar, SALT)
-    console.log(`${registrar.address} ✅`)
-
-    process.stdout.write(`Deploying RegistrarProxy(${registrar.address})... `)
-    const utx = await registrar.populateTransaction.initialize(
-      MINT_PRICE, 
-      ROYALTIES, 
-      ROYALTIES_RECIPIENT, 
-      metaData.address, 
-      owner.address
-    )    
-    const proxy = await create2Deploy(deployer, RegistrarProxy, SALT, [registrar.address, utx.data])
-    console.log(`${proxy.address} ✅`)
-
-    process.stdout.write('Deploying NFTAddressFactory... ')
-    const nftAddressFactory = await create2Deploy(deployer, NFTAddressFactory, SALT, [proxy.address])
-    console.log(`${nftAddressFactory.address} ✅`)
-
-    const registrarProxy = Registrar.attach(proxy.address)
-
-    process.stdout.write(`RegistrarProxy.allowFactory(${nftAddressFactory.address}, true)... `)
-    await send(registrarProxy.allowFactory(nftAddressFactory.address, true))
-    console.log('✅')
+    const { registrar, proxy, nftAddressFactory } = await deployContracts({
+      salt: '0x0000000000000000000000000000000000000000000000000000000000000001',
+      mintPrice: '0',
+      royalties: '500',
+      royaltiesRecipient: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      owner: owner.address,
+      verbose: true
+    })
 
     process.stdout.write('Creating config file... ')
     createConfig({
