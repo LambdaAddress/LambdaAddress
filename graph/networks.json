@@ -1,20 +1,20 @@
 {
   "sepolia": {
     "Registrar": {
-      "address": "0x5eddF9220a2356751211FAf51fab5BF129020E12",
-      "startBlock": 3425505
+      "address": "0x4c310c3159A97a8aFFa73380D874E7F6c5774E8C",
+      "startBlock": 3852741
     }
   },
   "goerli": {
     "Registrar": {
-      "address": "0x4EC36cd860dffDB3891c776c14678eb8d3580C00",
-      "startBlock": 9228731
+      "address": "0x4c310c3159A97a8aFFa73380D874E7F6c5774E8C",
+      "startBlock": 9312892
     }
   },
   "mumbai": {
     "Registrar": {
-      "address": "0x5eddF9220a2356751211FAf51fab5BF129020E12",
-      "startBlock": 37261175
+      "address": "0x4c310c3159A97a8aFFa73380D874E7F6c5774E8C",
+      "startBlock": 37708203
     }
   }
 }
