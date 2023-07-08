@@ -11,14 +11,14 @@ contract Create3Deployer {
    * @dev Deploys a contract using solmate's `CREATE3`. The address where the
    * contract will be deployed can be known in advance via {computeAddress}.
    */
-  function deploy(uint256 value, bytes32 salt, bytes memory code) public {
-    CREATE3.deploy(salt, code, value);
+  function deploy(uint256 value, bytes32 salt, bytes memory code) external returns (address) {
+    return CREATE3.deploy(salt, code, value);
   }
 
   /**
    * @dev Returns the address where a contract will be stored if deployed via {deploy}.
    */
-  function computeAddress(bytes32 salt) public view returns (address) {
+  function computeAddress(bytes32 salt) external view returns (address) {
     return CREATE3.getDeployed(salt);
   }
 }
