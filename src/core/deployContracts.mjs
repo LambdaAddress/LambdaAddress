@@ -8,6 +8,8 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     const Registrar = await hre.ethers.getContractFactory("Registrar")
     const RegistrarProxy = await hre.ethers.getContractFactory("RegistrarProxy")
     const NFTAddressFactory = await hre.ethers.getContractFactory("NFTAddressFactory")
+
+    const SafeDeployer = await hre.ethers.getContractFactory("SafeDeployer")
     const deployer = await getCreate2Deployer(CREATE2_DEPLOYER_ADDRESS)
   
     verbose && process.stdout.write('Deploying MetaData... ')
@@ -63,9 +65,13 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     verbose && process.stdout.write(`RegistrarProxy.allowFactory(${nftAddressFactory.address}, true)... `)
     await send(registrarProxy.allowFactory(nftAddressFactory.address, true, { gasLimit: 55000 }))
     verbose && console.log('✅')
+
+    verbose && process.stdout.write('Deploying SafeDeployer... ')
+    const safeDeployer = await create2Deploy(deployer, SafeDeployer, salt, [proxy.address])
+    verbose && console.log(`${safeDeployer.address} ✅`)
   
     return {
-      registrar, proxy, nftAddressFactory, metaData
+      registrar, proxy, nftAddressFactory, metaData, safeDeployer
     }
 }
 
