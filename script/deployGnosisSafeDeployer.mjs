@@ -1,5 +1,5 @@
 import hre from "hardhat"
-import { deploy, create2Deploy } from '../src/core/ethersHelpers.mjs'
+import { create2Deploy, getCreate2Deployer } from '../src/core/ethersHelpers.mjs'
 
 const CREATE2_DEPLOYER_ADDRESS = '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2'
 const salt = '0x0000000000000000000000000000000000000000000000000000000000000001'
@@ -22,17 +22,6 @@ async function main() {
   }
 }
 
-/**
- * If running locally, deploy and return a new instance of the Create2Deployer contract,
- * otherwise return the instance at `address`.
- */
-async function getCreate2Deployer(address) {
-  const Create2DeployerFactory = await hre.ethers.getContractFactory("Create2Deployer")
 
-  if (hre.network.name === 'hardhat' || hre.network.name === 'localhost')  
-    return await deploy(Create2DeployerFactory)
-  else
-    return Create2DeployerFactory.attach(address)
-}
 
 main()

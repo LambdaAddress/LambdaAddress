@@ -45,4 +45,17 @@ async function create3Deploy(create2Deployer, factory, salt, args) {
     return factory.attach(computedContractAddress)
 }
 
-export { create2Deploy, create3Deploy, deploy, send }
+/**
+ * If running locally, deploy and return a new instance of the Create2Deployer contract,
+ * otherwise return the instance at `address`.
+ */
+async function getCreate2Deployer(address) {
+  const Create2DeployerFactory = await hre.ethers.getContractFactory("Create2Deployer")
+
+  if (hre.network.name === 'hardhat' || hre.network.name === 'localhost')  
+    return await deploy(Create2DeployerFactory)
+  else
+    return Create2DeployerFactory.attach(address)
+}
+
+export { create2Deploy, create3Deploy, deploy, getCreate2Deployer, send }
