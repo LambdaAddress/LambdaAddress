@@ -1788,7 +1788,7 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
-"@gnosis.pm/safe-contracts@^1.3.0":
+"@gnosis.pm/safe-contracts@1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-contracts/-/safe-contracts-1.3.0.tgz#316741a7690d8751a1f701538cfc9ec80866eedc"
   integrity sha512-1p+1HwGvxGUVzVkFjNzglwHrLNA67U/axP0Ct85FzzH8yhGJb4t9jDjPYocVMzLorDoWAfKicGy1akPY9jXRVw==
@@ -10114,6 +10114,11 @@ gluegun@5.1.2:
     which "2.0.2"
     yargs-parser "^21.0.0"
 
+goober@2.1.12:
+  version "2.1.12"
+  resolved "https://registry.yarnpkg.com/goober/-/goober-2.1.12.tgz#6c1645314ac9a68fe76408e1f502c63df8a39042"
+  integrity sha512-yXHAvO08FU1JgTXX6Zn6sYCUFfB/OJSX8HHjDSgerZHZmFKAb08cykp5LBw5QnmyMcZyPRMqkdyHUSSzge788Q==
+
 gopd@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/gopd/-/gopd-1.0.1.tgz#29ff76de69dac7489b7c0918a5788e56477c332c"
@@ -16068,6 +16073,13 @@ react-jazzicon@^1.0.4:
   integrity sha512-/3kWv5vtAhI18GBFoqjpxRTtL+EImuB73PAC02r/zJQ6E+PAUmoBx8edYvTCIYHwS01uFf6N3elTDqSrVPwg4w==
   dependencies:
     mersenne-twister "^1.1.0"
+
+react-multistep@^5.5.8:
+  version "5.5.8"
+  resolved "https://registry.yarnpkg.com/react-multistep/-/react-multistep-5.5.8.tgz#63a3f1248faa1234b409a2099067566ceb4bc0c5"
+  integrity sha512-+LVbaGB4481Op7Bo3uzl5eLgPnjqz4OC0gPN843njVFgM6Exgk3ZE79EIwnX940tI73rKWLn4FBASQiH/nFkDw==
+  dependencies:
+    goober "2.1.12"
 
 react-native-fetch-api@^3.0.0:
   version "3.0.0"
