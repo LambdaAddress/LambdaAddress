@@ -2,37 +2,42 @@ import styled from '@emotion/styled'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import { useWeb3React } from '@web3-react/core'
-import { useState, useContext } from 'react'
+import { useState, useContext, useMemo } from 'react'
 
 import breakpoints from '../breakpoints'
+import CustomBytecode from '../components/deployers/CustomBytecode'
 import AddressCard from '../components/AddressCard'
 import Header from '../components/Header'
 import MKBox from '../components/MKBox'
 import MKButton from '../components/MKButton'
-import Spinner, { SpinnerStatus } from '../components/Spinner'
 import { injected } from '../connectors'
 import { MainContext } from '../MainContext'
+import SafeDeployer from '../components/deployers/SafeDeployer'
 import useAddresses from '../hooks/useAddresses'
 import useEagerConnect from '../hooks/useEagerConnect'
 import useTransactionSender from '../hooks/useTransactionSender'
 
+const DeployerType = { NONE: 0, CUSTOM_BYTECODE: 1, GNOSIS_SAFE: 2 }
+
 
 export default function AddressList() {
-  const { library, account } = useWeb3React()
+  const { library, account, active } = useWeb3React()
   const { contracts, network } = useContext(MainContext)
   const { registrar } = contracts || {}
-  window.registrar = registrar
-
+  
   useEagerConnect(injected)
-
+  
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeployerModalOpen, setIsDeployerModalOpen] = useState(false)
   const [txToSend, setTxToSend] = useState()
   const [editedAddress, setEditedAddress] = useState()
   const [editedBytecode, setBytecode] = useState()
+  const [selectedDeployer, setSelectedDeployer] = useState(DeployerType.NONE)
 
+  
   const addressList = useAddresses(account, registrar, network)
   const transaction = useTransactionSender(txToSend)
-
+  
   const clearState = () => {
     setTxToSend(undefined)
     setBytecode(undefined)
@@ -50,15 +55,29 @@ export default function AddressList() {
       setBytecode(undefined)
       setEditedAddress(address)
       setIsModalOpen(true)
+      setSelectedDeployer(DeployerType.CUSTOM_BYTECODE)
       const factoryAddress = await registrar.getFactory(address.address)
       setEditedAddress({ ...address, factoryAddress })
     }, 1)
   }
 
+  const showDeployerModal = (address) => {
+    setTimeout(async () => {
+      setEditedAddress(address)
+      setIsDeployerModalOpen(true)
+    },1)
+  }
+
   const generateMenu = (address) => {
     return [
       {
-        text: 'Deploy',
+        text: 'Deploy Gnosis Safe',
+        onClick: () => {
+          showDeployerModal(address)
+        },
+      },
+      {
+        text: 'Deploy custom bytecode',
         onClick: () => {
           showDeployModal(address)
         },
@@ -70,6 +89,14 @@ export default function AddressList() {
     let registrarSign = registrar.connect(library.getSigner())
     setTxToSend(registrarSign.deploy(editedAddress.address, editedBytecode))
   }
+
+  const DeployerComponent = useMemo(() =>{
+    switch (selectedDeployer) {
+      case DeployerType.NONE: return () => <div></div>
+      case DeployerType.CUSTOM_BYTECODE: return CustomBytecode
+      case DeployerType.GNOSIS_SAFE: return SafeDeployer
+    }
+  }, [selectedDeployer])
 
   return (
     <>
@@ -90,56 +117,25 @@ export default function AddressList() {
       </AddressListPage>
       <EditBytecodeModal open={isModalOpen}>
         {editedAddress && (
-          <>
-            {editedAddress.address}
-            <Form>
-              {!transaction.status ? (
-                <>
-                  <Label>Deployment bytecode:</Label>
-                  <BytecodeInput
-                    placeholder="0x123456789a..."
-                    multiline
-                    rows={5}
-                    value={editedBytecode}
-                    onChange={(e) => setBytecode(e.target.value)}
-                  />
-                  <ButtonContainer>
-                    <DeployButton onClick={onDeployClick}>Deploy</DeployButton>
-                    <CancelButton onClick={closeDeployModal}>Cancel</CancelButton>
-                  </ButtonContainer>
-                </>
-              ) : (
-                <Spinner
-                  status={(() => {
-                    switch (transaction.status) {
-                      case 'PENDING':
-                        return SpinnerStatus.loading
-                      case 'ERROR':
-                        return SpinnerStatus.fail
-                      case 'SUCCESS':
-                        return SpinnerStatus.success
-                    }
-                  })()}
-                  style={{ margin: 'auto' }}
-                />
-              )}
-
-              {transaction.status === 'ERROR' && (
-                <ButtonContainer>
-                  <DeployButton onClick={onDeployClick}>Retry</DeployButton>
-                  <CancelButton onClick={closeDeployModal}>Cancel</CancelButton>
-                </ButtonContainer>
-              )}
-
-              {transaction.status === 'SUCCESS' && (
-                <ButtonContainer>
-                  <CancelButton onClick={closeDeployModal}>Close</CancelButton>
-                </ButtonContainer>
-              )}
-            </Form>
-          </>
+          <DeployerComponent 
+            nftAddress={editedAddress.address}
+            contracts={network.contracts} 
+            deployer={contracts?.safeDeployer}
+            registrar={registrar}
+          />
         )}
       </EditBytecodeModal>
+
+      <DeployerModal open={isDeployerModalOpen}>
+        {editedAddress && 
+          <SafeDeployer 
+            nftAddress={editedAddress.address}
+            contracts={network.contracts} 
+            deployer={contracts?.safeDeployer}
+            registrar={registrar}
+          />
+        } 
+      </DeployerModal>
     </>
   )
 }
@@ -191,6 +187,33 @@ const AddressContainer = styled.div({
   flexWrap: 'wrap',
   justifyContent: 'center',
 })
+
+const DeployerModal = styled(Stack)(({ open }) => ({
+  [`@media ${breakpoints.up.xs}`]: {
+    width: '90%',
+  },
+  [`@media ${breakpoints.up.sm}`]: {
+    width: '400px',
+  },
+  [`@media ${breakpoints.up.md}`]: {
+    width: '600px',
+  },
+  borderRadius: '20px',
+  background: 'rgba(39,25,76,0.85)',
+  boxShadow: '2px 1px 7px 0px rgb(0, 0, 0, 0.5)',
+  margin: 'auto',
+  color: 'white',
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  display: 'block',
+  height: 450,
+  zIndex: open ? 10000 : -1,
+  opacity: open ? 1 : 0,
+  transition: 'opacity 0.3s ease-out',
+  padding: 20,
+}))
 
 const EditBytecodeModal = styled(Stack)(({ open }) => ({
   [`@media ${breakpoints.up.xs}`]: {
