@@ -15,33 +15,26 @@ import { MainContext } from '../MainContext'
 import SafeDeployer from '../components/deployers/SafeDeployer'
 import useAddresses from '../hooks/useAddresses'
 import useEagerConnect from '../hooks/useEagerConnect'
-import useTransactionSender from '../hooks/useTransactionSender'
 
 const DeployerType = { NONE: 0, CUSTOM_BYTECODE: 1, GNOSIS_SAFE: 2 }
 
 
 export default function AddressList() {
-  const { library, account, active } = useWeb3React()
+  const { account, active } = useWeb3React()
   const { contracts, network } = useContext(MainContext)
   const { registrar } = contracts || {}
   
   useEagerConnect(injected)
   
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isDeployerModalOpen, setIsDeployerModalOpen] = useState(false)
-  const [txToSend, setTxToSend] = useState()
-  const [editedAddress, setEditedAddress] = useState()
-  const [editedBytecode, setBytecode] = useState()
+  const [selectedAddress, setSelectedAddress] = useState()
   const [selectedDeployer, setSelectedDeployer] = useState(DeployerType.NONE)
-
   
   const addressList = useAddresses(account, registrar, network)
-  const transaction = useTransactionSender(txToSend)
   
   const clearState = () => {
-    setTxToSend(undefined)
-    setBytecode(undefined)
-    setEditedAddress(undefined)
+    setSelectedAddress(undefined)
+    setSelectedDeployer(DeployerType.NONE)
   }
 
   const closeDeployModal = () => {
@@ -49,23 +42,13 @@ export default function AddressList() {
     setIsModalOpen(false)
   }
 
-  const showDeployModal = (address) => {
-    setTimeout(async () => {
-      setTxToSend(undefined)
-      setBytecode(undefined)
-      setEditedAddress(address)
+  const showDeployModal = async (address, deployerType) => {
+    //setTimeout(async () => {
       setIsModalOpen(true)
-      setSelectedDeployer(DeployerType.CUSTOM_BYTECODE)
+      setSelectedDeployer(deployerType)
       const factoryAddress = await registrar.getFactory(address.address)
-      setEditedAddress({ ...address, factoryAddress })
-    }, 1)
-  }
-
-  const showDeployerModal = (address) => {
-    setTimeout(async () => {
-      setEditedAddress(address)
-      setIsDeployerModalOpen(true)
-    },1)
+      setSelectedAddress({ ...address, factoryAddress })
+    //}, 1)
   }
 
   const generateMenu = (address) => {
@@ -73,30 +56,26 @@ export default function AddressList() {
       {
         text: 'Deploy Gnosis Safe',
         onClick: () => {
-          showDeployerModal(address)
+          showDeployModal(address, DeployerType.GNOSIS_SAFE)
         },
       },
       {
         text: 'Deploy custom bytecode',
         onClick: () => {
-          showDeployModal(address)
+          showDeployModal(address, DeployerType.CUSTOM_BYTECODE)
         },
       },
     ]
   }
 
-  const onDeployClick = () => {
-    let registrarSign = registrar.connect(library.getSigner())
-    setTxToSend(registrarSign.deploy(editedAddress.address, editedBytecode))
-  }
-
-  const DeployerComponent = useMemo(() =>{
+  const [ DeployerComponent, deployer ] = useMemo(() =>{
     switch (selectedDeployer) {
-      case DeployerType.NONE: return () => <div></div>
-      case DeployerType.CUSTOM_BYTECODE: return CustomBytecode
-      case DeployerType.GNOSIS_SAFE: return SafeDeployer
+      case DeployerType.NONE: return () => [<div></div>, {}]
+      case DeployerType.CUSTOM_BYTECODE: return [CustomBytecode, {}]
+      case DeployerType.GNOSIS_SAFE: return [SafeDeployer, contracts?.safeDeployer]
     }
   }, [selectedDeployer])
+
 
   return (
     <>
@@ -116,26 +95,16 @@ export default function AddressList() {
         </MainBox>
       </AddressListPage>
       <EditBytecodeModal open={isModalOpen}>
-        {editedAddress && (
+        {selectedAddress && (
           <DeployerComponent 
-            nftAddress={editedAddress.address}
+            nftAddress={selectedAddress.address}
             contracts={network.contracts} 
-            deployer={contracts?.safeDeployer}
+            deployer={deployer}
             registrar={registrar}
+            onClose={closeDeployModal}
           />
         )}
       </EditBytecodeModal>
-
-      <DeployerModal open={isDeployerModalOpen}>
-        {editedAddress && 
-          <SafeDeployer 
-            nftAddress={editedAddress.address}
-            contracts={network.contracts} 
-            deployer={contracts?.safeDeployer}
-            registrar={registrar}
-          />
-        } 
-      </DeployerModal>
     </>
   )
 }
