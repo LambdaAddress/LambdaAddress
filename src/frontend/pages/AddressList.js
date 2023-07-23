@@ -12,7 +12,7 @@ import MKBox from '../components/MKBox'
 import MKButton from '../components/MKButton'
 import { injected } from '../connectors'
 import { MainContext } from '../MainContext'
-import SafeDeployer from '../components/deployers/SafeDeployer'
+import GnosisSafeDeployer from '../components/deployers/GnosisSafeDeployer'
 import useAddresses from '../hooks/useAddresses'
 import useEagerConnect from '../hooks/useEagerConnect'
 
@@ -43,12 +43,12 @@ export default function AddressList() {
   }
 
   const showDeployModal = async (address, deployerType) => {
-    //setTimeout(async () => {
+    setImmediate(async () => {      
       setIsModalOpen(true)
       setSelectedDeployer(deployerType)
       const factoryAddress = await registrar.getFactory(address.address)
       setSelectedAddress({ ...address, factoryAddress })
-    //}, 1)
+    })
   }
 
   const generateMenu = (address) => {
@@ -68,14 +68,16 @@ export default function AddressList() {
     ]
   }
 
-  const [ DeployerComponent, deployer ] = useMemo(() =>{
+  const [ DeployerComponent, deployer ] = useMemo(() => {
+    const none = [() => <div></div>, {}]
+
     switch (selectedDeployer) {
-      case DeployerType.NONE: return () => [<div></div>, {}]
+      case DeployerType.NONE: return none
       case DeployerType.CUSTOM_BYTECODE: return [CustomBytecode, {}]
-      case DeployerType.GNOSIS_SAFE: return [SafeDeployer, contracts?.safeDeployer]
+      case DeployerType.GNOSIS_SAFE: return [GnosisSafeDeployer, contracts?.safeDeployer]
+      default: return none
     }
   }, [selectedDeployer])
-
 
   return (
     <>
