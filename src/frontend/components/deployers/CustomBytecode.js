@@ -6,13 +6,12 @@ import TextField from '@mui/material/TextField'
 import useTransactionSender from '../../hooks/useTransactionSender'
 
 
-export default function CustomBytecode({ nftAddress, contracts, deployer, registrar, onClose = () => {}, ...props }) {
+export default function CustomBytecode({ nftAddress, contracts, deployer, registrar, onClose, ...props }) {
   const [editedBytecode, setBytecode] = useState()
-  const [txToSend, setTxToSend] = useState()
-  const transaction = useTransactionSender(txToSend) 
+  const [transaction, setTransaction] = useTransactionSender() 
 
   const onDeployClick = () => {
-    setTxToSend(registrar.deploy(nftAddress, editedBytecode))
+    setTransaction(registrar.deploy(nftAddress, editedBytecode))
   }
 
   return (

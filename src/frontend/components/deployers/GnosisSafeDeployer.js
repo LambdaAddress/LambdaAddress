@@ -1,20 +1,25 @@
+import CancelButton from '../CancelButton'
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded'
 import MKButton from '../MKButton'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
+import useTransactionSender from '../../hooks/useTransactionSender'
 
 const initializer = '0xb63e800d0000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000140000000000000000000000000f48f2b2d2a534e402487b3ee7c18c33aec0fe5e400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000009cf33ca0a779171d82f33203e6601be925c7d3ea0000000000000000000000000000000000000000000000000000000000000000'
 
-export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, registrar, ...props }) {
+export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, registrar, onClose, ...props }) {
   const [owners, setOwners] = useState([''])
+  const [approvedDeployer, setApprovedDeployer] = useState('')
+  const isDeployerApproved = approvedDeployer.toLowerCase() === deployer?.address?.toLowerCase()
+  const [approveDeployerTx, setApproveDeployerTx] = useTransactionSender() 
 
   const onAddOwnerClick = () => {
     setOwners([...owners, ''])
   }
 
-  const onApproveClick = () => {
-    registrar.approveDeployer(deployer.address, nftAddress)
+  const onApproveClick = async () => {
+    setApproveDeployerTx(await registrar.approveDeployer(deployer.address, nftAddress))
   }
 
   const onDeleteOwnerClick = (ownerIndex) => {
@@ -33,8 +38,15 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
     setOwners(newOwners)
   }
 
+  useEffect(async () => {
+    console.log('deployer: ', deployer)
+    if (registrar && nftAddress) {
+      setApprovedDeployer(await registrar.getApprovedDeployer(nftAddress))
+    }
+  }, [registrar, deployer, approveDeployerTx])
+
   return (
-    <div {...props}>
+    <Main {...props}>
       {nftAddress}
       <div style={{ marginTop: 10}}>
         {owners.map((owner, i) => 
@@ -45,17 +57,19 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
         )}
       </div>
       <MKButton onClick={onAddOwnerClick}>Add owner</MKButton>
-      <div>
-        <MKButton onClick={onApproveClick}>Approve deployer</MKButton><br />
-        <MKButton onClick={onDeployClick}>Deploy</MKButton>
-      </div>
-    </div>
+      <ButtonsContainer>
+        {isDeployerApproved
+          ? <MKButton onClick={onDeployClick}>Deploy</MKButton>
+          : <MKButton onClick={onApproveClick}>Approve deployer</MKButton>
+        }        
+        <CancelButton onClick={onClose}>Cancel</CancelButton>
+      </ButtonsContainer>
+    </Main>
   )
 }
 
-const Label = styled.div({
-  color: 'white',
-  fontSize: '1rem',
+const Main = styled.div({
+  marginBottom: 30
 })
 
 const Input = styled(TextField)({
@@ -83,4 +97,21 @@ const DeleteIcon = styled(DeleteForeverRoundedIcon)({
   cursor: 'pointer',
   marginTop: 4,
   display: 'inline-block'
+})
+
+const ButtonsContainer = styled.div({
+  marginTop: 20,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  position: 'absolute',
+  bottom: 24,
+  left: 0,
+  right: 0,
+
+  '& button': {
+    margin: '0 4px',
+    minWidth: 160
+  }
 })
