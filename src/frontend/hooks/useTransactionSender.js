@@ -6,26 +6,33 @@ const STATUS = {
   ERROR: 'ERROR',
 }
 
-export default function useTransactionSender(transaction) {
+export default function useTransactionSender() {
   const [state, setState] = useState({
     status: null,
     response: null,
     receipt: null,
     error: null,
+    transaction: null
   })
+
+  const setTransaction = transaction => {
+    setState({
+      transaction
+    })
+  }
 
   useEffect(() => {
     const fn = async () => {
-      if (!transaction) {
+      if (!state.transaction) {
         setState({})
         return
       }
 
       setState({ status: STATUS.PENDING })
       try {
-        const response = await transaction
+        const response = await state.transaction
         setState({
-          response: await transaction,
+          response: await state.transaction,
         })
 
         const receipt = await response.wait()
@@ -42,7 +49,7 @@ export default function useTransactionSender(transaction) {
     }
 
     fn()
-  }, [transaction])
+  }, [state.transaction])
 
-  return state
+  return [state, setTransaction]
 }
