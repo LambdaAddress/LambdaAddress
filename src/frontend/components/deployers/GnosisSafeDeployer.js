@@ -39,7 +39,7 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
       <div style={{ marginTop: 10}}>
         {owners.map((owner, i) => 
           <OwnerLine>
-          <Input key={i} label={`Owner #${i+1}`} value={owner} onChange={e => onOwnerValueChange(i, e)} />
+          <AddressInput key={i} label={`Owner #${i+1}`} value={owner} onChange={e => onOwnerValueChange(i, e)} />
             {i > 0 && <DeleteIcon onClick={() => onDeleteOwnerClick(i)} fontSize='large'/>}
           </OwnerLine>
         )}
@@ -59,7 +59,6 @@ const Label = styled.div({
 })
 
 const Input = styled(TextField)({
-
   '& input': {
     borderRadius: '8px',
     color: 'white',
@@ -68,16 +67,20 @@ const Input = styled(TextField)({
   '& label': {
     color: 'white',
   }
+})
 
-
+const AddressInput = styled(Input)({
+  width: 400
 })
 
 const OwnerLine = styled.div({
   marginTop: 10,
-  marginBottom: 4
+  marginBottom: 16,
+  height: 42
 })
 
 const DeleteIcon = styled(DeleteForeverRoundedIcon)({
   cursor: 'pointer',
-  marginTop: 4
+  marginTop: 4,
+  display: 'inline-block'
 })
