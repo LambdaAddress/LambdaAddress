@@ -65,8 +65,8 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
         )}
       </div>
       <MKButton onClick={onAddOwnerClick}>Add owner</MKButton>
-      <br /><br />
-      <FormControl fullWidth>
+
+      <SelectForm>
         <InputLabel>Threshold</InputLabel>
         <Select
             value={threshold}
@@ -77,7 +77,7 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
               <MenuItem key={`threshold${i+1}`} value={i+1}>{i + 1}</MenuItem>            
             )}
         </Select>
-      </FormControl>
+      </SelectForm>
       <ButtonsContainer>
         {isDeployerApproved
           ? <MKButton onClick={onDeployClick}>Deploy</MKButton>
@@ -90,7 +90,7 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
 }
 
 const Main = styled.div({
-  marginBottom: 30
+  marginBottom: 68
 })
 
 const Input = styled(TextField)({
@@ -102,6 +102,12 @@ const Input = styled(TextField)({
   '& label': {
     color: 'white',
   }
+})
+
+const SelectForm = styled(FormControl)({
+  display: 'flex',
+  width: 200,
+  marginTop: 20
 })
 
 const AddressInput = styled(Input)({
