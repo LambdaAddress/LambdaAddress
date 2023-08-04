@@ -1,18 +1,24 @@
-import CancelButton from '../CancelButton'
+import config from './config'
+import CancelButton from '../../CancelButton'
+import { ethers } from 'ethers'
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded'
 import MenuItem from '@mui/material/MenuItem'
-import MKButton from '../MKButton'
+import MKButton from '../../MKButton'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import { useEffect, useState } from 'react'
-import useTransactionSender from '../../hooks/useTransactionSender'
+import useTransactionSender from '../../../hooks/useTransactionSender'
+import GnosisSafeAbi from './GnosisSafeAbi'
+
+const gnosisSafe = new ethers.utils.Interface(GnosisSafeAbi.abi)
+const setupFunctionFragment = gnosisSafe.getFunction('0xb63e800d') 
 
 const initializer = '0xb63e800d0000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000140000000000000000000000000f48f2b2d2a534e402487b3ee7c18c33aec0fe5e400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000009cf33ca0a779171d82f33203e6601be925c7d3ea0000000000000000000000000000000000000000000000000000000000000000'
 
-export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, registrar, onClose, ...props }) {
+export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, registrar, network, onClose, ...props }) {
   const [owners, setOwners] = useState([''])
   const [threshold, setThreshold] = useState('')
   const [approvedDeployer, setApprovedDeployer] = useState('')
@@ -34,7 +40,17 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
   }
 
   const onDeployClick = () => {
-    deployer.deploy(nftAddress, contracts.GnosisSafeImpl, initializer)
+    const calldata = gnosisSafe.encodeFunctionData(setupFunctionFragment, [
+      owners, 
+      threshold, 
+      '0x0000000000000000000000000000000000000000',
+      '0x',
+      config.contracts[network.chainId.toString()]['GnosisSafeImplementation'],
+      '0x0000000000000000000000000000000000000000',
+      '0',
+      '0x0000000000000000000000000000000000000000'
+      ])
+    deployer.deploy(nftAddress, contracts.GnosisSafeImpl, calldata)
   }
 
   const onOwnerValueChange = (ownerIndex, event) => {
@@ -48,6 +64,8 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
   }
 
   useEffect(async () => {
+    if (network)
+      console.log('network: ', config.contracts[network.chainId.toString()]['GnosisSafeImplementation'])
     if (registrar && nftAddress) {
       setApprovedDeployer(await registrar.getApprovedDeployer(nftAddress))
     }
