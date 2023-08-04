@@ -12,12 +12,11 @@ import MKBox from '../components/MKBox'
 import MKButton from '../components/MKButton'
 import { injected } from '../connectors'
 import { MainContext } from '../MainContext'
-import GnosisSafeDeployer from '../components/deployers/GnosisSafeDeployer'
+import GnosisSafeDeployer from '../components/deployers/GnosisSafeDeployer/GnosisSafeDeployer'
 import useAddresses from '../hooks/useAddresses'
 import useEagerConnect from '../hooks/useEagerConnect'
 
 const DeployerType = { NONE: 0, CUSTOM_BYTECODE: 1, GNOSIS_SAFE: 2 }
-
 
 export default function AddressList() {
   const { account, active } = useWeb3React()
@@ -103,6 +102,7 @@ export default function AddressList() {
             contracts={network.contracts} 
             deployer={deployer}
             registrar={registrar}
+            network={network}
             onClose={closeDeployModal}
           />
         )}
@@ -159,32 +159,6 @@ const AddressContainer = styled.div({
   justifyContent: 'center',
 })
 
-const DeployerModal = styled(Stack)(({ open }) => ({
-  [`@media ${breakpoints.up.xs}`]: {
-    width: '90%',
-  },
-  [`@media ${breakpoints.up.sm}`]: {
-    width: '400px',
-  },
-  [`@media ${breakpoints.up.md}`]: {
-    width: '600px',
-  },
-  borderRadius: '20px',
-  background: 'rgba(39,25,76,0.85)',
-  boxShadow: '2px 1px 7px 0px rgb(0, 0, 0, 0.5)',
-  margin: 'auto',
-  color: 'white',
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  display: 'block',
-  height: 450,
-  zIndex: open ? 10000 : -1,
-  opacity: open ? 1 : 0,
-  transition: 'opacity 0.3s ease-out',
-  padding: 20,
-}))
 
 const EditBytecodeModal = styled(Stack)(({ open }) => ({
   [`@media ${breakpoints.up.xs}`]: {
