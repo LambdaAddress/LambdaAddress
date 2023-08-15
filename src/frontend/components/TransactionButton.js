@@ -17,14 +17,18 @@ export default function TransactionButton({ transaction, children, ...props }) {
   }, [transaction, transaction?.status])
 
   return (
-    <MKButton {...props}>
+    <Main status={status} disabled={status === SpinnerStatus.loading ? true : false} {...props}>
       {children}
       <Status>
         { transaction?.status && <Spinner size={2} status={status} /> }
       </Status>
-    </MKButton>
+    </Main>
   )
 }
+
+const Main = styled(MKButton)(({ status }) => ({
+  cursor: status === SpinnerStatus.loading ? 'progress' : 'pointer'
+}))
 
 const Status = styled.div({
   display: 'inline-block',
