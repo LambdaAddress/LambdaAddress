@@ -154,7 +154,8 @@ const SelectForm = styled(FormControl)({
 })
 
 const AddressInput = styled(Input)({
-  width: 400
+  width: 'calc(100% - 40px)',
+  maxWidth: 400
 })
 
 const OwnerLine = styled.div({
