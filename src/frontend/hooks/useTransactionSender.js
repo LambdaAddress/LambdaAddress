@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const STATUS = {
+export const TransactionStatus = {
   PENDING_USER: 'PENDING_USER',
   PENDING: 'PENDING',
   SUCCESS: 'SUCCESS',
@@ -30,25 +30,25 @@ export default function useTransactionSender() {
         return
       }
 
-      setState({ ...state, status: STATUS.PENDING_USER })
+      setState({ ...state, status: TransactionStatus.PENDING_USER })
       try {
         const response = await state.transaction
         setState({
           ...state,
-          status: STATUS.PENDING
+          status: TransactionStatus.PENDING
         })
 
         const receipt = await response.wait()
         setState({
           ...state,
           receipt,
-          status: STATUS.SUCCESS,
+          status: TransactionStatus.SUCCESS,
         })
       } catch (error) {
         setState({
           ...state,
           error,
-          status: STATUS.ERROR,
+          status: TransactionStatus.ERROR,
         })
       }
   }, [state.transaction])

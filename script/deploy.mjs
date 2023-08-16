@@ -18,7 +18,7 @@ async function main() {
       salt: '0x0000000000000000000000000000000000000000000000000000000000000001',
       mintPrice: '0',
       royalties: '500',
-      royaltiesRecipient: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      royaltiesRecipient: owner.address,
       owner: owner.address,
       verbose: true
     })

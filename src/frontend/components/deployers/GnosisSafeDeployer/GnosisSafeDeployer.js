@@ -7,10 +7,12 @@ import MKButton from '../../MKButton'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
+import Spinner, { SpinnerStatus } from '../../Spinner'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
-import { useEffect, useState } from 'react'
-import useTransactionSender from '../../../hooks/useTransactionSender'
+import TransactionButton from '../../TransactionButton'
+import { useEffect, useMemo, useState } from 'react'
+import useTransactionSender, { TransactionStatus } from '../../../hooks/useTransactionSender'
 import GnosisSafeAbi from './GnosisSafeAbi'
 
 const gnosisSafe = new ethers.utils.Interface(GnosisSafeAbi.abi)
@@ -22,13 +24,22 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
   const [approvedDeployer, setApprovedDeployer] = useState('')
   const isDeployerApproved = approvedDeployer.toLowerCase() === deployer?.address?.toLowerCase()
   const [approveDeployerTx, setApproveDeployerTx] = useTransactionSender() 
+  const [deployTx, setDeployTx] = useTransactionSender()
+  const deployTxStatus = useMemo(() => {
+    switch(deployTx?.status) {
+      case 'PENDING_USER': return SpinnerStatus.loading
+      case 'PENDING': return SpinnerStatus.loading
+      case 'SUCCESS': return SpinnerStatus.success
+      case 'ERROR': return SpinnerStatus.fail
+    }
+  }, [deployTx, deployTx?.status])
 
   const onAddOwnerClick = () => {
     setOwners([...owners, ''])
   }
 
   const onApproveClick = async () => {
-    setApproveDeployerTx(await registrar.approveDeployer(deployer.address, nftAddress))
+    setApproveDeployerTx(registrar.approveDeployer(deployer.address, nftAddress))
   }
 
   const onDeleteOwnerClick = (ownerIndex) => {
@@ -48,7 +59,7 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
       '0',
       '0x0000000000000000000000000000000000000000'
     ])
-    deployer.deploy(nftAddress, contracts.GnosisSafeImpl, calldata)
+    setDeployTx(deployer.deploy(nftAddress, contracts.GnosisSafeImpl, calldata))
   }
 
   const onOwnerValueChange = (ownerIndex, event) => {
@@ -62,8 +73,6 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
   }
 
   useEffect(async () => {
-    if (network)
-      console.log('network: ', config.contracts[network.chainId.toString()]['GnosisSafeImplementation'])
     if (registrar && nftAddress) {
       setApprovedDeployer(await registrar.getApprovedDeployer(nftAddress))
     }
@@ -72,34 +81,46 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
   return (
     <Main {...props}>
       {nftAddress}
-      <div style={{ marginTop: 10}}>
-        {owners.map((owner, i) => 
-          <OwnerLine key={`owner${i}`}>
-            <AddressInput  label={`Owner #${i+1}`} value={owner} onChange={e => onOwnerValueChange(i, e)} />
-            {i > 0 && <DeleteIcon onClick={() => onDeleteOwnerClick(i)} fontSize='large'/>}
-          </OwnerLine>
-        )}
-      </div>
-      <MKButton onClick={onAddOwnerClick}>Add owner</MKButton>
+      {deployTx?.status
+        ? <Loading status={deployTxStatus} />
+        : <>
+            <div style={{ marginTop: 10}}>
+              {owners.map((owner, i) => 
+                <OwnerLine key={`owner${i}`}>
+                  <AddressInput  label={`Owner #${i+1}`} value={owner} onChange={e => onOwnerValueChange(i, e)} />
+                  {i > 0 && <DeleteIcon onClick={() => onDeleteOwnerClick(i)} fontSize='large'/>}
+                </OwnerLine>
+              )}
+            </div>
+            <MKButton onClick={onAddOwnerClick}>Add owner</MKButton>
 
-      <SelectForm>
-        <InputLabel>Threshold</InputLabel>
-        <Select
-            value={threshold}
-            label="Threshold"
-            onChange={onThresholdChange}
-          >
-            {owners.map((owner, i) => 
-              <MenuItem key={`threshold${i+1}`} value={i+1}>{i + 1}</MenuItem>            
-            )}
-        </Select>
-      </SelectForm>
+            <SelectForm>
+              <InputLabel>Threshold</InputLabel>
+              <Select
+                  value={threshold}
+                  label="Threshold"
+                  onChange={onThresholdChange}
+                >
+                  {owners.map((owner, i) => 
+                    <MenuItem key={`threshold${i+1}`} value={i+1}>{i + 1}</MenuItem>            
+                  )}
+              </Select>
+            </SelectForm>
+          </>
+      }
       <ButtonsContainer>
-        {isDeployerApproved
-          ? <MKButton onClick={onDeployClick}>Deploy</MKButton>
-          : <MKButton onClick={onApproveClick}>Approve deployer</MKButton>
-        }        
-        <CancelButton onClick={onClose}>Cancel</CancelButton>
+        {deployTxStatus !== SpinnerStatus.success &&
+          <>
+          {isDeployerApproved
+            ? <MKButton onClick={onDeployClick}>Deploy</MKButton>
+            : <TransactionButton transaction={approveDeployerTx} onClick={onApproveClick}>Approve deployer</TransactionButton>
+          } 
+          </> 
+        }
+        {deployTxStatus === SpinnerStatus.success
+          ? <MKButton onClick={onClose}>Close</MKButton>
+          : <CancelButton onClick={onClose}>Cancel</CancelButton>
+        }      
       </ButtonsContainer>
     </Main>
   )
@@ -107,6 +128,12 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
 
 const Main = styled.div({
   marginBottom: 68
+})
+
+const Loading = styled(Spinner)({
+  display: 'block',
+  margin: 'auto',
+  marginTop: 40
 })
 
 const Input = styled(TextField)({
