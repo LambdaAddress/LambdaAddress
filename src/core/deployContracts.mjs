@@ -1,5 +1,5 @@
 import hre from "hardhat"
-import { create2Deploy, create3Deploy, deploy, send } from './ethersHelpers.mjs'
+import { create2Deploy, create3Deploy, deploy, getCreate2Deployer, send } from './ethersHelpers.mjs'
 
 const CREATE2_DEPLOYER_ADDRESS = '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2'
 
@@ -8,6 +8,8 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     const Registrar = await hre.ethers.getContractFactory("Registrar")
     const RegistrarProxy = await hre.ethers.getContractFactory("RegistrarProxy")
     const NFTAddressFactory = await hre.ethers.getContractFactory("NFTAddressFactory")
+
+    const SafeDeployer = await hre.ethers.getContractFactory("SafeDeployer")
     const deployer = await getCreate2Deployer(CREATE2_DEPLOYER_ADDRESS)
   
     verbose && process.stdout.write('Deploying MetaData... ')
@@ -63,22 +65,12 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     verbose && process.stdout.write(`RegistrarProxy.allowFactory(${nftAddressFactory.address}, true)... `)
     await send(registrarProxy.allowFactory(nftAddressFactory.address, true, { gasLimit: 55000 }))
     verbose && console.log('✅')
+
+    verbose && process.stdout.write('Deploying SafeDeployer... ')
+    const safeDeployer = await create2Deploy(deployer, SafeDeployer, salt, [proxy.address])
+    verbose && console.log(`${safeDeployer.address} ✅`)
   
     return {
-      registrar, proxy, nftAddressFactory, metaData
+      registrar, proxy, nftAddressFactory, metaData, safeDeployer
     }
 }
-
-/**
- * If running locally, deploy and return a new instance of the Create2Deployer contract,
- * otherwise return the instance at `address`.
- */
-async function getCreate2Deployer(address) {
-    const Create2DeployerFactory = await hre.ethers.getContractFactory("Create2Deployer")
-  
-    if (hre.network.name === 'hardhat' || hre.network.name === 'localhost')  
-      return await deploy(Create2DeployerFactory)
-    else
-      return Create2DeployerFactory.attach(address)
-}
-  

@@ -23,6 +23,7 @@
     "contracts:newMetadata:mumbai": "hardhat run script/newMetadata.mjs --network mumbai",
     "contracts:deploy:arbitrum_goerli": "hardhat run script/deploy.mjs --network arbitrum_goerli",
     "contracts:deploy:alpha": "hardhat run script/deployAlpha.mjs",
+    "contracts:deployGnosisSafeDeployer": "hardhat run script/deployGnosisSafeDeployer.mjs",
     "core:test": "hardhat test test/core.test.mjs",
     "integration:test": "hardhat test test/integration.test.mjs",
     "frontend:start:mainnet": "export REACT_APP_ETH_ENV=mainnet && yarn frontend:build:workerLogic && react-scripts start",
@@ -39,7 +40,6 @@
     "graph:deploy:goerli": "graph deploy lambdaaddress-goerli graph/subgraph.goerli.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
     "graph:deploy:mumbai": "graph deploy lambdaaddress-mumbai graph/subgraph.mumbai.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
     "graph:deploy:optimism-goerli": "graph deploy lambdaaddress-optimism-goerli graph/subgraph.optimism-goerli.yaml --studio --network-file=graph/networks.json --output-dir=graph/build"
-
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
@@ -74,6 +74,7 @@
     "@emotion/cache": "11.4.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@gnosis.pm/safe-contracts": "1.3.0",
     "@graphprotocol/graph-cli": "^0.50.1",
     "@graphprotocol/graph-ts": "^0.30.0",
     "@mui/icons-material": "5.2.0",

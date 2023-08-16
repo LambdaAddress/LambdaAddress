@@ -6,6 +6,15 @@ const { transparent } = colors
 export default {
   styleOverrides: {
     select: {
+      color: 'white',
+      backgroundColor: 'rgba(255, 255, 255, 0.25)'
+    },
+
+    icon: {
+      fill: 'white',
+    }
+    /*
+    select: {
       display: 'grid',
       alignItems: 'center',
       padding: `0 ${pxToRem(12)} !important`,
@@ -24,6 +33,6 @@ export default {
 
     icon: {
       display: 'none',
-    },
+    },*/
   },
 }

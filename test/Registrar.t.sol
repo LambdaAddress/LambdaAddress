@@ -41,7 +41,6 @@ contract RegistrarTest is Test {
     registrar = Registrar(address(proxy));
     factory = new NFTAddressFactory(registrar);
 
-    //registrar.initialize(MINT_PRICE, _ROYALTIES, payable(address(this)), metaData);
     registrar.allowFactory(factory, true);
   }
 

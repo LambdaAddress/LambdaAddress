@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 import { useState, createContext, useEffect } from 'react'
 import RegistrarAbi from '../abi/Registrar'
+import SafeDeployerAbi from '../abi/SafeDeployer'
 import { useWeb3React } from '@web3-react/core'
 import { getNetworkInfo, isChainIdSupported } from '../config/index'
 
@@ -20,7 +21,8 @@ export const MainContextProvider = ({ children }) => {
         const networkInfo = getNetworkInfo(chainId)
         setContracts({
           registrar: new ethers.Contract(networkInfo.contracts.Registrar, RegistrarAbi.abi, library.getSigner()),
-          factories: []
+          factories: [],
+          safeDeployer: new ethers.Contract(networkInfo.contracts.SafeDeployer, SafeDeployerAbi.abi, library.getSigner()),
         })
         setNetwork(networkInfo) 
       }

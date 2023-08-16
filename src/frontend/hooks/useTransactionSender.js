@@ -1,48 +1,57 @@
 import { useState, useEffect } from 'react'
 
-const STATUS = {
+export const TransactionStatus = {
+  PENDING_USER: 'PENDING_USER',
   PENDING: 'PENDING',
   SUCCESS: 'SUCCESS',
   ERROR: 'ERROR',
 }
 
-export default function useTransactionSender(transaction) {
-  const [state, setState] = useState({
+export default function useTransactionSender() {
+  const DEFAULT_STATE = {
     status: null,
-    response: null,
     receipt: null,
     error: null,
-  })
+    transaction: null
+  }
 
-  useEffect(() => {
-    const fn = async () => {
-      if (!transaction) {
-        setState({})
+  const [state, setState] = useState(DEFAULT_STATE)
+
+  const setTransaction = transaction => {
+    setState({
+      ...state,
+      transaction
+    })
+  }
+
+  useEffect(async () => {
+      if (!state.transaction) {
+        setState(DEFAULT_STATE)
         return
       }
 
-      setState({ status: STATUS.PENDING })
+      setState({ ...state, status: TransactionStatus.PENDING_USER })
       try {
-        const response = await transaction
+        const response = await state.transaction
         setState({
-          response: await transaction,
+          ...state,
+          status: TransactionStatus.PENDING
         })
 
         const receipt = await response.wait()
         setState({
+          ...state,
           receipt,
-          status: STATUS.SUCCESS,
+          status: TransactionStatus.SUCCESS,
         })
       } catch (error) {
         setState({
+          ...state,
           error,
-          status: STATUS.ERROR,
+          status: TransactionStatus.ERROR,
         })
       }
-    }
+  }, [state.transaction])
 
-    fn()
-  }, [transaction])
-
-  return state
+  return [state, setTransaction]
 }

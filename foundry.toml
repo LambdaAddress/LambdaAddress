@@ -10,6 +10,7 @@ remappings = [
     'eth-gas-reporter/=node_modules/eth-gas-reporter/',
     'hardhat/=node_modules/hardhat/',
     'solmate/=node_modules/solmate/',
+    '@gnosis.pm/=node_modules/@gnosis.pm/',
 ]
 [fuzz]
 runs = 1000
