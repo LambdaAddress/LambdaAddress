@@ -13,6 +13,7 @@ import MKButton from '../components/MKButton'
 import { injected } from '../connectors'
 import { MainContext } from '../MainContext'
 import GnosisSafeDeployer from '../components/deployers/GnosisSafeDeployer/GnosisSafeDeployer'
+import AmbireDeployer from '../components/deployers/AmbireDeployer/AmbireDeployer'
 import useAddresses from '../hooks/useAddresses'
 import useEagerConnect from '../hooks/useEagerConnect'
 
@@ -80,6 +81,7 @@ export default function AddressList() {
       case DeployerType.NONE: return none
       case DeployerType.CUSTOM_BYTECODE: return [CustomBytecode, {}]
       case DeployerType.GNOSIS_SAFE: return [GnosisSafeDeployer, contracts?.safeDeployer]
+      case DeployerType.AMBIRE: return [AmbireDeployer, contracts?.safeDeployer]
       default: return none
     }
   }, [selectedDeployer])
