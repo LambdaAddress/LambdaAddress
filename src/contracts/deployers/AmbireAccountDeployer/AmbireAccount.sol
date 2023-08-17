@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: agpl-3.0
+// Based on https://github.com/AmbireTech/wallet/blob/main/contracts/AmbireAccount.sol
 pragma solidity ^0.8.7;
 
 interface AmbireAccount {
