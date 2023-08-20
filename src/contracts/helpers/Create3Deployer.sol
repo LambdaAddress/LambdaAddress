@@ -14,7 +14,8 @@ contract Create3Deployer {
    * contract will be deployed can be known in advance via {computeAddress}.
    */
   function deploy(uint256 value, bytes32 salt, bytes memory code) external returns (address) {
-    address deployed = CREATE3.deploy(salt, code, value);
+    bytes32 computedSalt = keccak256(abi.encodePacked(msg.sender, salt));
+    address deployed = CREATE3.deploy(computedSalt, code, value);
     emit Deploy(msg.sender, salt, deployed);
     return deployed;
   }
@@ -23,6 +24,7 @@ contract Create3Deployer {
    * @dev Returns the address where a contract will be stored if deployed via {deploy}.
    */
   function computeAddress(bytes32 salt) external view returns (address) {
-    return CREATE3.getDeployed(salt);
+    bytes32 computedSalt = keccak256(abi.encodePacked(msg.sender, salt));
+    return CREATE3.getDeployed(computedSalt);
   }
 }
