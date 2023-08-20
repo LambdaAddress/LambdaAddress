@@ -7,12 +7,16 @@ import {CREATE3} from "solmate/src/utils/CREATE3.sol";
  * @title CREATE3 Deployer Smart Contract
  */
 contract Create3Deployer {
+  event Deploy(address indexed sender, bytes32 salt, address deployed);
+
   /**
    * @dev Deploys a contract using solmate's `CREATE3`. The address where the
    * contract will be deployed can be known in advance via {computeAddress}.
    */
   function deploy(uint256 value, bytes32 salt, bytes memory code) external returns (address) {
-    return CREATE3.deploy(salt, code, value);
+    address deployed = CREATE3.deploy(salt, code, value);
+    emit Deploy(msg.sender, salt, deployed);
+    return deployed;
   }
 
   /**
