@@ -13,10 +13,11 @@ import MKButton from '../components/MKButton'
 import { injected } from '../connectors'
 import { MainContext } from '../MainContext'
 import GnosisSafeDeployer from '../components/deployers/GnosisSafeDeployer/GnosisSafeDeployer'
+import AmbireDeployer from '../components/deployers/AmbireDeployer/AmbireDeployer'
 import useAddresses from '../hooks/useAddresses'
 import useEagerConnect from '../hooks/useEagerConnect'
 
-const DeployerType = { NONE: 0, CUSTOM_BYTECODE: 1, GNOSIS_SAFE: 2 }
+const DeployerType = { NONE: 0, CUSTOM_BYTECODE: 1, GNOSIS_SAFE: 2, AMBIRE: 3 }
 
 export default function AddressList() {
   const { account, active } = useWeb3React()
@@ -53,6 +54,12 @@ export default function AddressList() {
   const generateMenu = (address) => {
     return [
       {
+        text: 'Deploy an Ambire Wallet',
+        onClick: () => {
+          showDeployModal(address, DeployerType.AMBIRE)
+        },
+      },
+      {
         text: 'Deploy Gnosis Safe',
         onClick: () => {
           showDeployModal(address, DeployerType.GNOSIS_SAFE)
@@ -63,7 +70,7 @@ export default function AddressList() {
         onClick: () => {
           showDeployModal(address, DeployerType.CUSTOM_BYTECODE)
         },
-      },
+      }
     ]
   }
 
@@ -74,6 +81,7 @@ export default function AddressList() {
       case DeployerType.NONE: return none
       case DeployerType.CUSTOM_BYTECODE: return [CustomBytecode, {}]
       case DeployerType.GNOSIS_SAFE: return [GnosisSafeDeployer, contracts?.safeDeployer]
+      case DeployerType.AMBIRE: return [AmbireDeployer, contracts?.safeDeployer]
       default: return none
     }
   }, [selectedDeployer])
