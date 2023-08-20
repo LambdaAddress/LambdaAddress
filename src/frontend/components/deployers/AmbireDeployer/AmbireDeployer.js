@@ -8,10 +8,12 @@ import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import { useMemo, useState } from 'react'
 import useTransactionSender from '../../../hooks/useTransactionSender'
+import { useWeb3React } from '@web3-react/core'
 
 
 export default function AmbireDeployer({ nftAddress, contracts, deployer, registrar, network, onClose, ...props }) {
-  const [owners, setOwners] = useState([''])
+  const { account } = useWeb3React()
+  const [owners, setOwners] = useState([account])
   const [deployTx, setDeployTx] = useTransactionSender()
   const deployTxStatus = useMemo(() => {
     switch(deployTx?.status) {
