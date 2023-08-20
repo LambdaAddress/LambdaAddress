@@ -1,26 +1,17 @@
 import config from './config'
 import CancelButton from '../../CancelButton'
-import { ethers } from 'ethers'
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded'
 import { getProxyDeployBytecode } from './IdentityProxyDeploy'
-import MenuItem from '@mui/material/MenuItem'
 import MKButton from '../../MKButton'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
 import Spinner, { SpinnerStatus } from '../../Spinner'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
-import TransactionButton from '../../TransactionButton'
-import { useEffect, useMemo, useState } from 'react'
-import useTransactionSender, { TransactionStatus } from '../../../hooks/useTransactionSender'
+import { useMemo, useState } from 'react'
+import useTransactionSender from '../../../hooks/useTransactionSender'
 
 
 export default function AmbireDeployer({ nftAddress, contracts, deployer, registrar, network, onClose, ...props }) {
   const [owners, setOwners] = useState([''])
-  const [approvedDeployer, setApprovedDeployer] = useState('')
-  const isDeployerApproved = approvedDeployer.toLowerCase() === deployer?.address?.toLowerCase()
-  const [approveDeployerTx, setApproveDeployerTx] = useTransactionSender() 
   const [deployTx, setDeployTx] = useTransactionSender()
   const deployTxStatus = useMemo(() => {
     switch(deployTx?.status) {
@@ -35,10 +26,6 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
     setOwners([...owners, ''])
   }
 
-  const onApproveClick = async () => {
-    setApproveDeployerTx(registrar.approveDeployer(deployer.address, nftAddress))
-  }
-
   const onDeleteOwnerClick = (ownerIndex) => {
     const newOwners = [...owners]
     newOwners.splice(ownerIndex, 1)
@@ -46,7 +33,10 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
   }
 
   const onDeployClick = () => {
-    //setDeployTx(deployer.deploy(nftAddress, contracts.GnosisSafeImpl, calldata))
+    const privLevels = owners.map(owner => [owner, '0x0000000000000000000000000000000000000000000000000000000000000001'])
+    const implementation = config.contracts[network.chainId.toString()]['AmbireAccountImplementation']
+    const calldata = getProxyDeployBytecode(implementation, privLevels)
+    setDeployTx(registrar.deploy(nftAddress, calldata))
   }
 
   const onOwnerValueChange = (ownerIndex, event) => {
@@ -55,12 +45,6 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
     setOwners(newOwners)
   }
 
-  useEffect(async () => {
-    window.getProxyDeployBytecode = getProxyDeployBytecode
-    if (registrar && nftAddress) {
-      setApprovedDeployer(await registrar.getApprovedDeployer(nftAddress))
-    }
-  }, [registrar, deployer, approveDeployerTx])
 
   return (
     <Main {...props}>
@@ -80,18 +64,13 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
           </>
       }
       <ButtonsContainer>
-        {deployTxStatus !== SpinnerStatus.success &&
-          <>
-          {isDeployerApproved
-            ? <MKButton onClick={onDeployClick}>Deploy</MKButton>
-            : <TransactionButton transaction={approveDeployerTx} onClick={onApproveClick}>Approve deployer</TransactionButton>
-          } 
-          </> 
-        }
-        {deployTxStatus === SpinnerStatus.success
-          ? <MKButton onClick={onClose}>Close</MKButton>
-          : <CancelButton onClick={onClose}>Cancel</CancelButton>
-        }      
+        {deployTxStatus !== SpinnerStatus.success 
+          ? <>
+              <MKButton onClick={onDeployClick}>Deploy</MKButton>
+              <CancelButton onClick={onClose}>Cancel</CancelButton> 
+            </>
+          : <MKButton onClick={onClose}>Close</MKButton>
+        }   
       </ButtonsContainer>
     </Main>
   )
