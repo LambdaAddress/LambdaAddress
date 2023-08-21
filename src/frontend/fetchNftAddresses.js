@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 import { createClient, cacheExchange, fetchExchange } from 'urql'
 
+// This function doesn't support all the fields when running locally (without subgraphs)
 export default async function fetchNftAddresses(owner, registrarImpl, network) {
   return network?.graphUrl !== undefined
     ? fetchNftAddressesFromGraph(owner, network)
@@ -16,6 +17,7 @@ async function fetchNftAddressesFromGraph(owner, network) {
         owner
         mintTime
         tokenURI
+        isDeployed
       }
     }`
 
@@ -34,6 +36,7 @@ function convertToAddress(event) {
   return {
     address: ethers.utils.hexlify(event.args.tokenId),
     owner: event.args.to,
+    isDeployed: false
   }
 }
 
