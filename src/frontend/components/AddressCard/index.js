@@ -5,6 +5,7 @@ import styled from '@emotion/styled'
 import breakpoints from '../../breakpoints'
 import MenuIcon from '../../images/menu-icon.svg'
 import AddressCardSvg from '../AddressCardSvg'
+import Spinner, { SpinnerStatus } from '../Spinner'
 
 export default function AddressCard({ address, menu, ...attr }) {
   const menuButton = useRef(null)
@@ -22,10 +23,10 @@ export default function AddressCard({ address, menu, ...attr }) {
         address={address}
         highlightAddress
       />
+      { address?.isDeployed && <DeployedCheckmark /> }
       <MenuIconStyled src={MenuIcon} onClick={handleMenuClick} ref={menuButton} />
       {menu && (
         <Menu
-          id="basic-menu"
           anchorEl={menuButton.current}
           open={open}
           onClose={() => handleMenuClose()}
@@ -94,6 +95,17 @@ const AddressSvg = styled(AddressCardSvg)({
     height: 500,
   },
 })
+
+const DeployedCheckmark = styled(Spinner)({
+  position: 'absolute',
+  bottom: 20,
+  right: 14
+})
+DeployedCheckmark.defaultProps = {
+  size: 2.5,
+  status: SpinnerStatus.success,
+  title: 'Deployed'
+}
 
 const MenuIconStyled = styled.img({
   position: 'absolute',
