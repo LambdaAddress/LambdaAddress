@@ -15,9 +15,7 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     verbose && process.stdout.write('Deploying MetaData... ')
 
     // Workaround for the hardhat gas estimate problem
-    const metaData = local 
-        ? await create2Deploy(deployer, MetaData, salt, [], { gasLimit: 30000000 })
-        : await create2Deploy(deployer, MetaData, salt)
+    const metaData = await deploy(MetaData)
 
     verbose && console.log(`${metaData.address} ✅`)
       
