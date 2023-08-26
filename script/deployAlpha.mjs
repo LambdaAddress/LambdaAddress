@@ -16,10 +16,10 @@ async function main() {
     const [owner] = await hre.ethers.getSigners()
 
     const { registrar, proxy, nftAddressFactory } = await deployContracts({
-      salt: '0x0000000000000000000000000000000000000000000000000000000000000003',
+      salt: '0x0000000000000000000000000000000000000000000000000000000000000004',
       mintPrice: '1000000000000', // 0.000001 ETH
       royalties: '500', // 5%
-      royaltiesRecipient: '0x9CF33ca0A779171d82f33203e6601bE925c7D3eA',
+      royaltiesRecipient: '0x2F0cBd07f01862981b031eC7e0DC5A51109053aB',
       owner: owner.address,
       verbose: true
     })
