@@ -15,7 +15,7 @@ async function main() {
   try {    
     const [owner] = await hre.ethers.getSigners()
 
-    const { registrar, proxy, nftAddressFactory } = await deployContracts({
+    const { registrar, proxy, nftAddressFactory, safeDeployer } = await deployContracts({
       salt: '0x0000000000000000000000000000000000000000000000000000000000000004',
       mintPrice: '1000000000000', // 0.000001 ETH
       royalties: '500', // 5%
@@ -30,7 +30,8 @@ async function main() {
       config: {
         RegistrarImplementation: registrar.address,
         Registrar: proxy.address,
-        NFTAddressFactory: nftAddressFactory.address
+        NFTAddressFactory: nftAddressFactory.address,
+        SafeDeployer: safeDeployer.address
       }
     })
     console.log('✅')
@@ -40,6 +41,7 @@ async function main() {
       Registrar: RegistrarAbi.abi,
       RegistrarProxy: RegistrarProxyAbi.abi,
       NFTAddressFactory: NFTAddressFactoryAbi.abi,
+      SafeDeployer: SafeDeployerAbi.abi
     })
     console.log('✅')
 

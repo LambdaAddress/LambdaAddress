@@ -6,9 +6,9 @@ dataSources:
     name: Registrar
     network: goerli
     source:
-      address: "0x4c310c3159A97a8aFFa73380D874E7F6c5774E8C"
+      address: "0x83Ba1110e1fBC9aB84102B7DF0d909e367Fad785"
       abi: Registrar
-      startBlock: 9312892
+      startBlock: 9579734
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
