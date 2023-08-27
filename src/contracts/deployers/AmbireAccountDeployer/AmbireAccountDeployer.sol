@@ -7,14 +7,14 @@ import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
 import {Registrar} from "../../Registrar.sol";
 
 
-/// @title AmbireAccountFactory
-/// @dev Contract is almost identical to Ambire's original factory, with
+/// @title AmbireAccountDeployer
+/// @dev Contract is almost identical to Ambire's AmbireAccountFactory, with
 /// for one main difference: Instead of using the provided salt to generate 
 /// the account, we use LambdaAddress's Registrar to deploy it. The `salt`
 /// parameter is thus replaced with the actual tokenId of the LambdaAddress
 /// NFT. We can therefore keep the exact same function signatures as the 
 /// original AmbireAccountFactory.
-contract AmbireAccountFactory {
+contract AmbireAccountDeployer {
 	event LogDeployed(address addr, uint256 salt);
 
 	Registrar private _registrar;
@@ -24,8 +24,8 @@ contract AmbireAccountFactory {
 		_registrar = registrar;
 	}
 
-	function deploy(bytes calldata code, uint256 tokenId) external {
-		deploySafe(tokenId, code);
+	function deploy(bytes calldata code, uint256 tokenId) external returns(address) {
+		return deploySafe(tokenId, code);
 	}
 
 	// When the relayer needs to act upon an /identity/:addr/submit call, it'll either call execute on the AmbireAccount directly
