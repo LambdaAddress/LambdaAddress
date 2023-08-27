@@ -3,6 +3,7 @@ import sepolia from './sepolia'
 import mumbai from './mumbai'
 import goerli from './goerli'
 import optimismGoerli from './optimism_goerli'
+import optimism from './optimism'
 
 const supportedNetworks = {
     31337: {
@@ -10,7 +11,19 @@ const supportedNetworks = {
         chainId: 31337,
         isTestnet: true,
         contracts: development
-    },/*
+    },
+    10: {
+        chainId: 10,
+        name: 'Optimism',
+        chainName: 'Optimism',
+        nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+        rpcUrls: ['https://optimism.publicnode.com'],
+        blockExplorerUrls: ['https://optimistic.etherscan.io/'],
+        isTestnet: false,
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-optimism/version/latest',
+        contracts: optimism
+    },
+    /*
     42161: {
         chainId: 42161,
         name: 'Arbitrum',
@@ -33,7 +46,7 @@ const supportedNetworks = {
         isTestnet: true,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-sepolia/version/latest',
         contracts: sepolia
-    },
+    },/*
     80001: { 
         name: 'Polygon Mumbai',
         chainId: 80001,
@@ -43,7 +56,7 @@ const supportedNetworks = {
         isTestnet: true,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-mumbai/version/latest',
         contracts: mumbai
-    },
+    },*/
     5: { 
         name: 'Goerli',
         chainId: 5,
@@ -53,7 +66,7 @@ const supportedNetworks = {
         isTestnet: true,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-goerli/version/latest',
         contracts: goerli
-    },
+    },/*
     420: { 
         name: 'Optimism Goerli',
         chainId: 420,
@@ -63,7 +76,7 @@ const supportedNetworks = {
         isTestnet: true,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-optimism-goerli/version/latest',
         contracts: optimismGoerli
-    }    
+    }*/
 }
 
 const UnsupportedNetwork = {
