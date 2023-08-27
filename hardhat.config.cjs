@@ -36,6 +36,11 @@ module.exports = {
     noColors: true
   },
   networks: {
+    optimism: {
+      url: NODE_URL || 'https://optimism.publicnode.com',
+      chainId: 10,
+      accounts: [KEY]
+    },
     hardhat: {
     },
     sepolia: {

@@ -2,19 +2,23 @@ export default {
     "contracts": {
         // Ethereum 
         "1": {
-            "AmbireAccountImplementation": "0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4"
+            "AmbireAccountImplementation": "0x2A2b85EB1054d6f0c6c2E37dA05eD3E5feA684EF"
+        },
+        // Optimism
+        "10": {
+            "AmbireAccountImplementation": "0x2A2b85EB1054d6f0c6c2E37dA05eD3E5feA684EF"
         },
         // Hardhat localhost
         "31337": {
-            "AmbireAccountImplementation": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6"
+            "AmbireAccountImplementation": "0x2A2b85EB1054d6f0c6c2E37dA05eD3E5feA684EF"
         },
         // Goerli
         "5": {
-            "AmbireAccountImplementation": "0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4"
+            "AmbireAccountImplementation": "0x2A2b85EB1054d6f0c6c2E37dA05eD3E5feA684EF"
         },
         // Sepolia
         "11155111": {
-            "AmbireAccountImplementation": "0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4"
+            "AmbireAccountImplementation": "0x2A2b85EB1054d6f0c6c2E37dA05eD3E5feA684EF"
         }
     }
 }
