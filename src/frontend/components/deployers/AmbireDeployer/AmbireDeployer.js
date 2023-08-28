@@ -6,7 +6,8 @@ import MKButton from '../../MKButton'
 import Spinner, { SpinnerStatus } from '../../Spinner'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
-import { useMemo, useState } from 'react'
+import TransactionButton from '../../TransactionButton'
+import { useEffect, useMemo, useState } from 'react'
 import useTransactionSender from '../../../hooks/useTransactionSender'
 import { useWeb3React } from '@web3-react/core'
 
@@ -14,6 +15,9 @@ import { useWeb3React } from '@web3-react/core'
 export default function AmbireDeployer({ nftAddress, contracts, deployer, registrar, network, onClose, ...props }) {
   const { account } = useWeb3React()
   const [owners, setOwners] = useState([account])
+  const [approvedDeployer, setApprovedDeployer] = useState('')
+  const isDeployerApproved = approvedDeployer.toLowerCase() === deployer?.address?.toLowerCase()
+  const [approveDeployerTx, setApproveDeployerTx] = useTransactionSender() 
   const [deployTx, setDeployTx] = useTransactionSender()
   const deployTxStatus = useMemo(() => {
     switch(deployTx?.status) {
@@ -26,6 +30,10 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
 
   const onAddOwnerClick = () => {
     setOwners([...owners, ''])
+  }
+
+  const onApproveClick = async () => {
+    setApproveDeployerTx(registrar.approveDeployer(deployer.address, nftAddress))
   }
 
   const onDeleteOwnerClick = (ownerIndex) => {
@@ -47,6 +55,11 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
     setOwners(newOwners)
   }
 
+  useEffect(async () => {
+    if (registrar && nftAddress) {
+      setApprovedDeployer(await registrar.getApprovedDeployer(nftAddress))
+    }
+  }, [registrar, deployer, approveDeployerTx])
 
   return (
     <Main {...props}>
@@ -66,13 +79,18 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
           </>
       }
       <ButtonsContainer>
-        {deployTxStatus !== SpinnerStatus.success 
-          ? <>
-              <MKButton onClick={onDeployClick}>Deploy</MKButton>
-              <CancelButton onClick={onClose}>Cancel</CancelButton> 
-            </>
-          : <MKButton onClick={onClose}>Close</MKButton>
-        }   
+        {deployTxStatus !== SpinnerStatus.success &&
+          <>
+          {isDeployerApproved
+            ? <MKButton onClick={onDeployClick}>Deploy</MKButton>
+            : <TransactionButton transaction={approveDeployerTx} onClick={onApproveClick}>Approve deployer</TransactionButton>
+          } 
+          </> 
+        }
+        {deployTxStatus === SpinnerStatus.success
+          ? <MKButton onClick={onClose}>Close</MKButton>
+          : <CancelButton onClick={onClose}>Cancel</CancelButton>
+        }      
       </ButtonsContainer>
     </Main>
   )

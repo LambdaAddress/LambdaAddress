@@ -81,7 +81,7 @@ export default function AddressList() {
       case DeployerType.NONE: return none
       case DeployerType.CUSTOM_BYTECODE: return [CustomBytecode, {}]
       case DeployerType.GNOSIS_SAFE: return [GnosisSafeDeployer, contracts?.safeDeployer]
-      case DeployerType.AMBIRE: return [AmbireDeployer, contracts?.safeDeployer]
+      case DeployerType.AMBIRE: return [AmbireDeployer, contracts?.ambireAccountDeployer]
       default: return none
     }
   }, [selectedDeployer])
