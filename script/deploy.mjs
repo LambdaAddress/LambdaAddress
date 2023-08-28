@@ -8,13 +8,14 @@ import RegistrarAbi from '../artifacts/src/contracts/Registrar.sol/Registrar.jso
 import RegistrarProxyAbi from '../artifacts/src/contracts/RegistrarProxy.sol/RegistrarProxy.json' assert { type: "json" }
 import NFTAddressFactoryAbi from '../artifacts/src/contracts/NFTAddressFactory.sol/NFTAddressFactory.json' assert { type: "json" }
 import SafeDeployerAbi from '../artifacts/src/contracts/deployers/SafeDeployer.sol/SafeDeployer.json' assert { type: "json" }
+import AmbireAccountDeployerAbi from '../artifacts/src/contracts/deployers/AmbireAccountDeployer/AmbireAccountDeployer.sol/AmbireAccountDeployer.json' assert { type: "json" }
 
 
 async function main() {
   try {
     const [owner] = await hre.ethers.getSigners()
 
-    const { registrar, proxy, nftAddressFactory, safeDeployer } = await deployContracts({
+    const { registrar, proxy, nftAddressFactory, safeDeployer, ambireAccountDeployer } = await deployContracts({
       salt: '0x0000000000000000000000000000000000000000000000000000000000000001',
       mintPrice: '0',
       royalties: '500',
@@ -36,6 +37,7 @@ async function main() {
         Registrar: proxy.address,
         NFTAddressFactory: nftAddressFactory.address,
         SafeDeployer: safeDeployer.address,
+        AmbireAccountDeployer: ambireAccountDeployer.address,
         GnosisSafeImpl: gnosisSafe.address
       }
     })
@@ -46,7 +48,8 @@ async function main() {
       Registrar: RegistrarAbi.abi,
       RegistrarProxy: RegistrarProxyAbi.abi,
       NFTAddressFactory: NFTAddressFactoryAbi.abi,
-      SafeDeployer: SafeDeployerAbi.abi
+      SafeDeployer: SafeDeployerAbi.abi,
+      AmbireAccountDeployer: AmbireAccountDeployerAbi.abi
     })
     console.log('✅')
 

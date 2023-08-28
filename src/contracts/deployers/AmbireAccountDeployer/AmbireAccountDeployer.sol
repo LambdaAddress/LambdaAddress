@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: agpl-3.0
+// SPDX-License-Identifier: MIT
 // Based on https://github.com/AmbireTech/wallet/blob/main/contracts/AmbireAccountFactory.sol
 pragma solidity ^0.8.7;
 
