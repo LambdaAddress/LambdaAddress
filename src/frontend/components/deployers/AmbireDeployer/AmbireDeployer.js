@@ -104,7 +104,6 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
           ? <MKButton onClick={onClose}>Close</MKButton>
           : <CancelButton onClick={onClose}>Cancel</CancelButton>
         }      
-        <MKButton onClick={downloadWallet}>Download Wallet Data</MKButton>
       </ButtonsContainer>
     </Main>
   )
