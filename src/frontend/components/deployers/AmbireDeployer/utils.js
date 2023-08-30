@@ -20,6 +20,21 @@ export function getExportData(accountAddr, factory, baseAccount, signer) {
     }
 }
 
+// Used to send to the Ambire relayer to create the wallet
+export function getMetadata(accountAddr, factory, baseAccount, signer) {
+    return {
+        id: accountAddr,
+        salt: generateSalt(accountAddr),
+        identityFactoryAddr: factory,
+        baseIdentityAddr: baseAccount,
+        privileges: [
+            [signer, '0x0000000000000000000000000000000000000000000000000000000000000001']
+        ],
+        signerType: "Web3"
+    }
+}
+
+
 export function downloadJson(exportObj, filename) {
     var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
     var downloadAnchorNode = document.createElement('a');
