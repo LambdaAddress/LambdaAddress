@@ -88,7 +88,7 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
                 </OwnerLine>
               )}
             </div>
-            <MKButton onClick={onAddOwnerClick}>Add owner</MKButton>
+            {/*<MKButton onClick={onAddOwnerClick}>Add owner</MKButton>*/}
           </>
       }
       <ButtonsContainer>
