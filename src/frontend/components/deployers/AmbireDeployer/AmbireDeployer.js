@@ -1,5 +1,6 @@
 import config from './config'
 import CancelButton from '../../CancelButton'
+import { downloadJson, getExportData } from './utils'
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded'
 import { getProxyDeployBytecode } from './IdentityProxyDeploy'
 import MKButton from '../../MKButton'
@@ -46,7 +47,13 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
     const privLevels = owners.map(owner => [owner, '0x0000000000000000000000000000000000000000000000000000000000000001'])
     const implementation = config.contracts[network.chainId.toString()]['AmbireAccountImplementation']
     const calldata = getProxyDeployBytecode(implementation, privLevels)
-    setDeployTx(registrar.deploy(nftAddress, calldata))
+    setDeployTx(deployer.deploy(calldata, nftAddress))
+  }
+
+  const downloadWallet = () => {
+    const implementation = config.contracts[network.chainId.toString()]['AmbireAccountImplementation']
+    const json = getExportData(nftAddress, deployer.address, implementation, owners[0])
+    downloadJson(json, `ambire-wallet-${nftAddress}.json`)
   }
 
   const onOwnerValueChange = (ownerIndex, event) => {
@@ -60,6 +67,12 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
       setApprovedDeployer(await registrar.getApprovedDeployer(nftAddress))
     }
   }, [registrar, deployer, approveDeployerTx])
+
+  useEffect(() => {
+    if (deployTxStatus === SpinnerStatus.success) {
+      downloadWallet()
+    }
+  }, [deployTxStatus])
 
   return (
     <Main {...props}>
@@ -91,6 +104,7 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
           ? <MKButton onClick={onClose}>Close</MKButton>
           : <CancelButton onClick={onClose}>Cancel</CancelButton>
         }      
+        <MKButton onClick={downloadWallet}>Download Wallet Data</MKButton>
       </ButtonsContainer>
     </Main>
   )
