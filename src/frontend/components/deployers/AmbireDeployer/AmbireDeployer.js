@@ -1,6 +1,6 @@
 import deployerConfig from './config'
 import CancelButton from '../../CancelButton'
-import { downloadJson, getExportData, sendWalletCreationRequest } from './utils'
+import { downloadJson, getMetadata, getExportData, sendWalletCreationRequest } from './utils'
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded'
 import { getProxyDeployBytecode } from './IdentityProxyDeploy'
 import MKButton from '../../MKButton'
@@ -55,8 +55,7 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
   const downloadWallet = () => {
     const implementation = config['AmbireAccountImplementation']
     const json = getExportData(nftAddress, deployer.address, implementation, owners[0])
-    //downloadJson(json, `ambire-wallet-${nftAddress}.json`)
-    sendWalletCreationRequest(config.relayerUrl)
+    downloadJson(json, `ambire-wallet-${nftAddress}.json`)
   }
 
   const onOwnerValueChange = (ownerIndex, event) => {
@@ -73,7 +72,11 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
 
   useEffect(() => {
     if (deployTxStatus === SpinnerStatus.success) {
-      downloadWallet()
+      sendWalletCreationRequest(
+        nftAddress, 
+        config.relayerUrl, 
+        getMetadata(nftAddress, deployer.address, config.AmbireAccountImplementation, owners[0])
+      )
     }
   }, [deployTxStatus])
 

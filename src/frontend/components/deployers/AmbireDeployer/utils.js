@@ -37,6 +37,7 @@ export function getMetadata(accountAddr, factory, baseAccount, signer) {
 
 export async function sendWalletCreationRequest(walletAddress, relayerUrl, metadata) {
     try {
+        console.log('Sending wallet metadata')
         const formattedAddress = getAddress(walletAddress)
         const fullUrl = `${relayerUrl}/identity/${formattedAddress}`        
         console.log('sending metadata: ', metadata)
