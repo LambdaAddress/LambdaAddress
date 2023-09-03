@@ -1,6 +1,6 @@
-import config from './config'
+import deployerConfig from './config'
 import CancelButton from '../../CancelButton'
-import { downloadJson, getExportData } from './utils'
+import { downloadJson, getExportData, sendWalletCreationRequest } from './utils'
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded'
 import { getProxyDeployBytecode } from './IdentityProxyDeploy'
 import MKButton from '../../MKButton'
@@ -29,6 +29,8 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
     }
   }, [deployTx, deployTx?.status])
 
+  const config = useMemo(() => deployerConfig[network.chainId.toString()], [network])
+
   const onAddOwnerClick = () => {
     setOwners([...owners, ''])
   }
@@ -45,15 +47,16 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
 
   const onDeployClick = () => {
     const privLevels = owners.map(owner => [owner, '0x0000000000000000000000000000000000000000000000000000000000000001'])
-    const implementation = config.contracts[network.chainId.toString()]['AmbireAccountImplementation']
+    const implementation = config['AmbireAccountImplementation']
     const calldata = getProxyDeployBytecode(implementation, privLevels)
     setDeployTx(deployer.deploy(calldata, nftAddress))
   }
 
   const downloadWallet = () => {
-    const implementation = config.contracts[network.chainId.toString()]['AmbireAccountImplementation']
+    const implementation = config['AmbireAccountImplementation']
     const json = getExportData(nftAddress, deployer.address, implementation, owners[0])
-    downloadJson(json, `ambire-wallet-${nftAddress}.json`)
+    //downloadJson(json, `ambire-wallet-${nftAddress}.json`)
+    sendWalletCreationRequest(config.relayerUrl)
   }
 
   const onOwnerValueChange = (ownerIndex, event) => {
@@ -73,6 +76,7 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
       downloadWallet()
     }
   }, [deployTxStatus])
+
 
   return (
     <Main {...props}>

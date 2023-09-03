@@ -1,4 +1,6 @@
 import { getProxyDeployBytecode } from './IdentityProxyDeploy'
+import { utils } from 'ethers'
+const { getAddress } = utils
 
 export function getExportData(accountAddr, factory, baseAccount, signer) {
     return {
@@ -23,7 +25,6 @@ export function getExportData(accountAddr, factory, baseAccount, signer) {
 // Used to send to the Ambire relayer to create the wallet
 export function getMetadata(accountAddr, factory, baseAccount, signer) {
     return {
-        id: accountAddr,
         salt: generateSalt(accountAddr),
         identityFactoryAddr: factory,
         baseIdentityAddr: baseAccount,
@@ -34,6 +35,34 @@ export function getMetadata(accountAddr, factory, baseAccount, signer) {
     }
 }
 
+export async function sendWalletCreationRequest(walletAddress, relayerUrl, metadata) {
+    try {
+        const formattedAddress = getAddress(walletAddress)
+        const fullUrl = `${relayerUrl}/identity/${formattedAddress}`        
+        console.log('sending metadata: ', metadata)
+        console.log('to: ', fullUrl)
+
+        const response = await fetch(relayerUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(metadata)
+        })
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+    
+        const responseData = await response.json()
+        console.log('response: ', responseData)
+        // TODO: Handle response
+        return responseData
+      } catch (error) {
+        console.error('Error sending POST request:', error);
+        throw error
+    }
+}
 
 export function downloadJson(exportObj, filename) {
     var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
