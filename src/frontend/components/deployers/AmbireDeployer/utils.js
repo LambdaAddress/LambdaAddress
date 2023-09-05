@@ -35,23 +35,23 @@ export function getMetadata(accountAddr, factory, baseAccount, signer) {
     }
 }
 
+
 export async function sendWalletCreationRequest(walletAddress, relayerUrl, metadata) {
     try {
         console.log('Sending wallet metadata')
         const formattedAddress = getAddress(walletAddress)
         const fullUrl = `${relayerUrl}/identity/${formattedAddress}`        
-        console.log('sending metadata: ', metadata)
-        console.log('to: ', fullUrl)
 
-        const response = await fetch(relayerUrl, {
+        const response = await fetch(fullUrl, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(metadata)
         })
     
         if (!response.ok) {
+          console.log('response: ', response)
           throw new Error(`HTTP error! Status: ${response.status}`)
         }
     
@@ -60,7 +60,7 @@ export async function sendWalletCreationRequest(walletAddress, relayerUrl, metad
         // TODO: Handle response
         return responseData
       } catch (error) {
-        console.error('Error sending POST request:', error);
+        console.error('Error sending POST request:', error)
         throw error
     }
 }

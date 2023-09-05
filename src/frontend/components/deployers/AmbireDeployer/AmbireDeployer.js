@@ -49,7 +49,12 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
     const privLevels = owners.map(owner => [owner, '0x0000000000000000000000000000000000000000000000000000000000000001'])
     const implementation = config['AmbireAccountImplementation']
     const calldata = getProxyDeployBytecode(implementation, privLevels)
-    setDeployTx(deployer.deploy(calldata, nftAddress))
+    //setDeployTx(deployer.deploy(calldata, nftAddress))
+    sendWalletCreationRequest(
+      nftAddress, 
+      config.relayerUrl, 
+      getMetadata(nftAddress, deployer.address, config.AmbireAccountImplementation, owners[0])
+    )
   }
 
   const downloadWallet = () => {
