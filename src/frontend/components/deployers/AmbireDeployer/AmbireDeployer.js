@@ -111,9 +111,9 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
     downloadJson(json, `ambire-wallet-${nftAddress}.json`)
   }
 
-  const onOwnerValueChange = (ownerIndex, event) => {
+  const onOwnerValueChange = (event) => {
     const newOwners = [...owners]
-    newOwners[ownerIndex] = event.target.value
+    newOwners[0] = event.target.value
     setOwners(newOwners)
   }
 
@@ -122,7 +122,7 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
       setApprovedDeployer(await registrar.getApprovedDeployer(nftAddress))
     }
   }, [registrar, deployer, approveDeployerTx])
-  
+
 
   return (
     <Main {...props}>
@@ -131,14 +131,8 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
         ? <Loading status={deployStatus} />
         : <>
             <div style={{ marginTop: 10}}>
-              {owners.map((owner, i) => 
-                <OwnerLine key={`owner${i}`}>
-                  <AddressInput  label={`Owner #${i+1}`} value={owner} onChange={e => onOwnerValueChange(i, e)} />
-                  {i > 0 && <DeleteIcon onClick={() => onDeleteOwnerClick(i)} fontSize='large'/>}
-                </OwnerLine>
-              )}
+              <AddressInput  label={`Owner`} value={owners[0]} onChange={e => onOwnerValueChange(0, e)} />
             </div>
-            {/*<MKButton onClick={onAddOwnerClick}>Add owner</MKButton>*/}
           </>
       }
       <ButtonsContainer>
