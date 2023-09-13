@@ -16,18 +16,53 @@ import { useWeb3React } from '@web3-react/core'
 export default function AmbireDeployer({ nftAddress, contracts, deployer, registrar, network, onClose, ...props }) {
   const { account } = useWeb3React()
   const [owners, setOwners] = useState([account])
+
+  // Address of the currently approved deployer, if any
   const [approvedDeployer, setApprovedDeployer] = useState('')
   const isDeployerApproved = approvedDeployer.toLowerCase() === deployer?.address?.toLowerCase()
+  
+  // Deployment process consists of 2 steps:
+  // 1. Execute transaction to approve the Ambire deployer
   const [approveDeployerTx, setApproveDeployerTx] = useTransactionSender() 
+  // 2. Send creation request to the Ambire relayer proxy
+  const [relayerResponse, setRelayerResponse] = useState()
+
+  // Deployment transaction
   const [deployTx, setDeployTx] = useTransactionSender()
+
+  // Status of the deployment transaction
   const deployTxStatus = useMemo(() => {
     switch(deployTx?.status) {
       case 'PENDING_USER': return SpinnerStatus.loading
       case 'PENDING': return SpinnerStatus.loading
       case 'SUCCESS': return SpinnerStatus.success
       case 'ERROR': return SpinnerStatus.fail
+      default: return undefined
     }
   }, [deployTx, deployTx?.status])
+
+  // Status for the 2 steps of the deployment:
+  // 1. Executing the deploy transaction on-chain
+  // 2. Posting the creation request on the Ambire Relayer proxy
+  const deployStatus = useMemo(() => {
+    // Deployment not initiated
+    if (!deployTxStatus)
+      return undefined
+
+    if (deployTxStatus === SpinnerStatus.loading || !relayerResponse) {
+      return SpinnerStatus.loading
+    }
+
+    if (deployTxStatus === SpinnerStatus.fail || (relayerResponse && !relayerResponse.success)) {
+      return SpinnerStatus.fail
+    }
+
+    if (deployTxStatus === SpinnerStatus.success && relayerResponse?.success === true) {
+      return SpinnerStatus.success
+    }
+
+    return undefined
+  }, [relayerResponse, deployTxStatus])
 
   const config = useMemo(() => deployerConfig[network.chainId.toString()], [network])
 
@@ -45,16 +80,29 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
     setOwners(newOwners)
   }
 
-  const onDeployClick = () => {
-    const privLevels = owners.map(owner => [owner, '0x0000000000000000000000000000000000000000000000000000000000000001'])
-    const implementation = config['AmbireAccountImplementation']
-    const calldata = getProxyDeployBytecode(implementation, privLevels)
-    //setDeployTx(deployer.deploy(calldata, nftAddress))
-    sendWalletCreationRequest(
-      nftAddress, 
-      config.relayerUrl, 
-      getMetadata(nftAddress, deployer.address, config.AmbireAccountImplementation, owners[0])
-    )
+  const onDeployClick = async () => {
+    try {
+      const privLevels = owners.map(owner => [owner, '0x0000000000000000000000000000000000000000000000000000000000000001'])
+      const implementation = config['AmbireAccountImplementation']
+      const calldata = getProxyDeployBytecode(implementation, privLevels)
+      setDeployTx(deployer.deploy(calldata, nftAddress))
+
+      const response = await sendWalletCreationRequest(
+        nftAddress, 
+        config.relayerUrl, 
+        getMetadata(nftAddress, deployer.address, config.AmbireAccountImplementation, owners[0])
+      )
+
+      console.log('Relayer response: ', response)
+
+      if (response.success !== true)
+        console.error('Error creating wallet on the relayer: ', response)
+
+      setRelayerResponse(response)
+    } catch(error) {
+      console.log('Error while deploying: ', error)
+      setRelayerResponse({})
+    }
   }
 
   const downloadWallet = () => {
@@ -74,23 +122,13 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
       setApprovedDeployer(await registrar.getApprovedDeployer(nftAddress))
     }
   }, [registrar, deployer, approveDeployerTx])
-
-  useEffect(() => {
-    if (deployTxStatus === SpinnerStatus.success) {
-      sendWalletCreationRequest(
-        nftAddress, 
-        config.relayerUrl, 
-        getMetadata(nftAddress, deployer.address, config.AmbireAccountImplementation, owners[0])
-      )
-    }
-  }, [deployTxStatus])
-
+  
 
   return (
     <Main {...props}>
       {nftAddress}
-      {deployTx?.status
-        ? <Loading status={deployTxStatus} />
+      {deployStatus
+        ? <Loading status={deployStatus} />
         : <>
             <div style={{ marginTop: 10}}>
               {owners.map((owner, i) => 
@@ -112,7 +150,7 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
           } 
           </> 
         }
-        {deployTxStatus === SpinnerStatus.success
+        {deployStatus === SpinnerStatus.success
           ? <MKButton onClick={onClose}>Close</MKButton>
           : <CancelButton onClick={onClose}>Cancel</CancelButton>
         }      

@@ -57,7 +57,7 @@ export async function sendWalletCreationRequest(walletAddress, relayerUrl, metad
     
         const responseData = await response.json()
         console.log('response: ', responseData)
-        // TODO: Handle response
+        
         return responseData
       } catch (error) {
         console.error('Error sending POST request:', error)
