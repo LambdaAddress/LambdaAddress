@@ -39,7 +39,6 @@ contract AmbireAccountDeployerTest is Test {
     _registrar.allowFactory(_addressFactory, true);
 
     _deployer = new AmbireAccountDeployer(_registrar);
-
   }
 
   function testDeploy() public {
@@ -56,6 +55,9 @@ contract AmbireAccountDeployerTest is Test {
 
     assertEq(address(uint160(tokenId)), newAccount);
 
-    assertEq(newAccount.code, hex"363d3d373d3d3d363d732a2b85eb1054d6f0c6c2e37da05ed3e5fea684ef5af43d82803e903d91602b57fd5bf3");
+    assertEq(
+      newAccount.code,
+      hex"363d3d373d3d3d363d732a2b85eb1054d6f0c6c2e37da05ed3e5fea684ef5af43d82803e903d91602b57fd5bf3"
+    );
   }
 }
