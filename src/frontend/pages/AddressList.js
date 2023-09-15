@@ -52,7 +52,7 @@ export default function AddressList() {
   }
 
   const generateMenu = (address) => {
-    return [
+    const deployMenu = [
       {
         text: 'Deploy an Ambire Wallet',
         onClick: () => {
@@ -72,6 +72,10 @@ export default function AddressList() {
         },
       }
     ]
+
+    return address.isDeployed
+      ? undefined
+      : deployMenu
   }
 
   const [ DeployerComponent, deployer ] = useMemo(() => {

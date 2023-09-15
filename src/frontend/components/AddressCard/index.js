@@ -24,7 +24,7 @@ export default function AddressCard({ address, menu, ...attr }) {
         highlightAddress
       />
       { address?.isDeployed && <DeployedCheckmark /> }
-      <MenuIconStyled src={MenuIcon} onClick={handleMenuClick} ref={menuButton} />
+      {menu && <MenuIconStyled src={MenuIcon} onClick={handleMenuClick} ref={menuButton} /> }
       {menu && (
         <Menu
           anchorEl={menuButton.current}
