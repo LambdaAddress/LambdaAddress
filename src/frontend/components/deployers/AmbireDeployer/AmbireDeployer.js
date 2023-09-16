@@ -1,12 +1,14 @@
-import config from './config'
+import deployerConfig from './config'
 import CancelButton from '../../CancelButton'
+import { downloadJson, getMetadata, getExportData, sendWalletCreationRequest } from './utils'
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded'
 import { getProxyDeployBytecode } from './IdentityProxyDeploy'
 import MKButton from '../../MKButton'
 import Spinner, { SpinnerStatus } from '../../Spinner'
 import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
-import { useMemo, useState } from 'react'
+import TransactionButton from '../../TransactionButton'
+import { useEffect, useMemo, useState } from 'react'
 import useTransactionSender from '../../../hooks/useTransactionSender'
 import { useWeb3React } from '@web3-react/core'
 
@@ -14,18 +16,62 @@ import { useWeb3React } from '@web3-react/core'
 export default function AmbireDeployer({ nftAddress, contracts, deployer, registrar, network, onClose, ...props }) {
   const { account } = useWeb3React()
   const [owners, setOwners] = useState([account])
+
+  // Address of the currently approved deployer, if any
+  const [approvedDeployer, setApprovedDeployer] = useState('')
+  const isDeployerApproved = approvedDeployer.toLowerCase() === deployer?.address?.toLowerCase()
+  
+  // Deployment process consists of 2 steps:
+  // 1. Execute transaction to approve the Ambire deployer
+  const [approveDeployerTx, setApproveDeployerTx] = useTransactionSender() 
+  // 2. Send creation request to the Ambire relayer proxy
+  const [relayerResponse, setRelayerResponse] = useState()
+
+  // Deployment transaction
   const [deployTx, setDeployTx] = useTransactionSender()
+
+  // Status of the deployment transaction
   const deployTxStatus = useMemo(() => {
     switch(deployTx?.status) {
       case 'PENDING_USER': return SpinnerStatus.loading
       case 'PENDING': return SpinnerStatus.loading
       case 'SUCCESS': return SpinnerStatus.success
       case 'ERROR': return SpinnerStatus.fail
+      default: return undefined
     }
   }, [deployTx, deployTx?.status])
 
+  // Status for the 2 steps of the deployment:
+  // 1. Executing the deploy transaction on-chain
+  // 2. Posting the creation request on the Ambire Relayer proxy
+  const deployStatus = useMemo(() => {
+    // Deployment not initiated
+    if (!deployTxStatus)
+      return undefined
+
+    if (deployTxStatus === SpinnerStatus.loading || !relayerResponse) {
+      return SpinnerStatus.loading
+    }
+
+    if (deployTxStatus === SpinnerStatus.fail || (relayerResponse && !relayerResponse.success)) {
+      return SpinnerStatus.fail
+    }
+
+    if (deployTxStatus === SpinnerStatus.success && relayerResponse?.success === true) {
+      return SpinnerStatus.success
+    }
+
+    return undefined
+  }, [relayerResponse, deployTxStatus])
+
+  const config = useMemo(() => deployerConfig[network.chainId.toString()], [network])
+
   const onAddOwnerClick = () => {
     setOwners([...owners, ''])
+  }
+
+  const onApproveClick = async () => {
+    setApproveDeployerTx(registrar.approveDeployer(deployer.address, nftAddress))
   }
 
   const onDeleteOwnerClick = (ownerIndex) => {
@@ -34,45 +80,74 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
     setOwners(newOwners)
   }
 
-  const onDeployClick = () => {
-    const privLevels = owners.map(owner => [owner, '0x0000000000000000000000000000000000000000000000000000000000000001'])
-    const implementation = config.contracts[network.chainId.toString()]['AmbireAccountImplementation']
-    const calldata = getProxyDeployBytecode(implementation, privLevels)
-    setDeployTx(registrar.deploy(nftAddress, calldata))
+  const onDeployClick = async () => {
+    try {
+      const privLevels = owners.map(owner => [owner, '0x0000000000000000000000000000000000000000000000000000000000000001'])
+      const implementation = config['AmbireAccountImplementation']
+      const calldata = getProxyDeployBytecode(implementation, privLevels)
+      setDeployTx(deployer.deploy(calldata, nftAddress))
+
+      const response = await sendWalletCreationRequest(
+        nftAddress, 
+        config.relayerUrl, 
+        getMetadata(nftAddress, deployer.address, config.AmbireAccountImplementation, owners[0])
+      )
+
+      console.log('Relayer response: ', response)
+
+      if (response.success !== true)
+        console.error('Error creating wallet on the relayer: ', response)
+
+      setRelayerResponse(response)
+    } catch(error) {
+      console.log('Error while deploying: ', error)
+      setRelayerResponse({})
+    }
   }
 
-  const onOwnerValueChange = (ownerIndex, event) => {
+  const downloadWallet = () => {
+    const implementation = config['AmbireAccountImplementation']
+    const json = getExportData(nftAddress, deployer.address, implementation, owners[0])
+    downloadJson(json, `ambire-wallet-${nftAddress}.json`)
+  }
+
+  const onOwnerValueChange = (event) => {
     const newOwners = [...owners]
-    newOwners[ownerIndex] = event.target.value
+    newOwners[0] = event.target.value
     setOwners(newOwners)
   }
+
+  useEffect(async () => {
+    if (registrar && nftAddress) {
+      setApprovedDeployer(await registrar.getApprovedDeployer(nftAddress))
+    }
+  }, [registrar, deployer, approveDeployerTx])
 
 
   return (
     <Main {...props}>
       {nftAddress}
-      {deployTx?.status
-        ? <Loading status={deployTxStatus} />
+      {deployStatus
+        ? <Loading status={deployStatus} />
         : <>
             <div style={{ marginTop: 10}}>
-              {owners.map((owner, i) => 
-                <OwnerLine key={`owner${i}`}>
-                  <AddressInput  label={`Owner #${i+1}`} value={owner} onChange={e => onOwnerValueChange(i, e)} />
-                  {i > 0 && <DeleteIcon onClick={() => onDeleteOwnerClick(i)} fontSize='large'/>}
-                </OwnerLine>
-              )}
+              <AddressInput  label={`Owner`} value={owners[0]} onChange={e => onOwnerValueChange(0, e)} />
             </div>
-            <MKButton onClick={onAddOwnerClick}>Add owner</MKButton>
           </>
       }
       <ButtonsContainer>
-        {deployTxStatus !== SpinnerStatus.success 
-          ? <>
-              <MKButton onClick={onDeployClick}>Deploy</MKButton>
-              <CancelButton onClick={onClose}>Cancel</CancelButton> 
-            </>
-          : <MKButton onClick={onClose}>Close</MKButton>
-        }   
+        {deployTxStatus !== SpinnerStatus.success &&
+          <>
+          {isDeployerApproved
+            ? <MKButton onClick={onDeployClick}>Deploy</MKButton>
+            : <TransactionButton transaction={approveDeployerTx} onClick={onApproveClick}>Approve deployer</TransactionButton>
+          } 
+          </> 
+        }
+        {deployStatus === SpinnerStatus.success
+          ? <MKButton onClick={onClose}>Close</MKButton>
+          : <CancelButton onClick={onClose}>Cancel</CancelButton>
+        }      
       </ButtonsContainer>
     </Main>
   )

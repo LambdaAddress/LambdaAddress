@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import { createClient, cacheExchange, fetchExchange } from 'urql'
 
-// This function doesn't support all the fields when running locally (without subgraphs)
+// This function may not  support all the fields when running locally (without subgraphs)
 export default async function fetchNftAddresses(owner, registrarImpl, network) {
   return network?.graphUrl !== undefined
     ? fetchNftAddressesFromGraph(owner, network)
@@ -27,16 +27,19 @@ async function fetchNftAddressesFromGraph(owner, network) {
 }
 
 async function fallBack(owner, registrarImpl) {
-  return (await registrarImpl.queryFilter(registrarImpl.filters.Transfer(null, owner))).map(
-    convertToAddress
+  return Promise.all(
+    (await registrarImpl.queryFilter(registrarImpl.filters.Transfer(null, owner)))
+      .map(event => convertTransferEventToAddress(event, registrarImpl))
   )
 }
 
-function convertToAddress(event) {
+async function convertTransferEventToAddress(event, registrarImpl) {
+  const address = ethers.utils.hexlify(event.args.tokenId)
+  const isDeployed = await registrarImpl.getIsDeployed(address)
   return {
-    address: ethers.utils.hexlify(event.args.tokenId),
+    address,
     owner: event.args.to,
-    isDeployed: false
+    isDeployed
   }
 }
 

@@ -10,6 +10,7 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     const NFTAddressFactory = await hre.ethers.getContractFactory("NFTAddressFactory")
 
     const SafeDeployer = await hre.ethers.getContractFactory("SafeDeployer")
+    const AmbireAccountDeployer = await hre.ethers.getContractFactory("AmbireAccountDeployer")
     const deployer = await getCreate2Deployer(CREATE2_DEPLOYER_ADDRESS)
   
     verbose && process.stdout.write('Deploying MetaData... ')
@@ -67,8 +68,12 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     verbose && process.stdout.write('Deploying SafeDeployer... ')
     const safeDeployer = await create2Deploy(deployer, SafeDeployer, salt, [proxy.address])
     verbose && console.log(`${safeDeployer.address} ✅`)
+
+    verbose && process.stdout.write('Deploying AmbireAccountDeployer... ')
+    const ambireAccountDeployer = await create2Deploy(deployer, AmbireAccountDeployer, salt, [proxy.address])
+    verbose && console.log(`${ambireAccountDeployer.address} ✅`)
   
     return {
-      registrar, proxy, nftAddressFactory, metaData, safeDeployer
+      registrar, proxy, nftAddressFactory, metaData, safeDeployer, ambireAccountDeployer
     }
 }
