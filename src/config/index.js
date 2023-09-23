@@ -1,3 +1,4 @@
+import arbitrum from './arbitrum'
 import development from './development'
 import sepolia from './sepolia'
 import mumbai from './mumbai'
@@ -34,7 +35,8 @@ const supportedNetworks = {
         },
         rpcUrls: ['https://arb1.arbitrum.io/rpc'],
         blockExplorerUrls: ['https://arbiscan.io/'],
-        isTestnet: false
+        isTestnet: false,
+        contracts: arbitrum
     },
     11155111: { 
         name: 'Sepolia',
