@@ -36,6 +36,11 @@ module.exports = {
     noColors: true
   },
   networks: {
+    arbitrum: {
+      url: NODE_URL || 'https://arb1.arbitrum.io/rpc',
+      chainId: 42161,
+      accounts: [KEY]
+    },
     optimism: {
       url: NODE_URL || 'https://optimism.publicnode.com',
       chainId: 10,
