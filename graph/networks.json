@@ -1,4 +1,10 @@
 {
+  "arbitrum-one": {
+    "Registrar": {
+      "address": "0x83Ba1110e1fBC9aB84102B7DF0d909e367Fad785",
+      "startBlock": 133924012
+    }
+  },
   "optimism": {
     "Registrar": {
       "address": "0x83Ba1110e1fBC9aB84102B7DF0d909e367Fad785",

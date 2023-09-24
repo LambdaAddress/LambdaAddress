@@ -1,3 +1,4 @@
+import arbitrum from './arbitrum'
 import development from './development'
 import sepolia from './sepolia'
 import mumbai from './mumbai'
@@ -23,7 +24,6 @@ const supportedNetworks = {
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-optimism/version/latest',
         contracts: optimism
     },
-    /*
     42161: {
         chainId: 42161,
         name: 'Arbitrum',
@@ -35,8 +35,10 @@ const supportedNetworks = {
         },
         rpcUrls: ['https://arb1.arbitrum.io/rpc'],
         blockExplorerUrls: ['https://arbiscan.io/'],
-        isTestnet: false
-    },*/
+        isTestnet: false,
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-arbitrum/version/latest',
+        contracts: arbitrum
+    },
     11155111: { 
         name: 'Sepolia',
         chainId: 11155111,
