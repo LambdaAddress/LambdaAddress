@@ -22,6 +22,7 @@ const supportedNetworks = {
         blockExplorerUrls: ['https://optimistic.etherscan.io/'],
         isTestnet: false,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-optimism/version/latest',
+        graphId: 'QmeZEc4pPjckedbuBeoABft9npEzpEEmEJC1oNnX9nAjvd',
         contracts: optimism
     },
     42161: {
@@ -37,6 +38,7 @@ const supportedNetworks = {
         blockExplorerUrls: ['https://arbiscan.io/'],
         isTestnet: false,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-arbitrum/version/latest',
+        graphId: 'QmPpf9fxmj8275pUFntu9F8NJjFBPqYNvoe8AA9wmseDnN',
         contracts: arbitrum
     },
     11155111: { 
@@ -47,6 +49,7 @@ const supportedNetworks = {
         blockExplorerUrls: ['https://sepolia.etherscan.io'],
         isTestnet: true,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-sepolia/version/latest',
+        graphId: 'Qmbwi9p8aCebFk1QC4KJ3dthND7tHwNCGcLNdHMvxNj9TW',
         contracts: sepolia
     },/*
     80001: { 
@@ -67,6 +70,7 @@ const supportedNetworks = {
         blockExplorerUrls: ['https://goerli.etherscan.io'],
         isTestnet: true,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-goerli/version/latest',
+        graphId: 'QmeKk6yQTVBHMi91wCwH9mcfnH1ApH7PxarvyApuoAkYrB',
         contracts: goerli
     },/*
     420: { 
