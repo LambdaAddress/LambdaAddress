@@ -36,6 +36,7 @@ const supportedNetworks = {
         rpcUrls: ['https://arb1.arbitrum.io/rpc'],
         blockExplorerUrls: ['https://arbiscan.io/'],
         isTestnet: false,
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-arbitrum/version/latest',
         contracts: arbitrum
     },
     11155111: { 
