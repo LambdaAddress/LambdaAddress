@@ -1,14 +1,43 @@
 import { ethers } from 'ethers'
+import { from, Observable, Subject, takeUntil } from 'rxjs'
 import { createClient, cacheExchange, fetchExchange } from 'urql'
 
 // This function may not  support all the fields when running locally (without subgraphs)
-export default async function fetchNftAddresses(owner, registrarImpl, network) {
+export default function fetchNftAddresses(owner, registrarImpl, network) {
   return network?.graphUrl !== undefined
     ? fetchNftAddressesFromGraph(owner, network)
-    : fallBack(owner, registrarImpl)
+    : from(fallBack(owner, registrarImpl))
 }
 
-async function fetchNftAddressesFromGraph(owner, network) {
+
+function getSubgraphSyncStatus(subgraphId) {
+  const query = `
+  query {
+    indexingStatuses(subgraphs: ["${subgraphId}"]) {
+      synced
+      health
+      chains {
+        chainHeadBlock {
+          number
+        }
+        earliestBlock {
+          number
+        }
+        latestBlock {
+          number
+        }
+      }
+      subgraph
+    }
+  }`
+
+  const client = createClient({ url: '...', exchanges: [cacheExchange, fetchExchange], })
+  return client.query(query)
+}
+
+function fetchNftAddressesFromGraph(owner, network) {
+  const source$ = new Subject()
+
   const query = `
     query {
       lambdaAddresses(first: 50, where: { owner: "${owner}" }) {
@@ -22,9 +51,14 @@ async function fetchNftAddressesFromGraph(owner, network) {
     }`
 
   const client = createClient({ url: network.graphUrl, exchanges: [cacheExchange, fetchExchange], })
-  const result = await client.query(query).toPromise()
-  return result?.data?.lambdaAddresses || []
+  client.query(query).toPromise().then(result => source$.next(result?.data?.lambdaAddresses || []))
+
+  setTimeout(() => { 
+    source$.complete() 
+  }, 5000)
+  return source$.asObservable()
 }
+
 
 async function fallBack(owner, registrarImpl) {
   return Promise.all(
