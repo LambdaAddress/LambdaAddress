@@ -5,9 +5,9 @@ export default function useAddresses(owner, registrar, network) {
   const [addressList, setAddressList] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
+  useEffect(async () => {
     if (owner && registrar) {
-      fetchNftAddresses(owner, registrar, network).subscribe({
+      (await fetchNftAddresses(owner, registrar, network)).subscribe({
           next(result) {
             console.log('fetchNftAddresses: ', result)
             setAddressList(result || [])
