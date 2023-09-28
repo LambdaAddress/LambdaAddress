@@ -67,32 +67,32 @@ async function fetchNftAddressesFromGraph(owner, network) {
       }
     }`
 
-  const client = createClient({ url: network.graphUrl, exchanges: [cacheExchange, fetchExchange], })
+  const client = createClient({ url: network.graphUrl, exchanges: [fetchExchange], })
   const result = await client.query(query).toPromise()
+  console.log('results: ', result)
   setImmediate(() => source$.next(result?.data?.lambdaAddresses || []))  
 
-  if (syncStatus && syncStatus.latestBlock < syncStatus.chainHeadBlock) {
-    const chainHeadBlock = syncStatus.chainHeadBlock 
+  if (syncStatus && !syncStatus.synced) {
     let latestBlock = syncStatus.latestBlock
 
     const timer = setInterval(async () => {
       const newSyncStatus = await getSubgraphSyncStatus(network.graphId)
 
-      if (newSyncStatus.latestBlock > latestBlock) {
+      if (newSyncStatus && newSyncStatus.latestBlock > latestBlock) {
         const result = await client.query(query).toPromise()
         source$.next(result?.data?.lambdaAddresses || [])
         latestBlock = newSyncStatus.latestBlock
 
-        if (latestBlock > chainHeadBlock) {
+        if (newSyncStatus && newSyncStatus.synced) {
           clearInterval(timer)
           source$.complete()
         }
       }
       
-    }, 60000)
+    }, 30000)
   }
   else {
-    source$.complete()
+    setImmediate(() => source$.complete())
   }
 
   return source$.asObservable()
