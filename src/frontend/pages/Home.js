@@ -16,7 +16,6 @@ import config from '../config'
 import logo from '../images/logo.svg'
 import mobileImg from '../images/phone-tilted.png'
 import underTheHoodImg from '../images/under-the-hood.svg'
-import royaltiesImg from '../images/royalties.svg'
 
 export default function Home() {
   const pageRef = [
@@ -375,13 +374,6 @@ const MobileImg = styled.img`
   }
   
 `
-
-const RoyaltiesImg = styled.img({
-  width: '100%',
-  maxWidth: 620
-})
-
-
 
 const UnderTheHoodImg = styled.img({
   width: '80%',
