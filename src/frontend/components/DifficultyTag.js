@@ -28,6 +28,7 @@ export default function DifficultyTag({ difficulty, matchStartOfAddress = false 
     <LightTooltip
       open={tooltipOpen}
       onClose={() => setTooltipOpen(false)}
+      placement="left"
       title={
         <>
           On average <strong>{getDifficultyIterations(difficulty, matchStartOfAddress)} iterations</strong> are needed to
