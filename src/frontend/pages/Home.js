@@ -120,21 +120,6 @@ export default function Home() {
           </RightSection>
         </PageWrap>
       </Page>
-      <Page ref={pageRef[3]}>
-        <PageWrap>
-          <LeftSection>
-            <SectionH2>Earn royalties</SectionH2>
-            <p>Each Lambda Address sale includes a 5% royalty, with 2.5% going to the project's DAO and the remaining 2.5% given to the original minter.</p>
-            <p><a href={`${config.docUrl}/royalties`} target="_blank">Learn more</a></p>
-            <ButtonsContainer>
-              <WhiteButton href="#/mint">Get Started</WhiteButton>
-            </ButtonsContainer>
-          </LeftSection>
-          <MobileContainer>
-            <RoyaltiesImg src={royaltiesImg} />
-          </MobileContainer>
-        </PageWrap>
-      </Page>
     </Main>
   )
 }
