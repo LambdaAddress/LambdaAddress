@@ -7,6 +7,7 @@ import { useState, useContext, useMemo } from 'react'
 import breakpoints from '../breakpoints'
 import CustomBytecode from '../components/deployers/CustomBytecode'
 import AddressCard from '../components/AddressCard'
+import Spinner from '../components/Spinner'
 import Header from '../components/Header'
 import MKBox from '../components/MKBox'
 import MKButton from '../components/MKButton'
@@ -30,7 +31,7 @@ export default function AddressList() {
   const [selectedAddress, setSelectedAddress] = useState()
   const [selectedDeployer, setSelectedDeployer] = useState(DeployerType.NONE)
   
-  const addressList = useAddresses(account, registrar, network)
+  const { addressList, isLoading } = useAddresses(account, registrar, network)
   
   const clearState = () => {
     setSelectedAddress(undefined)
@@ -97,8 +98,9 @@ export default function AddressList() {
 
         <MainBox>
           <TitleContainer>
-            <Title>My Addresses</Title>
+            <Title>My Addresses {isLoading && <Loading />}</Title>
           </TitleContainer>
+         
 
           <AddressContainer>
             {addressList.map((addr) => (
@@ -164,6 +166,14 @@ const Title = styled.h1({
   fontSize: 32,
   margin: 'auto',
 })
+
+const Loading = styled(Spinner)({
+  marginLeft: 8,
+  marginTop: 10
+})
+Loading.defaultProps = { 
+  size: 1 
+}
 
 const AddressContainer = styled.div({
   display: 'flex',
