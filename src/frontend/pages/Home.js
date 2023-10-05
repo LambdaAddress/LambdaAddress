@@ -16,7 +16,6 @@ import config from '../config'
 import logo from '../images/logo.svg'
 import mobileImg from '../images/phone-tilted.png'
 import underTheHoodImg from '../images/under-the-hood.svg'
-import royaltiesImg from '../images/royalties.svg'
 
 export default function Home() {
   const pageRef = [
@@ -118,21 +117,6 @@ export default function Home() {
           <RightSection>
             <UnderTheHoodImg />
           </RightSection>
-        </PageWrap>
-      </Page>
-      <Page ref={pageRef[3]}>
-        <PageWrap>
-          <LeftSection>
-            <SectionH2>Earn royalties</SectionH2>
-            <p>Each Lambda Address sale includes a 5% royalty, with 2.5% going to the project's DAO and the remaining 2.5% given to the original minter.</p>
-            <p><a href={`${config.docUrl}/royalties`} target="_blank">Learn more</a></p>
-            <ButtonsContainer>
-              <WhiteButton href="#/mint">Get Started</WhiteButton>
-            </ButtonsContainer>
-          </LeftSection>
-          <MobileContainer>
-            <RoyaltiesImg src={royaltiesImg} />
-          </MobileContainer>
         </PageWrap>
       </Page>
     </Main>
@@ -390,13 +374,6 @@ const MobileImg = styled.img`
   }
   
 `
-
-const RoyaltiesImg = styled.img({
-  width: '100%',
-  maxWidth: 620
-})
-
-
 
 const UnderTheHoodImg = styled.img({
   width: '80%',
