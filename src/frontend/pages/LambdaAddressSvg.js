@@ -29,11 +29,34 @@ export default function LambdaAddressSvg() {
     }
     
     return (
-    <div>
+    <div style={{ margin: 20 }}>
         {isImg 
             ? <img src={dataURI} />
             : <AddressCardSvg address={{ address }} />
         }
+        <code style={{ margin: '30px 10px', display: 'block', fontSize: 12, whiteSpace: 'pre-wrap'    }}>{getMetadataImageSource(svgString)}</code>
     </div>
     )
+}
+
+
+function getMetadataImageSource(svgString) {
+    svgString = svgString.replaceAll('&#x27;', "\\'").replaceAll('\n', '')
+    const firstBlockPos = svgString.indexOf('class="badge">') + 14
+    const secondBlockPos = svgString.indexOf('class="address">') + 16
+
+    return `
+function getImage(uint256 tokenId, Registrar registrar) public pure returns (string memory) {
+    return
+        string(
+            abi.encodePacked(
+                '${svgString.substring(0, firstBlockPos)}',
+                Strings.toString(registrar.getAddressDifficulty(tokenId)),
+                '${svgString.substring(firstBlockPos + 1, secondBlockPos)}',
+                Strings.toHexString(address(uint160(tokenId))),
+                "</text></svg></g></svg>"
+            )
+        );
+}
+    `
 }
