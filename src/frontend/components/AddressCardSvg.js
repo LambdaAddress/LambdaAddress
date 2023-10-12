@@ -10,12 +10,21 @@ export default function AddressCardSvg({ address, className, highlightAddress = 
   return (
     <svg
       {...style}
-      className={`nft-address ${className}`}
+      className={className}
+      width="424"
+      height="524"
+      viewBox="0 0 452 552"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+    <g>
+    <svg
+      className="nft-address"
       width="424"
       height="524"
       viewBox="0 0 424 524"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+      x="14" y="14"
     >
       <style>{`
                 @font-face { font-family: 'Sofia Sans Extra Condensed'; font-style: normal; src: url(${base64Font}) format('woff2'); }
@@ -112,6 +121,8 @@ export default function AddressCardSvg({ address, className, highlightAddress = 
         }
         
       </text>
+    </svg>
+    </g>
     </svg>
   )
 }
