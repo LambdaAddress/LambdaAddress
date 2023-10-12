@@ -41,7 +41,10 @@ export default function LambdaAddressSvg() {
 
 
 function getMetadataImageSource(svgString) {
-    svgString = svgString.replaceAll('&#x27;', "\\'").replaceAll('\n', '')
+    svgString = svgString
+        .replaceAll('&#x27;', "\\'")
+        .replaceAll('\n', '')
+        .replace(' data-reactroot=""', '')
     const firstBlockPos = svgString.indexOf('class="badge">') + 14
     const secondBlockPos = svgString.indexOf('class="address">') + 16
 
