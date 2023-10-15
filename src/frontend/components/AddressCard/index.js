@@ -115,11 +115,11 @@ const MenuIconStyled = styled.img({
   transition: 'opacity 0.3s ease-out',
 
   [`@media ${breakpoints.up.xs}`]: {
-    top: '6%',
-    right: 4,
+    top: '7%',
+    right: 16,
   },
   [`@media ${breakpoints.up.sm}`]: {
-    top: 40,
+    top: 48,
     right: 2
   },
 

@@ -22,7 +22,7 @@ export default {
       fontSize: size.sm,
       color: white,
       textAlign: 'left',
-      backgroundColor: `rgba(35,35,35,0.4) !important`,
+      backgroundColor: `rgba(40,26,78,0.7) !important`,
       borderRadius: borderRadius.md,
     },
   },
