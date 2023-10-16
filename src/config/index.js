@@ -100,7 +100,11 @@ export function getNetworkInfo(chainId) {
 }
 
 export function getSupportedNetworks() {
-    return Object.values(supportedNetworks)
+    const isProduction = process.env.REACT_APP_BUILD_ENV === 'production'
+
+    return isProduction 
+        ? Object.values(supportedNetworks).filter(network => !network.isTestnet)
+        : Object.values(supportedNetworks)
 }
 
 export function getUnsupportedNetwork() {
