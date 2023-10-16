@@ -12,7 +12,7 @@ import styled from '@emotion/styled'
 import TextField from '@mui/material/TextField'
 import TransactionButton from '../../TransactionButton'
 import { useEffect, useMemo, useState } from 'react'
-import useTransactionSender, { TransactionStatus } from '../../../hooks/useTransactionSender'
+import useTransactionSender from '../../../hooks/useTransactionSender'
 import GnosisSafeAbi from './GnosisSafeAbi'
 
 const gnosisSafe = new ethers.utils.Interface(GnosisSafeAbi.abi)

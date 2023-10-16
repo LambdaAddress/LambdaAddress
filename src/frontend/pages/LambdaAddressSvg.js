@@ -9,7 +9,6 @@
  * 
  */
 import AddressCardSvg from '../components/AddressCardSvg'
-import { useEffect } from 'react'
 import { renderToString } from 'react-dom/server'
 import { useLocation } from 'react-router-dom'
 
@@ -31,7 +30,7 @@ export default function LambdaAddressSvg() {
     return (
     <div style={{ margin: 20 }}>
         {isImg 
-            ? <img src={dataURI} />
+            ? <img alt="" src={dataURI} />
             : <AddressCardSvg address={{ address }} />
         }
         <code style={{ margin: '30px 10px', display: 'block', fontSize: 12, whiteSpace: 'pre-wrap'    }}>{getMetadataImageSource(svgString)}</code>

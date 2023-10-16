@@ -1,7 +1,4 @@
-import colors from '../../base/colors'
-import pxToRem from '../../functions/pxToRem'
 
-const { transparent } = colors
 
 export default {
   styleOverrides: {
