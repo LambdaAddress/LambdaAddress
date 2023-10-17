@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { from, Observable, Subject, takeUntil } from 'rxjs'
+import { from, Subject } from 'rxjs'
 import { createClient, cacheExchange, fetchExchange } from 'urql'
 
 const apiUrl = 'https://api.thegraph.com/index-node/graphql'

@@ -487,5 +487,5 @@ const Link = styled.a({
 
 // Debugging info
 console.debug('NODE_ENV: ', process.env.NODE_ENV)
-console.debug('ETH_ENV: ', process.env.REACT_APP_ETH_ENV)
+console.debug('BUILD_ENV', process.env.REACT_APP_BUILD_ENV)
 //console.debug('Registrar address: ', Registrar)

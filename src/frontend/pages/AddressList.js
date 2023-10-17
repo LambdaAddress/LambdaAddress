@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import Stack from '@mui/material/Stack'
-import TextField from '@mui/material/TextField'
 import { useWeb3React } from '@web3-react/core'
 import { useState, useContext, useMemo } from 'react'
 
@@ -10,7 +9,6 @@ import AddressCard from '../components/AddressCard'
 import Spinner from '../components/Spinner'
 import Header from '../components/Header'
 import MKBox from '../components/MKBox'
-import MKButton from '../components/MKButton'
 import { injected } from '../connectors'
 import { MainContext } from '../MainContext'
 import GnosisSafeDeployer from '../components/deployers/GnosisSafeDeployer/GnosisSafeDeployer'
@@ -21,7 +19,7 @@ import useEagerConnect from '../hooks/useEagerConnect'
 const DeployerType = { NONE: 0, CUSTOM_BYTECODE: 1, GNOSIS_SAFE: 2, AMBIRE: 3 }
 
 export default function AddressList() {
-  const { account, active } = useWeb3React()
+  const { account } = useWeb3React()
   const { contracts, network } = useContext(MainContext)
   const { registrar } = contracts || {}
   
@@ -55,6 +53,15 @@ export default function AddressList() {
   const generateMenu = (address) => {
     const deployMenu = [
       {
+        text: 'Deploy custom bytecode',
+        onClick: () => {
+          showDeployModal(address, DeployerType.CUSTOM_BYTECODE)
+        },
+      }
+    ]
+
+    if (process.env.REACT_APP_BUILD_ENV !== 'production') {
+      deployMenu.push({
         text: 'Deploy an Ambire Wallet',
         onClick: () => {
           showDeployModal(address, DeployerType.AMBIRE)
@@ -65,14 +72,8 @@ export default function AddressList() {
         onClick: () => {
           showDeployModal(address, DeployerType.GNOSIS_SAFE)
         },
-      },
-      {
-        text: 'Deploy custom bytecode',
-        onClick: () => {
-          showDeployModal(address, DeployerType.CUSTOM_BYTECODE)
-        },
-      }
-    ]
+      })
+    }
 
     return address.isDeployed
       ? undefined
@@ -209,47 +210,4 @@ const EditBytecodeModal = styled(Stack)(({ open }) => ({
   padding: 20,
 }))
 
-const Form = styled.div({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  marginTop: 40,
-})
 
-const BytecodeInput = styled(TextField)({
-  width: '100%',
-  '& .MuiOutlinedInput-notchedOutline': {
-    color: '#344767',
-  },
-  '& .MuiInputBase-input': {
-    borderRadius: '8px',
-    backgroundColor: 'white',
-    color: '#344767',
-  },
-})
-
-const ButtonContainer = styled.div({
-  display: 'flex',
-  justifyContent: 'center',
-  marginTop: 40,
-})
-
-const DeployButton = styled(MKButton)({
-  width: 160,
-  margin: '0 10px',
-})
-
-const CancelButton = styled(MKButton)({
-  width: 160,
-  margin: '0 10px',
-  backgroundColor: '#aaa',
-
-  ':hover': {
-    backgroundColor: '#bbb',
-  },
-})
-
-const Label = styled.div({
-  color: 'white',
-  fontSize: '1rem',
-})

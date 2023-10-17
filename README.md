@@ -112,4 +112,14 @@ export KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
 - `yarn frontend:prettier:write` : Prettier write on frontend code
 - `yarn frontend:serve` : Run a local server for the frontend build
 
+# Supported networks
+
+The following chains are currently supported: 
+
+- Arbitrum
+- Optimism
+- Goerli
+- Sepolia
+
+A list of the corresponding contract addresses can be found [here](./src/config/README.md).
 
