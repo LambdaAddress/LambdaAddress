@@ -23,7 +23,7 @@ export default function AddressCard({ address, menu, ...attr }) {
         address={address}
         highlightAddress
       />
-      { address?.isDeployed && <DeployedCheckmark /> }
+      { address?.isDeployed || true && <DeployedCheckmark /> }
       {menu && <MenuIconStyled src={MenuIcon} onClick={handleMenuClick} ref={menuButton} /> }
       {menu && (
         <Menu
@@ -56,15 +56,14 @@ export default function AddressCard({ address, menu, ...attr }) {
 const NftAddress = styled.div({
   [`@media ${breakpoints.up.xs}`]: {
     margin: '16px 0',
-    //width: 345,
-    //height: 450,
+    marginLeft: 0,
     width: '100%',
     maxWidth: 400,
     height: 'auto'
   },
   [`@media ${breakpoints.up.sm}`]: {
     margin: '12px 18px',
-    //width: 400,
+    marginLeft: 0,
     width: 'auto',
     height: 500,
   },
@@ -98,8 +97,8 @@ const AddressSvg = styled(AddressCardSvg)({
 
 const DeployedCheckmark = styled(Spinner)({
   position: 'absolute',
-  bottom: 20,
-  right: 14
+  bottom: 32,
+  right: 24
 })
 DeployedCheckmark.defaultProps = {
   size: 2.5,
