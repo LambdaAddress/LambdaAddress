@@ -1,0 +1,1 @@
+export default { NONE: 0, CUSTOM_BYTECODE: 1, GNOSIS_SAFE: 2, AMBIRE: 3 }

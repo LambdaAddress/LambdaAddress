@@ -1,13 +1,14 @@
-import { useState, useRef } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { Menu, MenuItem } from '@mui/material'
 import styled from '@emotion/styled'
 
 import breakpoints from '../../breakpoints'
 import MenuIcon from '../../images/menu-icon.svg'
 import AddressCardSvg from '../AddressCardSvg'
+import DeployerType from '../deployers/DeployerType'
 import Spinner, { SpinnerStatus } from '../Spinner'
 
-export default function AddressCard({ address, menu, ...attr }) {
+export default function AddressCard({ address, onMenuItemClick, ...attr }) {
   const menuButton = useRef(null)
   const [open, setOpen] = useState(false)
   const handleMenuClick = () => {
@@ -16,6 +17,36 @@ export default function AddressCard({ address, menu, ...attr }) {
   const handleMenuClose = () => {
     setOpen(false)
   }
+
+  const menu = useMemo(() => {
+    const deployMenu = [
+      {
+        text: 'Deploy custom bytecode',
+        onClick: () => {
+          onMenuItemClick(address, DeployerType.CUSTOM_BYTECODE)
+        },
+      }
+    ]
+
+    if (process.env.REACT_APP_BUILD_ENV !== 'production') {
+      deployMenu.push({
+        text: 'Deploy an Ambire Wallet',
+        onClick: () => {
+          onMenuItemClick(address, DeployerType.AMBIRE)
+        },
+      },
+      {
+        text: 'Deploy Gnosis Safe',
+        onClick: () => {
+          onMenuItemClick(address, DeployerType.GNOSIS_SAFE)
+        },
+      })
+    }
+
+    return address.isDeployed
+      ? undefined
+      : deployMenu
+  }, [address])
 
   return (
     <NftAddress {...attr}>

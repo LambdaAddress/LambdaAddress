@@ -11,12 +11,13 @@ import Header from '../components/Header'
 import MKBox from '../components/MKBox'
 import { injected } from '../connectors'
 import { MainContext } from '../MainContext'
+import DeployerType from '../components/deployers/DeployerType'
 import GnosisSafeDeployer from '../components/deployers/GnosisSafeDeployer/GnosisSafeDeployer'
 import AmbireDeployer from '../components/deployers/AmbireDeployer/AmbireDeployer'
 import useAddresses from '../hooks/useAddresses'
 import useEagerConnect from '../hooks/useEagerConnect'
 
-const DeployerType = { NONE: 0, CUSTOM_BYTECODE: 1, GNOSIS_SAFE: 2, AMBIRE: 3 }
+
 
 export default function AddressList() {
   const { account } = useWeb3React()
@@ -50,36 +51,6 @@ export default function AddressList() {
     })
   }
 
-  const generateMenu = (address) => {
-    const deployMenu = [
-      {
-        text: 'Deploy custom bytecode',
-        onClick: () => {
-          showDeployModal(address, DeployerType.CUSTOM_BYTECODE)
-        },
-      }
-    ]
-
-    if (process.env.REACT_APP_BUILD_ENV !== 'production') {
-      deployMenu.push({
-        text: 'Deploy an Ambire Wallet',
-        onClick: () => {
-          showDeployModal(address, DeployerType.AMBIRE)
-        },
-      },
-      {
-        text: 'Deploy Gnosis Safe',
-        onClick: () => {
-          showDeployModal(address, DeployerType.GNOSIS_SAFE)
-        },
-      })
-    }
-
-    return address.isDeployed
-      ? undefined
-      : deployMenu
-  }
-
   const [ DeployerComponent, deployer ] = useMemo(() => {
     const none = [() => <div></div>, {}]
 
@@ -105,7 +76,7 @@ export default function AddressList() {
 
           <AddressContainer>
             {addressList.map((addr) => (
-              <AddressCard key={addr.address} address={addr} menu={generateMenu(addr)} />
+              <AddressCard key={addr.address} address={addr} onMenuItemClick={showDeployModal} />
             ))}
           </AddressContainer>
         </MainBox>
