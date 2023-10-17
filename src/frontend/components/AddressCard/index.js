@@ -23,7 +23,7 @@ export default function AddressCard({ address, menu, ...attr }) {
         address={address}
         highlightAddress
       />
-      { address?.isDeployed || true && <DeployedCheckmark /> }
+      { address?.isDeployed && <DeployedCheckmark /> }
       {menu && <MenuIconStyled src={MenuIcon} onClick={handleMenuClick} ref={menuButton} /> }
       {menu && (
         <Menu
