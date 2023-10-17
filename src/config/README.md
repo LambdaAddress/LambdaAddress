@@ -1,0 +1,36 @@
+# Supported networks
+
+## Arbitrum
+
+  - **RegistrarImplementation**: `0x25822D236F4AcbA19f8104ccc8D6FeBEAa2005E5`
+  - **Registrar**: `0x83Ba1110e1fBC9aB84102B7DF0d909e367Fad785`
+  - **NFTAddressFactory**: `0xC7CF3B442038741932c69B7c3212C3527D11f05C`
+  - **MetaData**: `0xeFb07be179d518C0e09E5C914be611137BA34024`
+  - **AmbireAccountDeployer**: `0xa0456f4bd258A3685dd5f7222A7763AAC9463A97`
+  - **SafeDeployer**: `0xB0196ddC5D3F5953566D505d866176eE1Ef0BE76`
+
+## Optimism
+
+  - **RegistrarImplementation**: `0x25822D236F4AcbA19f8104ccc8D6FeBEAa2005E5`
+  - **Registrar**: `0x83Ba1110e1fBC9aB84102B7DF0d909e367Fad785`
+  - **NFTAddressFactory**: `0xC7CF3B442038741932c69B7c3212C3527D11f05C`
+  - **MetaData**: `0xeFb07be179d518C0e09E5C914be611137BA34024`
+  - **AmbireAccountDeployer**: `0xa0456f4bd258A3685dd5f7222A7763AAC9463A97`
+  - **SafeDeployer**: `0xB0196ddC5D3F5953566D505d866176eE1Ef0BE76`
+
+## Goerli
+
+  - **RegistrarImplementation**: `0x25822D236F4AcbA19f8104ccc8D6FeBEAa2005E5`
+  - **Registrar**: `0x83Ba1110e1fBC9aB84102B7DF0d909e367Fad785`
+  - **NFTAddressFactory**: `0xC7CF3B442038741932c69B7c3212C3527D11f05C`
+  - **MetaData**: `0xeFb07be179d518C0e09E5C914be611137BA34024`
+  - **AmbireAccountDeployer**: `0xa0456f4bd258A3685dd5f7222A7763AAC9463A97`
+  - **SafeDeployer**: `0xB0196ddC5D3F5953566D505d866176eE1Ef0BE76`
+
+## Sepolia
+
+  - **RegistrarImplementation**: `0x25822D236F4AcbA19f8104ccc8D6FeBEAa2005E5`
+  - **Registrar**: `0x83Ba1110e1fBC9aB84102B7DF0d909e367Fad785`
+  - **NFTAddressFactory**: `0xC7CF3B442038741932c69B7c3212C3527D11f05C`
+  - **SafeDeployer**: `0xB0196ddC5D3F5953566D505d866176eE1Ef0BE76`
+
