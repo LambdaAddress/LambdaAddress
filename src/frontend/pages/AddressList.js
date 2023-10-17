@@ -53,6 +53,15 @@ export default function AddressList() {
   const generateMenu = (address) => {
     const deployMenu = [
       {
+        text: 'Deploy custom bytecode',
+        onClick: () => {
+          showDeployModal(address, DeployerType.CUSTOM_BYTECODE)
+        },
+      }
+    ]
+
+    if (process.env.REACT_APP_BUILD_ENV !== 'production') {
+      deployMenu.push({
         text: 'Deploy an Ambire Wallet',
         onClick: () => {
           showDeployModal(address, DeployerType.AMBIRE)
@@ -63,14 +72,8 @@ export default function AddressList() {
         onClick: () => {
           showDeployModal(address, DeployerType.GNOSIS_SAFE)
         },
-      },
-      {
-        text: 'Deploy custom bytecode',
-        onClick: () => {
-          showDeployModal(address, DeployerType.CUSTOM_BYTECODE)
-        },
-      }
-    ]
+      })
+    }
 
     return address.isDeployed
       ? undefined
