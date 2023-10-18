@@ -1,10 +1,7 @@
 import styled from '@emotion/styled'
 import Stack from '@mui/material/Stack'
 import { useWeb3React } from '@web3-react/core'
-import { useState, useContext, useMemo } from 'react'
-
 import breakpoints from '../breakpoints'
-import CustomBytecode from '../components/deployers/CustomBytecode'
 import AddressCard from '../components/AddressCard'
 import Spinner from '../components/Spinner'
 import Header from '../components/Header'
@@ -12,10 +9,10 @@ import MKBox from '../components/MKBox'
 import { injected } from '../connectors'
 import { MainContext } from '../MainContext'
 import DeployerType from '../components/deployers/DeployerType'
-import GnosisSafeDeployer from '../components/deployers/GnosisSafeDeployer/GnosisSafeDeployer'
-import AmbireDeployer from '../components/deployers/AmbireDeployer/AmbireDeployer'
+import DeployerModal from '../components/deployers/DeployerModal'
 import useAddresses from '../hooks/useAddresses'
 import useEagerConnect from '../hooks/useEagerConnect'
+import { useState, useContext } from 'react'
 
 
 
@@ -46,22 +43,12 @@ export default function AddressList() {
     setImmediate(async () => {      
       setIsModalOpen(true)
       setSelectedDeployer(deployerType)
-      const factoryAddress = await registrar.getFactory(address.address)
-      setSelectedAddress({ ...address, factoryAddress })
+      setSelectedAddress(address)
+      //const factoryAddress = await registrar.getFactory(address.address)
+      //setSelectedAddress({ ...address, factoryAddress })
     })
   }
 
-  const [ DeployerComponent, deployer ] = useMemo(() => {
-    const none = [() => <div></div>, {}]
-
-    switch (selectedDeployer) {
-      case DeployerType.NONE: return none
-      case DeployerType.CUSTOM_BYTECODE: return [CustomBytecode, {}]
-      case DeployerType.GNOSIS_SAFE: return [GnosisSafeDeployer, contracts?.safeDeployer]
-      case DeployerType.AMBIRE: return [AmbireDeployer, contracts?.ambireAccountDeployer]
-      default: return none
-    }
-  }, [selectedDeployer])
 
   return (
     <>
@@ -71,8 +58,7 @@ export default function AddressList() {
         <MainBox>
           <TitleContainer>
             <Title>My Addresses {isLoading && <Loading />}</Title>
-          </TitleContainer>
-         
+          </TitleContainer>         
 
           <AddressContainer>
             {addressList.map((addr) => (
@@ -81,18 +67,13 @@ export default function AddressList() {
           </AddressContainer>
         </MainBox>
       </AddressListPage>
-      <EditBytecodeModal open={isModalOpen}>
-        {selectedAddress && (
-          <DeployerComponent 
-            nftAddress={selectedAddress.address}
-            contracts={network.contracts} 
-            deployer={deployer}
-            registrar={registrar}
-            network={network}
-            onClose={closeDeployModal}
-          />
-        )}
-      </EditBytecodeModal>
+
+      <DeployerModal 
+        isOpen={isModalOpen} 
+        address={selectedAddress?.address} 
+        deployerType={selectedDeployer} 
+        onClose={closeDeployModal}
+      />
     </>
   )
 }
