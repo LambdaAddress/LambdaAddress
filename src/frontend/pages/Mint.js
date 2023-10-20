@@ -241,7 +241,7 @@ export default function Mint() {
               </MessageContainer>
             </ProgressBox>
 
-            <UnmmintedAddressCard
+            <MintedAddressCard
               className={[
                 SEARCH_STATUS.ADDRESS_FOUND, 
                 SEARCH_STATUS.TRANSACTION_PENDING,, 
@@ -305,13 +305,7 @@ export default function Mint() {
                     </MKButton>
                   </ButtonContainer>
                 </>
-              )}                    
-              {/*}
-              <MintedAddressCard 
-                className={status === SEARCH_STATUS.ADDRESS_CREATED && 'show'}
-                address={{ address: generatedAddress }} 
-                onMenuItemClick={() => {}} 
-              />*/}
+              )}       
             </div>
           )}
 
@@ -354,7 +348,7 @@ const TitleContainer = styled.div({
     marginBottom: 14
   },
   [`@media ${breakpoints.up.sm}`]: {
-    marginBottom: 40
+    marginBottom: 20
   },
 })
 
@@ -444,14 +438,14 @@ const UnmmintedAddressCard = styled(AddressCardSvg)({
 
 const MintedAddressCard = styled(AddressCard)({
   position: 'absolute',
-  transform: 'translateX(calc(-50% - 12px))',
+  transform: 'translateX(calc(-50% - 24px))',
   transition: 'opacity 3.5s ease-in 0.8s',
   opacity: 0,
   width: '100%',
-  maxWidth: 350,
+  maxWidth: '350px !important',
   height: 'auto',
   [`@media ${breakpoints.up.xs}`]: {
-    left: 'calc(50% + 8px)',
+    left: 'calc(50% + 32px)',
   },
   [`@media ${breakpoints.up.sm}`]: {
     left: 'calc(50% + 8px)',

@@ -51,6 +51,7 @@ export default function AddressCard({ address, onMenuItemClick, ...attr }) {
   return (
     <NftAddress {...attr}>
       <AddressSvg
+        style={{ width: '100%'  }}
         address={address}
         highlightAddress
       />
@@ -102,13 +103,9 @@ const NftAddress = styled.div({
   position: 'relative',
   height: 500,
   borderRadius: 20,
-  transform: 'scale(1)',
-  transition: 'transform 0.25s ease-out',
   overflow: 'visible',
 
   ':hover': {
-    transform: 'scale(1.05)',
-    zIndex: 100,
   },
 })
 
@@ -121,8 +118,8 @@ const AddressSvg = styled(AddressCardSvg)({
   },
   [`@media ${breakpoints.up.sm}`]: {
     margin: '12px 18px',
-    width: 'auto',
-    height: 500,
+    //width: 'auto',
+    //height: 500,
   },
 })
 
