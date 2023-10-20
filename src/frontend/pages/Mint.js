@@ -4,7 +4,6 @@ import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Stack from '@mui/material/Stack'
 import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import CountUp from 'react-countup'
 

@@ -125,8 +125,8 @@ const AddressSvg = styled(AddressCardSvg)({
 
 const DeployedCheckmark = styled(Spinner)({
   position: 'absolute',
-  bottom: 32,
-  right: 24
+  bottom: '8%',
+  right: '9%'
 })
 DeployedCheckmark.defaultProps = {
   size: 2.5,
