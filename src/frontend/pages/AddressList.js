@@ -44,8 +44,6 @@ export default function AddressList() {
       setIsModalOpen(true)
       setSelectedDeployer(deployerType)
       setSelectedAddress(address)
-      //const factoryAddress = await registrar.getFactory(address.address)
-      //setSelectedAddress({ ...address, factoryAddress })
     })
   }
 

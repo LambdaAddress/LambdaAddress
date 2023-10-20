@@ -13,7 +13,6 @@ import { injected } from '../connectors'
 import breakpoints from '../breakpoints'
 import AdvancedOptions from '../components/AdvancedOptions'
 import AddressCard from '../components/AddressCard'
-import AddressCardSvg from '../components/AddressCardSvg'
 import DifficultySelector from '../components/DifficultySelector'
 import DifficultyTag from '../components/DifficultyTag'
 import Header from '../components/Header'
@@ -32,7 +31,7 @@ const SEARCH_STATUS = {
   SEARCHING: 'SEARCHING',
   POST_SEARCH: 'POST_SEARCH',
   ADDRESS_FOUND: 'ADDRESS_FOUND',
-  ADDRESS_CREATED: 'ADDRESS_CREATED',
+  ADDRESS_MINTED: 'ADDRESS_CREATED',
   TRANSACTION_PENDING: 'TRANSACTION_PENDING',
   ERROR: 'ERROR',
 }
@@ -56,7 +55,7 @@ function searchStatus({
   else if (tryAgain || (!isStarted && !generatedAddress)) return SEARCH_STATUS.PRE_SEARCH
   else if (isStarted) return SEARCH_STATUS.SEARCHING
   else if (generatedAddress && !isStarted && !isCreated) return SEARCH_STATUS.ADDRESS_FOUND
-  else if (generatedAddress && isCreated) return SEARCH_STATUS.ADDRESS_CREATED
+  else if (generatedAddress && isCreated) return SEARCH_STATUS.ADDRESS_MINTED
 }
 
 export default function Mint() {
@@ -201,7 +200,7 @@ export default function Mint() {
           SEARCH_STATUS.SEARCHING, 
           SEARCH_STATUS.TRANSACTION_PENDING, 
           SEARCH_STATUS.ADDRESS_FOUND, 
-          SEARCH_STATUS.ADDRESS_CREATED, 
+          SEARCH_STATUS.ADDRESS_MINTED, 
           SEARCH_STATUS.ERROR].includes(status) && (
           <SpinnerContainer>
             <ProgressBox className={status === SEARCH_STATUS.SEARCHING && 'show'}>
@@ -216,7 +215,7 @@ export default function Mint() {
                           return SpinnerStatus.loading
                         case SEARCH_STATUS.ADDRESS_FOUND:
                           return SpinnerStatus.success
-                        case SEARCH_STATUS.ADDRESS_CREATED:
+                        case SEARCH_STATUS.ADDRESS_MINTED:
                           return SpinnerStatus.success
                         case SEARCH_STATUS.ERROR:
                           return SpinnerStatus.fail
@@ -242,10 +241,11 @@ export default function Mint() {
             </ProgressBox>
 
             <AddressCardPreview
+              minted={status === SEARCH_STATUS.ADDRESS_MINTED}
               className={[
                 SEARCH_STATUS.ADDRESS_FOUND, 
-                SEARCH_STATUS.TRANSACTION_PENDING,, 
-                SEARCH_STATUS.ADDRESS_CREATED, 
+                SEARCH_STATUS.TRANSACTION_PENDING,
+                SEARCH_STATUS.ADDRESS_MINTED, 
                 SEARCH_STATUS.ERROR].includes(status) && 'show'}
               address={{ address: generatedAddress }}
               highlightAddress
@@ -264,49 +264,51 @@ export default function Mint() {
 
           {[
             SEARCH_STATUS.TRANSACTION_PENDING,
-            SEARCH_STATUS.ADDRESS_CREATED,
+            SEARCH_STATUS.ADDRESS_MINTED,
             SEARCH_STATUS.ERROR,
           ].includes(status) && (
-            <MintingStatus>
-              <Spinner
-                size={3}
-                style={{ flex: '0 0 60px' }}
-                status={(() => {
-                  switch (status) {
-                    case SEARCH_STATUS.TRANSACTION_PENDING:
-                      return SpinnerStatus.loading
-                    case SEARCH_STATUS.ADDRESS_CREATED:
-                      return SpinnerStatus.success
-                    case SEARCH_STATUS.ERROR:
-                      return SpinnerStatus.fail
-                  }
-                })()}
-              />
+            <>
+              <MintingStatus>
+                <Spinner
+                  size={3}
+                  style={{ flex: '0 0 60px' }}
+                  status={(() => {
+                    switch (status) {
+                      case SEARCH_STATUS.TRANSACTION_PENDING:
+                        return SpinnerStatus.loading
+                      case SEARCH_STATUS.ADDRESS_MINTED:
+                        return SpinnerStatus.success
+                      case SEARCH_STATUS.ERROR:
+                        return SpinnerStatus.fail
+                    }
+                  })()}
+                />
 
-              {status === SEARCH_STATUS.TRANSACTION_PENDING && (
-                <StatusText>Minting address...</StatusText>
-              )}
+                {status === SEARCH_STATUS.TRANSACTION_PENDING && (
+                  <StatusText>Minting address...</StatusText>
+                )}
 
-              {status === SEARCH_STATUS.ADDRESS_CREATED && (
-                <StatusText>Address successfully minted. </StatusText>
-              )}        
+                {status === SEARCH_STATUS.ADDRESS_MINTED && (
+                  <StatusText>Address successfully minted. </StatusText>
+                )}        
 
-              {status === SEARCH_STATUS.ERROR && (
-                <>
+                {status === SEARCH_STATUS.ERROR && (
                   <StatusText>Error: Unable to generate address.</StatusText>
-                  <ButtonContainer style={{ marginTop: 10 }}>
-                    <MKButton
-                      onClick={() => {
-                        setError()
-                        onCreateClick(owner, salt)
-                      }}
-                    >
-                      Try again
-                    </MKButton>
-                  </ButtonContainer>
-                </>
-              )}       
-            </MintingStatus>
+                )}       
+              </MintingStatus>
+              {status === SEARCH_STATUS.ERROR && (
+                <ButtonContainer style={{ marginTop: 10 }}>
+                  <MKButton
+                    onClick={() => {
+                      setError()
+                      onCreateClick(owner, salt)
+                    }}
+                  >
+                    Try again
+                  </MKButton>
+                </ButtonContainer>
+                )}    
+            </>
           )}
 
         </MessageContainer>
@@ -371,6 +373,7 @@ const MainBox = styled(Stack)({
   boxShadow: '2px 1px 7px 0px rgb(0, 0, 0, 0.5)',
   margin: 'auto',
   marginTop: '80px',
+  marginBottom: '80px',
   color: 'white',
 })
 
@@ -400,7 +403,9 @@ const MintingStatus = styled.div({
   [`@media ${breakpoints.up.xs}`]: {
     marginTop: 0
   },  
-  marginTop: 20, 
+  [`@media ${breakpoints.up.sm}`]: {
+    marginTop: 20
+  },
   height: 70, 
   display: 'flex', 
   alignItems: 'center', 

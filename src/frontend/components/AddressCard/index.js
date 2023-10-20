@@ -8,7 +8,7 @@ import AddressCardSvg from '../AddressCardSvg'
 import DeployerType from '../deployers/DeployerType'
 import Spinner, { SpinnerStatus } from '../Spinner'
 
-export default function AddressCard({ address, onMenuItemClick, ...attr }) {
+export default function AddressCard({ minted, address, onMenuItemClick, ...attr }) {
   const menuButton = useRef(null)
   const [open, setOpen] = useState(false)
   const handleMenuClick = () => {
@@ -43,7 +43,7 @@ export default function AddressCard({ address, onMenuItemClick, ...attr }) {
       })
     }
 
-    return address.isDeployed
+    return address.isDeployed || minted === false
       ? undefined
       : deployMenu
   }, [address])
