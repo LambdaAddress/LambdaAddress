@@ -270,8 +270,8 @@ export default function Mint() {
             <>
               <MintingStatus>
                 <Spinner
-                  size={3}
-                  style={{ flex: '0 0 60px' }}
+                  size={2}
+                  style={{ flex: '0 0 40px' }}
                   status={(() => {
                     switch (status) {
                       case SEARCH_STATUS.TRANSACTION_PENDING:
