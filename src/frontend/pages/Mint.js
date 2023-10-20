@@ -241,7 +241,7 @@ export default function Mint() {
               </MessageContainer>
             </ProgressBox>
 
-            <MintedAddressCard
+            <AddressCardPreview
               className={[
                 SEARCH_STATUS.ADDRESS_FOUND, 
                 SEARCH_STATUS.TRANSACTION_PENDING,, 
@@ -267,10 +267,10 @@ export default function Mint() {
             SEARCH_STATUS.ADDRESS_CREATED,
             SEARCH_STATUS.ERROR,
           ].includes(status) && (
-            <div style={{ marginTop: 20 }}>
+            <MintingStatus>
               <Spinner
                 size={3}
-                style={{ display: 'inline-block', marginBottom: 20 }}
+                style={{ flex: '0 0 60px' }}
                 status={(() => {
                   switch (status) {
                     case SEARCH_STATUS.TRANSACTION_PENDING:
@@ -306,7 +306,7 @@ export default function Mint() {
                   </ButtonContainer>
                 </>
               )}       
-            </div>
+            </MintingStatus>
           )}
 
         </MessageContainer>
@@ -396,10 +396,20 @@ const Label = styled(FormControlLabel)({
   }
 })
 
+const MintingStatus = styled.div({ 
+  [`@media ${breakpoints.up.xs}`]: {
+    marginTop: 0
+  },  
+  marginTop: 20, 
+  height: 70, 
+  display: 'flex', 
+  alignItems: 'center', 
+  justifyContent: 'center' 
+})
+
 const StatusText = styled.span({
   marginLeft: '16px',
-  verticalAlig: 'middle',
-  lineHeight: '56px'
+  fontSize: '16px'
 })
 
 const SpinnerContainer = styled.div({
@@ -416,27 +426,8 @@ const SpinnerContainer = styled.div({
   },
 })
 
-const UnmmintedAddressCard = styled(AddressCardSvg)({
-  position: 'absolute',
-  transform: 'translateX(calc(-50% - 12px))',
-  transition: 'opacity 3.5s ease-in 0.8s',
-  opacity: 0,
-  width: '100%',
-  maxWidth: 350,
-  height: 'auto',
-  [`@media ${breakpoints.up.xs}`]: {
-    left: 'calc(50% + 8px)',
-  },
-  [`@media ${breakpoints.up.sm}`]: {
-    left: 'calc(50% + 8px)',
-  },
 
-  '&.show': {
-    opacity: 1,
-  },
-})
-
-const MintedAddressCard = styled(AddressCard)({
+const AddressCardPreview = styled(AddressCard)({
   position: 'absolute',
   transform: 'translateX(calc(-50% - 24px))',
   transition: 'opacity 3.5s ease-in 0.8s',
