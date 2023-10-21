@@ -25,6 +25,8 @@ export default function DeployerModal({ isOpen, address, deployerType, onClose }
     }, [deployerType])
 
     return (
+      <>
+      <Background open={isOpen} />
       <EditBytecodeModal open={isOpen}>
         {address && (
           <DeployerComponent 
@@ -37,33 +39,46 @@ export default function DeployerModal({ isOpen, address, deployerType, onClose }
           />
         )}
       </EditBytecodeModal>
+      </>
     )
 }
 
 
 const EditBytecodeModal = styled(Stack)(({ open }) => ({
-    [`@media ${breakpoints.up.xs}`]: {
-      width: '90%',
-    },
-    [`@media ${breakpoints.up.sm}`]: {
-      width: '400px',
-    },
-    [`@media ${breakpoints.up.md}`]: {
-      width: '600px',
-    },
-    borderRadius: '20px',
-    background: 'rgba(39,25,76,0.85)',
-    boxShadow: '2px 1px 7px 0px rgb(0, 0, 0, 0.5)',
-    margin: 'auto',
-    color: 'white',
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    display: 'block',
-    minHeight: 350,
-    zIndex: open ? 100 : -1,
-    opacity: open ? 1 : 0,
-    transition: 'opacity 0.3s ease-out',
-    padding: 20,
-  }))
+  [`@media ${breakpoints.up.xs}`]: {
+    width: '90%',
+  },
+  [`@media ${breakpoints.up.sm}`]: {
+    width: '400px',
+  },
+  [`@media ${breakpoints.up.md}`]: {
+    width: '600px',
+  },
+  borderRadius: '20px',
+  background: 'rgba(39,25,76,0.85)',
+  boxShadow: '2px 1px 7px 0px rgb(0, 0, 0, 0.5)',
+  margin: 'auto',
+  color: 'white',
+  position: 'fixed',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  display: 'block',
+  minHeight: 350,
+  zIndex: open ? 100 : -1,
+  opacity: open ? 1 : 0,
+  transition: 'opacity 0.3s ease-out',
+  padding: 20,
+}))
+
+const Background = styled.div(({ open }) => ({
+  position: 'fixed',
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  backdropFilter: 'blur(10px)',
+  zIndex: open ? 99 : -1,
+  opacity: open ? 1 : 0,
+  transition: 'opacity 0.3s ease-out',
+}))
