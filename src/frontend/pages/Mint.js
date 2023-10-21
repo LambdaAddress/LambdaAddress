@@ -73,7 +73,7 @@ export default function Mint() {
   // Address of the owner for the NftAddress and network info
   const { owner, network, contracts } = useContext(MainContext)
   // Contract addresses
-  const { NFTAddressFactory, Registrar } = network?.contracts || {}
+  const { NFTAddressFactory } = network?.contracts || {}
   // Is a transaction pending?
   const [sendingTransaction, setSendingTransaction] = useState(false)
   // Only search for addresses starting with pattern
@@ -468,17 +468,6 @@ const AddressCardPreview = styled(AddressCard)({
   },
 })
 
-const AddressText = styled(HighlightedAddress)({
-  [`@media ${breakpoints.up.xs}`]: {
-    marginTop: 0
-  }, 
-  [`@media ${breakpoints.up.sm}`]: {
-    marginTop: 30
-  }, 
-  [`@media ${breakpoints.up.md}`]: {
-    marginTop: 50
-  }, 
-})
 
 const ButtonContainer = styled.div({
   display: 'flex',
@@ -507,13 +496,6 @@ const MessageContainer = styled.div({
   textAlign: 'center',
 })
 
-const Link = styled.a({
-  color: 'white',
-  textDecoration: 'underline !important',
-  '&.alink': {
-    textDecoration: 'underline !important',
-  },
-})
 
 // Debugging info
 console.debug('NODE_ENV: ', process.env.NODE_ENV)
