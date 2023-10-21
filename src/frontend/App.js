@@ -1,12 +1,12 @@
 import { MainContextProvider } from './MainContext'
-import { useEffect } from 'react'
+import { lazy, useEffect, Suspense } from 'react'
 import ReactGA from "react-ga"
 import { Routes, Route, Navigate, HashRouter } from 'react-router-dom'
 
-import AddressList from './pages/AddressList'
-import Home from './pages/Home'
-import LambdaAddressSvg from './pages/LambdaAddressSvg'
-import Mint from './pages/Mint'
+const Home = lazy(() => import('./pages/Home'))
+const Mint = lazy(() => import('./pages/Mint'))
+const AddressList = lazy(() => import('./pages/AddressList'))
+const LambdaAddressSvg = lazy(() => import('./pages/LambdaAddressSvg'))
 
 ReactGA.initialize("G-EPF5R5CCES")
 
@@ -19,13 +19,17 @@ export default function App() {
     <MainContextProvider>
       <HashRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/mint" element={<Mint />} />
-          <Route path="/addresses" element={<AddressList />} />
-          <Route path="/svg" element={<LambdaAddressSvg />} />
+          <Route path="/" element={<RouteLoading page={<Home />} />} />
+          <Route path="/mint" element={<RouteLoading page={<Mint />} />} />
+          <Route path="/addresses" element={<RouteLoading page={<AddressList />} />} />
+          <Route path="/svg" element={<RouteLoading page={<LambdaAddressSvg />} />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </HashRouter>
     </MainContextProvider>
   )
+}
+
+function RouteLoading({ page }) {
+  return <Suspense fallback={<div>Loading...</div>}>{page}</Suspense>
 }
