@@ -80,7 +80,7 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
 
   return (
     <Main {...props}>
-      {nftAddress}
+      <Title>{nftAddress}</Title>
       {deployTx?.status
         ? <Loading status={deployTxStatus} />
         : <>
@@ -128,6 +128,12 @@ export default function GnosisSafeDeployer({ nftAddress, contracts, deployer, re
 
 const Main = styled.div({
   marginBottom: 68
+})
+
+const Title = styled.div({
+  fontFamily: "'Sofia Sans Extra Condensed', sans-serif",
+  fontSize: '28px',
+  textTransform: 'lowercase',
 })
 
 const Loading = styled(Spinner)({

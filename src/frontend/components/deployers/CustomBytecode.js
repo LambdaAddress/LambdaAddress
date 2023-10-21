@@ -16,7 +16,7 @@ export default function CustomBytecode({ nftAddress, contracts, deployer, regist
 
   return (
     <div {...props}>
-      {nftAddress}
+      <Title>{nftAddress}</Title>
       <Form>
         {!transaction.status ? (
           <>
@@ -65,6 +65,12 @@ export default function CustomBytecode({ nftAddress, contracts, deployer, regist
     </div>
   )
 }
+
+const Title = styled.div({
+  fontFamily: "'Sofia Sans Extra Condensed', sans-serif",
+  fontSize: '28px',
+  textTransform: 'lowercase',
+})
 
 const Label = styled.div({
   color: 'white',
