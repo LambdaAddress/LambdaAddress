@@ -4,7 +4,6 @@ import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Stack from '@mui/material/Stack'
 import { useWeb3React } from '@web3-react/core'
-import { ethers } from 'ethers'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import CountUp from 'react-countup'
 
@@ -12,7 +11,9 @@ import config from '../config'
 import { injected } from '../connectors'
 import breakpoints from '../breakpoints'
 import AdvancedOptions from '../components/AdvancedOptions'
-import AddressCardSvg from '../components/AddressCardSvg'
+import AddressCard from '../components/AddressCard'
+import DeployerType from '../components/deployers/DeployerType'
+import DeployerModal from '../components/deployers/DeployerModal'
 import DifficultySelector from '../components/DifficultySelector'
 import DifficultyTag from '../components/DifficultyTag'
 import Header from '../components/Header'
@@ -31,7 +32,7 @@ const SEARCH_STATUS = {
   SEARCHING: 'SEARCHING',
   POST_SEARCH: 'POST_SEARCH',
   ADDRESS_FOUND: 'ADDRESS_FOUND',
-  ADDRESS_CREATED: 'ADDRESS_CREATED',
+  ADDRESS_MINTED: 'ADDRESS_CREATED',
   TRANSACTION_PENDING: 'TRANSACTION_PENDING',
   ERROR: 'ERROR',
 }
@@ -55,7 +56,7 @@ function searchStatus({
   else if (tryAgain || (!isStarted && !generatedAddress)) return SEARCH_STATUS.PRE_SEARCH
   else if (isStarted) return SEARCH_STATUS.SEARCHING
   else if (generatedAddress && !isStarted && !isCreated) return SEARCH_STATUS.ADDRESS_FOUND
-  else if (generatedAddress && isCreated) return SEARCH_STATUS.ADDRESS_CREATED
+  else if (generatedAddress && isCreated) return SEARCH_STATUS.ADDRESS_MINTED
 }
 
 export default function Mint() {
@@ -72,7 +73,7 @@ export default function Mint() {
   // Address of the owner for the NftAddress and network info
   const { owner, network, contracts } = useContext(MainContext)
   // Contract addresses
-  const { NFTAddressFactory, Registrar } = network?.contracts || {}
+  const { NFTAddressFactory } = network?.contracts || {}
   // Is a transaction pending?
   const [sendingTransaction, setSendingTransaction] = useState(false)
   // Only search for addresses starting with pattern
@@ -81,6 +82,9 @@ export default function Mint() {
   const [isAdvancedOptionsVisible, setIsAdvancedOptionsVisible] = useState(false)
   // Display warning message or not
   const [isWarningVisible, setIsWarningVisible] = useState(true) 
+
+  const [selectedDeployer, setSelectedDeployer] = useState(DeployerType.NONE)
+  const [isDeployerModalOpen, setIsDeployerModalOpen] = useState(false)
 
   const [tryAgain, setTryAgain] = useState(false)
   // Current error
@@ -146,6 +150,11 @@ export default function Mint() {
     setTryAgain(true)
   }
 
+  const onDeployerClick = (address, deployerType) => {
+    setSelectedDeployer(deployerType)
+    setIsDeployerModalOpen(true)
+  } 
+
   // Reset `isStarted` when address is found
   if (!tryAgain && isStarted && generatedAddress) setIsStarted(false)
 
@@ -196,7 +205,12 @@ export default function Mint() {
           </DifficultySelectorContainer>
         )}
 
-        {[SEARCH_STATUS.SEARCHING, SEARCH_STATUS.ADDRESS_FOUND].includes(status) && (
+        {[
+          SEARCH_STATUS.SEARCHING, 
+          SEARCH_STATUS.TRANSACTION_PENDING, 
+          SEARCH_STATUS.ADDRESS_FOUND, 
+          SEARCH_STATUS.ADDRESS_MINTED, 
+          SEARCH_STATUS.ERROR].includes(status) && (
           <SpinnerContainer>
             <ProgressBox className={status === SEARCH_STATUS.SEARCHING && 'show'}>
               <MessageContainer>
@@ -210,7 +224,7 @@ export default function Mint() {
                           return SpinnerStatus.loading
                         case SEARCH_STATUS.ADDRESS_FOUND:
                           return SpinnerStatus.success
-                        case SEARCH_STATUS.ADDRESS_CREATED:
+                        case SEARCH_STATUS.ADDRESS_MINTED:
                           return SpinnerStatus.success
                         case SEARCH_STATUS.ERROR:
                           return SpinnerStatus.fail
@@ -235,10 +249,16 @@ export default function Mint() {
               </MessageContainer>
             </ProgressBox>
 
-            <AddressCard
-              className={status === SEARCH_STATUS.ADDRESS_FOUND && 'show'}
+            <AddressCardPreview
+              minted={status === SEARCH_STATUS.ADDRESS_MINTED}
+              className={[
+                SEARCH_STATUS.ADDRESS_FOUND, 
+                SEARCH_STATUS.TRANSACTION_PENDING,
+                SEARCH_STATUS.ADDRESS_MINTED, 
+                SEARCH_STATUS.ERROR].includes(status) && 'show'}
               address={{ address: generatedAddress }}
               highlightAddress
+              onMenuItemClick={onDeployerClick}
             />
           </SpinnerContainer>
         )}
@@ -254,75 +274,65 @@ export default function Mint() {
 
           {[
             SEARCH_STATUS.TRANSACTION_PENDING,
-            SEARCH_STATUS.ADDRESS_CREATED,
+            SEARCH_STATUS.ADDRESS_MINTED,
             SEARCH_STATUS.ERROR,
           ].includes(status) && (
-            <div>
-              <Spinner
-                style={{ marginBottom: 20 }}
-                status={(() => {
-                  switch (status) {
-                    case SEARCH_STATUS.TRANSACTION_PENDING:
-                      return SpinnerStatus.loading
-                    case SEARCH_STATUS.ADDRESS_CREATED:
-                      return SpinnerStatus.success
-                    case SEARCH_STATUS.ERROR:
-                      return SpinnerStatus.fail
-                  }
-                })()}
-              />
-            </div>
-          )}
-
-          {status === SEARCH_STATUS.TRANSACTION_PENDING && (
             <>
-              <div>Generating address...</div>
+              <MintingStatus>
+                <Spinner
+                  size={2}
+                  style={{ flex: '0 0 40px' }}
+                  status={(() => {
+                    switch (status) {
+                      case SEARCH_STATUS.TRANSACTION_PENDING:
+                        return SpinnerStatus.loading
+                      case SEARCH_STATUS.ADDRESS_MINTED:
+                        return SpinnerStatus.success
+                      case SEARCH_STATUS.ERROR:
+                        return SpinnerStatus.fail
+                    }
+                  })()}
+                />
+
+                {status === SEARCH_STATUS.TRANSACTION_PENDING && (
+                  <StatusText>Minting address...</StatusText>
+                )}
+
+                {status === SEARCH_STATUS.ADDRESS_MINTED && (
+                  <StatusText>Address successfully minted. </StatusText>
+                )}        
+
+                {status === SEARCH_STATUS.ERROR && (
+                  <StatusText>Error: Unable to generate address.</StatusText>
+                )}       
+              </MintingStatus>
+              {status === SEARCH_STATUS.ERROR && (
+                <ButtonContainer style={{ marginTop: 10 }}>
+                  <MKButton
+                    onClick={() => {
+                      setError()
+                      onCreateClick(owner, salt)
+                    }}
+                  >
+                    Try again
+                  </MKButton>
+                </ButtonContainer>
+                )}    
             </>
           )}
 
-          {status === SEARCH_STATUS.ADDRESS_CREATED && (
-            <>
-              <div>Address successfully created. </div>
-              <AddressText address={generatedAddress} />
-              <p style={{ marginTop: 10 }}>
-                View it on{' '}
-                <Link
-                  className="alink"
-                  href={openseaUrl(Registrar, generatedAddress)}
-                  target="_blank"
-                >
-                  OpenSea
-                </Link>
-                .
-              </p>
-            </>
-          )}
-
-          {status === SEARCH_STATUS.ERROR && (
-            <>
-              <div>Error: Unable to generate address.</div>
-              <ButtonContainer>
-                <MKButton
-                  onClick={() => {
-                    setError()
-                    onCreateClick(owner, salt)
-                  }}
-                >
-                  Try again
-                </MKButton>
-              </ButtonContainer>
-            </>
-          )}
         </MessageContainer>
       </MainBox>
+      <DeployerModal 
+        isOpen={isDeployerModalOpen} 
+        address={generatedAddress} 
+        deployerType={selectedDeployer} 
+        onClose={() => setIsDeployerModalOpen(false)}
+      />
     </MainPage>
   )
 }
 
-function openseaUrl(contractAddress, nftId) {
-  const nftIdBN = ethers.BigNumber.from(nftId)
-  return `https://opensea.io/assets/ethereum/${contractAddress}/${nftIdBN.toString()}`
-}
 
 const AlertBox = styled(Alert)({
   margin: 'auto',
@@ -356,7 +366,7 @@ const TitleContainer = styled.div({
     marginBottom: 14
   },
   [`@media ${breakpoints.up.sm}`]: {
-    marginBottom: 40
+    marginBottom: 20
   },
 })
 
@@ -379,6 +389,7 @@ const MainBox = styled(Stack)({
   boxShadow: '2px 1px 7px 0px rgb(0, 0, 0, 0.5)',
   margin: 'auto',
   marginTop: '80px',
+  marginBottom: '80px',
   color: 'white',
 })
 
@@ -404,6 +415,24 @@ const Label = styled(FormControlLabel)({
   }
 })
 
+const MintingStatus = styled.div({ 
+  [`@media ${breakpoints.up.xs}`]: {
+    marginTop: 0
+  },  
+  [`@media ${breakpoints.up.sm}`]: {
+    marginTop: 20
+  },
+  height: 70, 
+  display: 'flex', 
+  alignItems: 'center', 
+  justifyContent: 'center' 
+})
+
+const StatusText = styled.span({
+  marginLeft: '16px',
+  fontSize: '16px'
+})
+
 const SpinnerContainer = styled.div({
   [`@media ${breakpoints.down.md}`]: {
     aspectRatio: '350 / 434',
@@ -418,16 +447,17 @@ const SpinnerContainer = styled.div({
   },
 })
 
-const AddressCard = styled(AddressCardSvg)({
+
+const AddressCardPreview = styled(AddressCard)({
   position: 'absolute',
-  transform: 'translateX(calc(-50% - 12px))',
+  transform: 'translateX(calc(-50% - 24px))',
   transition: 'opacity 3.5s ease-in 0.8s',
   opacity: 0,
   width: '100%',
-  maxWidth: 350,
+  maxWidth: '350px !important',
   height: 'auto',
   [`@media ${breakpoints.up.xs}`]: {
-    left: 'calc(50% + 8px)',
+    left: 'calc(50% + 32px)',
   },
   [`@media ${breakpoints.up.sm}`]: {
     left: 'calc(50% + 8px)',
@@ -438,17 +468,6 @@ const AddressCard = styled(AddressCardSvg)({
   },
 })
 
-const AddressText = styled(HighlightedAddress)({
-  [`@media ${breakpoints.up.xs}`]: {
-    marginTop: 0
-  }, 
-  [`@media ${breakpoints.up.sm}`]: {
-    marginTop: 30
-  }, 
-  [`@media ${breakpoints.up.md}`]: {
-    marginTop: 50
-  }, 
-})
 
 const ButtonContainer = styled.div({
   display: 'flex',
@@ -477,13 +496,6 @@ const MessageContainer = styled.div({
   textAlign: 'center',
 })
 
-const Link = styled.a({
-  color: 'white',
-  textDecoration: 'underline !important',
-  '&.alink': {
-    textDecoration: 'underline !important',
-  },
-})
 
 // Debugging info
 console.debug('NODE_ENV: ', process.env.NODE_ENV)

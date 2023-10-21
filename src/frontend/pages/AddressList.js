@@ -1,22 +1,20 @@
 import styled from '@emotion/styled'
 import Stack from '@mui/material/Stack'
 import { useWeb3React } from '@web3-react/core'
-import { useState, useContext, useMemo } from 'react'
-
 import breakpoints from '../breakpoints'
-import CustomBytecode from '../components/deployers/CustomBytecode'
 import AddressCard from '../components/AddressCard'
 import Spinner from '../components/Spinner'
 import Header from '../components/Header'
 import MKBox from '../components/MKBox'
 import { injected } from '../connectors'
 import { MainContext } from '../MainContext'
-import GnosisSafeDeployer from '../components/deployers/GnosisSafeDeployer/GnosisSafeDeployer'
-import AmbireDeployer from '../components/deployers/AmbireDeployer/AmbireDeployer'
+import DeployerType from '../components/deployers/DeployerType'
+import DeployerModal from '../components/deployers/DeployerModal'
 import useAddresses from '../hooks/useAddresses'
 import useEagerConnect from '../hooks/useEagerConnect'
+import { useState, useContext } from 'react'
 
-const DeployerType = { NONE: 0, CUSTOM_BYTECODE: 1, GNOSIS_SAFE: 2, AMBIRE: 3 }
+
 
 export default function AddressList() {
   const { account } = useWeb3React()
@@ -45,83 +43,35 @@ export default function AddressList() {
     setImmediate(async () => {      
       setIsModalOpen(true)
       setSelectedDeployer(deployerType)
-      const factoryAddress = await registrar.getFactory(address.address)
-      setSelectedAddress({ ...address, factoryAddress })
+      setSelectedAddress(address)
     })
   }
 
-  const generateMenu = (address) => {
-    const deployMenu = [
-      {
-        text: 'Deploy custom bytecode',
-        onClick: () => {
-          showDeployModal(address, DeployerType.CUSTOM_BYTECODE)
-        },
-      }
-    ]
-
-    if (process.env.REACT_APP_BUILD_ENV !== 'production') {
-      deployMenu.push({
-        text: 'Deploy an Ambire Wallet',
-        onClick: () => {
-          showDeployModal(address, DeployerType.AMBIRE)
-        },
-      },
-      {
-        text: 'Deploy Gnosis Safe',
-        onClick: () => {
-          showDeployModal(address, DeployerType.GNOSIS_SAFE)
-        },
-      })
-    }
-
-    return address.isDeployed
-      ? undefined
-      : deployMenu
-  }
-
-  const [ DeployerComponent, deployer ] = useMemo(() => {
-    const none = [() => <div></div>, {}]
-
-    switch (selectedDeployer) {
-      case DeployerType.NONE: return none
-      case DeployerType.CUSTOM_BYTECODE: return [CustomBytecode, {}]
-      case DeployerType.GNOSIS_SAFE: return [GnosisSafeDeployer, contracts?.safeDeployer]
-      case DeployerType.AMBIRE: return [AmbireDeployer, contracts?.ambireAccountDeployer]
-      default: return none
-    }
-  }, [selectedDeployer])
 
   return (
     <>
-      <AddressListPage modal={isModalOpen ? 'true' : 'false'} onClick={closeDeployModal}>
+      <AddressListPage onClick={closeDeployModal}>
         <Header />
 
         <MainBox>
           <TitleContainer>
             <Title>My Addresses {isLoading && <Loading />}</Title>
-          </TitleContainer>
-         
+          </TitleContainer>         
 
           <AddressContainer>
             {addressList.map((addr) => (
-              <AddressCard key={addr.address} address={addr} menu={generateMenu(addr)} />
+              <AddressCard key={addr.address} address={addr} onMenuItemClick={showDeployModal} />
             ))}
           </AddressContainer>
         </MainBox>
       </AddressListPage>
-      <EditBytecodeModal open={isModalOpen}>
-        {selectedAddress && (
-          <DeployerComponent 
-            nftAddress={selectedAddress.address}
-            contracts={network.contracts} 
-            deployer={deployer}
-            registrar={registrar}
-            network={network}
-            onClose={closeDeployModal}
-          />
-        )}
-      </EditBytecodeModal>
+
+      <DeployerModal 
+        isOpen={isModalOpen} 
+        address={selectedAddress?.address} 
+        deployerType={selectedDeployer} 
+        onClose={closeDeployModal}
+      />
     </>
   )
 }
@@ -134,8 +84,6 @@ const AddressListPage = styled(MKBox)`
   position: relative;
   justify-content: center;
   display: flow-root;
-  transition: filter 0.3s ease-out;
-  filter: ${({ modal }) => (modal === 'true' ? 'blur(10px)' : 'none')};
 `
 
 const TitleContainer = styled.div({
@@ -183,31 +131,5 @@ const AddressContainer = styled.div({
 })
 
 
-const EditBytecodeModal = styled(Stack)(({ open }) => ({
-  [`@media ${breakpoints.up.xs}`]: {
-    width: '90%',
-  },
-  [`@media ${breakpoints.up.sm}`]: {
-    width: '400px',
-  },
-  [`@media ${breakpoints.up.md}`]: {
-    width: '600px',
-  },
-  borderRadius: '20px',
-  background: 'rgba(39,25,76,0.85)',
-  boxShadow: '2px 1px 7px 0px rgb(0, 0, 0, 0.5)',
-  margin: 'auto',
-  color: 'white',
-  position: 'fixed',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  display: 'block',
-  minHeight: 350,
-  zIndex: open ? 100 : -1,
-  opacity: open ? 1 : 0,
-  transition: 'opacity 0.3s ease-out',
-  padding: 20,
-}))
 
 

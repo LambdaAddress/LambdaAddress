@@ -1,13 +1,14 @@
-import { useState, useRef } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { Menu, MenuItem } from '@mui/material'
 import styled from '@emotion/styled'
 
 import breakpoints from '../../breakpoints'
 import MenuIcon from '../../images/menu-icon.svg'
 import AddressCardSvg from '../AddressCardSvg'
+import DeployerType from '../deployers/DeployerType'
 import Spinner, { SpinnerStatus } from '../Spinner'
 
-export default function AddressCard({ address, menu, ...attr }) {
+export default function AddressCard({ minted, address, onMenuItemClick, ...attr }) {
   const menuButton = useRef(null)
   const [open, setOpen] = useState(false)
   const handleMenuClick = () => {
@@ -17,9 +18,40 @@ export default function AddressCard({ address, menu, ...attr }) {
     setOpen(false)
   }
 
+  const menu = useMemo(() => {
+    const deployMenu = [
+      {
+        text: 'Deploy custom bytecode',
+        onClick: () => {
+          onMenuItemClick(address, DeployerType.CUSTOM_BYTECODE)
+        },
+      }
+    ]
+
+    if (process.env.REACT_APP_BUILD_ENV !== 'production') {
+      deployMenu.push({
+        text: 'Deploy an Ambire Wallet',
+        onClick: () => {
+          onMenuItemClick(address, DeployerType.AMBIRE)
+        },
+      },
+      {
+        text: 'Deploy Gnosis Safe',
+        onClick: () => {
+          onMenuItemClick(address, DeployerType.GNOSIS_SAFE)
+        },
+      })
+    }
+
+    return address.isDeployed || minted === false
+      ? undefined
+      : deployMenu
+  }, [address])
+
   return (
     <NftAddress {...attr}>
       <AddressSvg
+        style={{ width: '100%'  }}
         address={address}
         highlightAddress
       />
@@ -56,15 +88,14 @@ export default function AddressCard({ address, menu, ...attr }) {
 const NftAddress = styled.div({
   [`@media ${breakpoints.up.xs}`]: {
     margin: '16px 0',
-    //width: 345,
-    //height: 450,
+    marginLeft: 0,
     width: '100%',
     maxWidth: 400,
     height: 'auto'
   },
   [`@media ${breakpoints.up.sm}`]: {
     margin: '12px 18px',
-    //width: 400,
+    marginLeft: 0,
     width: 'auto',
     height: 500,
   },
@@ -72,13 +103,9 @@ const NftAddress = styled.div({
   position: 'relative',
   height: 500,
   borderRadius: 20,
-  transform: 'scale(1)',
-  transition: 'transform 0.25s ease-out',
   overflow: 'visible',
 
   ':hover': {
-    transform: 'scale(1.05)',
-    zIndex: 100,
   },
 })
 
@@ -91,15 +118,15 @@ const AddressSvg = styled(AddressCardSvg)({
   },
   [`@media ${breakpoints.up.sm}`]: {
     margin: '12px 18px',
-    width: 'auto',
-    height: 500,
+    //width: 'auto',
+    //height: 500,
   },
 })
 
 const DeployedCheckmark = styled(Spinner)({
   position: 'absolute',
-  bottom: 20,
-  right: 14
+  bottom: '8%',
+  right: '9%'
 })
 DeployedCheckmark.defaultProps = {
   size: 2.5,

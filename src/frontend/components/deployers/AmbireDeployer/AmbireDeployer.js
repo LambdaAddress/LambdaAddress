@@ -126,7 +126,7 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
 
   return (
     <Main {...props}>
-      {nftAddress}
+      <Title>{nftAddress}</Title>
       {deployStatus
         ? <Loading status={deployStatus} />
         : <>
@@ -155,6 +155,12 @@ export default function AmbireDeployer({ nftAddress, contracts, deployer, regist
 
 const Main = styled.div({
   marginBottom: 68
+})
+
+const Title = styled.div({
+  fontFamily: "'Sofia Sans Extra Condensed', sans-serif",
+  fontSize: '28px',
+  textTransform: 'lowercase',
 })
 
 const Loading = styled(Spinner)({
