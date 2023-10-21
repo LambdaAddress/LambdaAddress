@@ -12,6 +12,8 @@ import { injected } from '../connectors'
 import breakpoints from '../breakpoints'
 import AdvancedOptions from '../components/AdvancedOptions'
 import AddressCard from '../components/AddressCard'
+import DeployerType from '../components/deployers/DeployerType'
+import DeployerModal from '../components/deployers/DeployerModal'
 import DifficultySelector from '../components/DifficultySelector'
 import DifficultyTag from '../components/DifficultyTag'
 import Header from '../components/Header'
@@ -81,6 +83,9 @@ export default function Mint() {
   // Display warning message or not
   const [isWarningVisible, setIsWarningVisible] = useState(true) 
 
+  const [selectedDeployer, setSelectedDeployer] = useState(DeployerType.NONE)
+  const [isDeployerModalOpen, setIsDeployerModalOpen] = useState(false)
+
   const [tryAgain, setTryAgain] = useState(false)
   // Current error
   const [error, setError] = useState()
@@ -144,6 +149,11 @@ export default function Mint() {
     setError(undefined)
     setTryAgain(true)
   }
+
+  const onDeployerClick = (address, deployerType) => {
+    setSelectedDeployer(deployerType)
+    setIsDeployerModalOpen(true)
+  } 
 
   // Reset `isStarted` when address is found
   if (!tryAgain && isStarted && generatedAddress) setIsStarted(false)
@@ -248,6 +258,7 @@ export default function Mint() {
                 SEARCH_STATUS.ERROR].includes(status) && 'show'}
               address={{ address: generatedAddress }}
               highlightAddress
+              onMenuItemClick={onDeployerClick}
             />
           </SpinnerContainer>
         )}
@@ -312,6 +323,12 @@ export default function Mint() {
 
         </MessageContainer>
       </MainBox>
+      <DeployerModal 
+        isOpen={isDeployerModalOpen} 
+        address={generatedAddress} 
+        deployerType={selectedDeployer} 
+        onClose={() => setIsDeployerModalOpen(false)}
+      />
     </MainPage>
   )
 }
