@@ -1,6 +1,6 @@
 import { MainContextProvider } from './MainContext'
 import { lazy, useEffect, Suspense } from 'react'
-import ReactGA from "react-ga"
+import ReactGA from "react-ga4"
 import { Routes, Route, Navigate, HashRouter } from 'react-router-dom'
 import Spinner from './components/Spinner'
 import styled from '@emotion/styled'
@@ -14,7 +14,7 @@ ReactGA.initialize("G-EPF5R5CCES")
 
 export default function App() {
   useEffect(() => {
-    ReactGA.pageview(window.location.pathname + window.location.search)
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search })
   }, [])
 
   return (

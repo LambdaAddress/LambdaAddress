@@ -100,7 +100,7 @@
     "react-countup": "^4.3.3",
     "react-dom": "^17.0.1",
     "react-flatpickr": "3.10.7",
-    "react-ga": "^3.3.1",
+    "react-ga4": "^2.1.0",
     "react-jazzicon": "^1.0.4",
     "react-router-dom": "6.0.2",
     "react-scripts": "4.0.3",
