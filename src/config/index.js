@@ -91,8 +91,11 @@ export function getNetworkInfo(chainId) {
 export function getSupportedNetworks() {
     const isProduction = process.env.REACT_APP_BUILD_ENV === 'production'
 
-    return isProduction 
-        ? Object.values(supportedNetworks).filter(network => !network.isTestnet)
+    // Temporarily display test networks in prod, just remove localhost 
+    return isProduction
+        ? Object.values(supportedNetworks)
+            .filter(network => network.name !== 'localhost')
+            .sort((a, b) => a.isTestnet - b.isTestnet)
         : Object.values(supportedNetworks)
 }
 
