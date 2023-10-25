@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import breakpoints from '../breakpoints.js'
 import AddressShuffle from '../components/AddressShuffle'
@@ -28,12 +29,18 @@ export default function Home() {
 
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const navigate = useNavigate()
 
   const handleScrollClick = page => {
     window.scrollTo({
       top: pageRef[page].current.offsetTop,
       behavior: "smooth",
     })
+  }
+
+  const handleGetStartedClick = homescreen => {
+    ReactGA.event({ category: 'home', action: "get_started_click", label: `homescreen-${homescreen}` })
+    navigate('/mint')
   }
 
   useEffect(() => {
@@ -75,7 +82,7 @@ export default function Home() {
             <SectionH1>Lambda Address</SectionH1>
             <SectionH4>Collectible Ethereum addresses.</SectionH4>
             <ButtonsContainer>
-              <WhiteButton href="#/mint">Get Started</WhiteButton>
+              <WhiteButton onClick={() => handleGetStartedClick(1)}>Get Started</WhiteButton>
               <TextButton onClick={() => handleScrollClick(1)}>Read more</TextButton>
             </ButtonsContainer>
           </LeftSection>
@@ -95,7 +102,7 @@ export default function Home() {
               <AddressShuffle style={{ margin: '10px 0 28px 0' }} />
             }
             <ButtonsContainer>
-              <WhiteButton href="#/mint">Get Started</WhiteButton>
+              <WhiteButton onClick={() => handleGetStartedClick(2)}>Get Started</WhiteButton>
               <TextButton onClick={() => handleScrollClick(2)}>Keep reading</TextButton>
             </ButtonsContainer>
 
@@ -115,7 +122,7 @@ export default function Home() {
             <p>Since EOA accounts require a private key, they are not supported.</p>
             <p><a href={config.docUrl} target="_blank" rel="noreferrer">Learn more</a></p>
             <ButtonsContainer>
-              <WhiteButton href="#/mint">Get Started</WhiteButton>
+              <WhiteButton onClick={() => handleGetStartedClick(3)}>Get Started</WhiteButton>
               <TextButton onClick={() => handleScrollClick(3)}>Keep reading</TextButton>
             </ButtonsContainer>
           </LeftSection>

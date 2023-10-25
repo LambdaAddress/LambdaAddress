@@ -119,6 +119,8 @@ export default function Mint() {
     async (owner, salt) => {
       if (!active) await connect()
 
+      ReactGA.event({ category: 'mint', action: "mint_address_click", label: `difficulty-${difficulty}`})
+
       try {
         setSendingTransaction(true)
         const tx = await contracts.registrar.mint(NFTAddressFactory, salt, {
@@ -128,16 +130,24 @@ export default function Mint() {
         await tx.wait()
         setSendingTransaction(false)
         setIsCreated(true)
+        ReactGA.event({ category: 'mint', action: "mint_address_success", label: `difficulty-${difficulty}`})
       } catch (err) {
         setSendingTransaction(false)
-        if (err?.code === 4001) setError(ERROR.USER_CANCEL)
-        else setError(ERROR.TRANSACTION_FAILED)
+        if (err?.code === 4001) {
+          ReactGA.event({ category: 'mint', action: "mint_address_fail", label: `user-cancel`})
+          setError(ERROR.USER_CANCEL)
+        }
+        else {
+          ReactGA.event({ category: 'mint', action: "mint_address_fail", label: `transaction-failed`})
+          setError(ERROR.TRANSACTION_FAILED)
+        }
       }
     },
     [active, connect, contracts, NFTAddressFactory]
   )
 
   const startSearch = () => {
+    ReactGA.event({ category: 'mint', action: "find_address_click", label: `difficulty-${difficulty}`})
     setIsStarted(true)
     setTimeout(() => setTryAgain(false), 1)
   }
