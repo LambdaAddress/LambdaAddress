@@ -14,7 +14,7 @@ ReactGA.initialize("G-EPF5R5CCES")
 
 export default function App() {
   useEffect(() => {
-    ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search })
+    
   }, [])
 
   return (

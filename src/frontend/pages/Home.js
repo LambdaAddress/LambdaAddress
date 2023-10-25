@@ -2,10 +2,11 @@ import styled from '@emotion/styled'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
+import ReactGA from "react-ga4"
 import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import breakpoints from '../breakpoints.js'
 import AddressShuffle from '../components/AddressShuffle'
@@ -34,6 +35,10 @@ export default function Home() {
       behavior: "smooth",
     })
   }
+
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search, title: "Home" })
+  }, [])
 
   return (
     <Main>

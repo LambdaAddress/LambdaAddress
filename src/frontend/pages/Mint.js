@@ -2,9 +2,10 @@ import styled from '@emotion/styled'
 import Alert from '@mui/material/Alert'
 import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import ReactGA from "react-ga4"
 import Stack from '@mui/material/Stack'
 import { useWeb3React } from '@web3-react/core'
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import CountUp from 'react-countup'
 
 import config from '../config'
@@ -17,7 +18,6 @@ import DeployerModal from '../components/deployers/DeployerModal'
 import DifficultySelector from '../components/DifficultySelector'
 import DifficultyTag from '../components/DifficultyTag'
 import Header from '../components/Header'
-import HighlightedAddress from '../components/HighlightedAddress'
 import MKBox from '../components/MKBox'
 import MKButton from '../components/MKButton'
 import MKTypography from '../components/MKTypography'
@@ -157,6 +157,10 @@ export default function Mint() {
 
   // Reset `isStarted` when address is found
   if (!tryAgain && isStarted && generatedAddress) setIsStarted(false)
+
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search, title: "Mint" })
+  }, [])
 
   return (
     <MainPage>
