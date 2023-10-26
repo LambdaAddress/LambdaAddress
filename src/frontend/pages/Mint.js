@@ -60,7 +60,7 @@ function searchStatus({
 }
 
 export default function Mint() {
-  const { activate, active } = useWeb3React()
+  const { activate, active, chainId } = useWeb3React()
 
   useEagerConnect(injected)
 
@@ -119,7 +119,7 @@ export default function Mint() {
     async (owner, salt) => {
       if (!active) await connect()
 
-      ReactGA.event({ category: 'mint', action: "mint_address_click", label: `difficulty-${difficulty}`})
+      ReactGA.event({ category: `chain-${chainId}`, action: "mint_address_click", label: `difficulty-${difficulty}`})
 
       try {
         setSendingTransaction(true)
@@ -130,15 +130,15 @@ export default function Mint() {
         await tx.wait()
         setSendingTransaction(false)
         setIsCreated(true)
-        ReactGA.event({ category: 'mint', action: "mint_address_success", label: `difficulty-${difficulty}`})
+        ReactGA.event({ category: `chain-${chainId}`, action: "mint_address_success", label: `difficulty-${difficulty}`})
       } catch (err) {
         setSendingTransaction(false)
         if (err?.code === 4001) {
-          ReactGA.event({ category: 'mint', action: "mint_address_fail", label: `user-cancel`})
+          ReactGA.event({ category: `chain-${chainId}`, action: "mint_address_fail", label: `user-cancel`})
           setError(ERROR.USER_CANCEL)
         }
         else {
-          ReactGA.event({ category: 'mint', action: "mint_address_fail", label: `transaction-failed`})
+          ReactGA.event({ category: `chain-${chainId}`, action: "mint_address_fail", label: `transaction-failed`})
           setError(ERROR.TRANSACTION_FAILED)
         }
       }
@@ -147,7 +147,7 @@ export default function Mint() {
   )
 
   const startSearch = () => {
-    ReactGA.event({ category: 'mint', action: "find_address_click", label: `difficulty-${difficulty}`})
+    ReactGA.event({ category: `chain-${chainId}`, action: "find_address_click", label: `difficulty-${difficulty}`})
     setIsStarted(true)
     setTimeout(() => setTryAgain(false), 1)
   }
