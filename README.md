@@ -3,7 +3,7 @@
 
 # <img src="src/frontend/images/logo.svg" height="34" style="vertical-align: bottom;" /> Lambda Address
 
-> **Important**: The smart contracts are currently undergoing an auditing process. In the meantime, please consider the app to be in an experimental state.
+> **Important**: The smart contracts have not been audited yet. Please consider the app to be in an experimental state.
 
 # Pre-requisites
 

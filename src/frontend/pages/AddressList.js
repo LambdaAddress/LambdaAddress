@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import Stack from '@mui/material/Stack'
 import { useWeb3React } from '@web3-react/core'
+import ReactGA from "react-ga4"
 import breakpoints from '../breakpoints'
 import AddressCard from '../components/AddressCard'
 import Spinner from '../components/Spinner'
@@ -12,7 +13,7 @@ import DeployerType from '../components/deployers/DeployerType'
 import DeployerModal from '../components/deployers/DeployerModal'
 import useAddresses from '../hooks/useAddresses'
 import useEagerConnect from '../hooks/useEagerConnect'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 
 
 
@@ -46,6 +47,10 @@ export default function AddressList() {
       setSelectedAddress(address)
     })
   }
+
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search, title: "Address List" })
+  }, [])
 
 
   return (
