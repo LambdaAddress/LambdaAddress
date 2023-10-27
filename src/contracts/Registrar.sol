@@ -97,8 +97,8 @@ contract Registrar is IERC2981Upgradeable, ERC721Upgradeable, OwnableUpgradeable
   function deploy(uint256 tokenId, bytes memory creationCode) external {
     require(_canDeploy(tokenId, msg.sender), Errors.NO_DEPLOY_PERMISSION);
     address nftAddress = address(uint160(tokenId));
-    getFactory(tokenId).deploy(nftAddress, creationCode);
     _nftAddress[tokenId].isDeployed = true;
+    getFactory(tokenId).deploy(nftAddress, creationCode);
     emit Deploy(msg.sender, tokenId);
   }
 
@@ -204,7 +204,7 @@ contract Registrar is IERC2981Upgradeable, ERC721Upgradeable, OwnableUpgradeable
     uint256 salePrice
   ) external view override returns (address receiver, uint256 royaltyAmount) {
     receiver = _royaltiesRecipient;
-    royaltyAmount = (salePrice / 10000) * uint256(_royalties);
+    royaltyAmount = salePrice * uint256(_royalties) / 10000;
   }
 
   /// @notice Set the contract used to generate metadata for the NFT addresses
