@@ -15,7 +15,6 @@ import {StringHelper} from "./utils/StringHelper.sol";
 contract MetaDataTest is Test {
   using StringHelper for string;
   uint256 public constant MINT_PRICE = 10000000000000000;
-  uint96 internal constant _ROYALTIES = 500;
 
   Registrar public registrarLogic;
   MetaData public metaData;
@@ -29,8 +28,6 @@ contract MetaDataTest is Test {
     bytes memory data = abi.encodeWithSelector(
       registrar.initialize.selector,
       MINT_PRICE,
-      _ROYALTIES,
-      payable(address(this)),
       metaData,
       address(this)
     );

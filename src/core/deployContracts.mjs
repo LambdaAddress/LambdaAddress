@@ -3,7 +3,7 @@ import { create2Deploy, create3Deploy, deploy, getCreate2Deployer, send } from '
 
 const CREATE2_DEPLOYER_ADDRESS = '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2'
 
-export default async function deployContracts({ salt, mintPrice, royalties, royaltiesRecipient, owner, verbose = false, local = false}) {
+export default async function deployContracts({ salt, mintPrice, owner, verbose = false, local = false}) {
     const MetaData = await hre.ethers.getContractFactory("MetaData")
     const Registrar = await hre.ethers.getContractFactory("Registrar")
     const RegistrarProxy = await hre.ethers.getContractFactory("RegistrarProxy")
@@ -27,8 +27,6 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
     verbose && console.log(`Deploying RegistrarProxy(${registrar.address})`)
     verbose && console.log(' Initialization params:', {
       mintPrice,
-      royalties,
-      royaltiesRecipient,
       metaData: metaData.address,
       owner
     })
@@ -36,8 +34,6 @@ export default async function deployContracts({ salt, mintPrice, royalties, roya
       
     const utx = await registrar.populateTransaction.initialize(
       mintPrice, 
-      royalties, 
-      royaltiesRecipient, 
       metaData.address, 
       owner
     )

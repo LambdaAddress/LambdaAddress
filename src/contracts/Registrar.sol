@@ -2,7 +2,6 @@
 pragma solidity 0.8.18;
 
 import {ERC721Upgradeable, IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import {IERC2981Upgradeable} from "@openzeppelin/contracts-upgradeable/interfaces/IERC2981Upgradeable.sol";
 import {Errors} from "./Errors.sol";
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {IFactory} from "./IFactory.sol";
@@ -17,7 +16,7 @@ import {IMetaData} from "./IMetaData.sol";
 ///   - [IMetaData](IMetaData.md): Generating the metadata for the NFT addresses.
 ///
 /// The ID of an NFT address is simply its value casted to `uint256`.
-contract Registrar is IERC2981Upgradeable, ERC721Upgradeable, OwnableUpgradeable {
+contract Registrar is ERC721Upgradeable, OwnableUpgradeable {
   string private constant _NAME = "Lambda Address";
   string private constant _SYMBOL = "LADD";
   bytes4 private constant _INTERFACE_ID_ERC2981 = 0x2a55205a;
@@ -40,7 +39,9 @@ contract Registrar is IERC2981Upgradeable, ERC721Upgradeable, OwnableUpgradeable
 
   uint256 private _mintPrice; // Mint price in wei
   IMetaData private _metaData; // Contract used to generate metadata for the NFT addresses
-  uint96 _royalties; // Sales royalties (basis points)
+
+  // _royalties and _royaltiesRecipient are not currently used
+  uint96 _royalties; 
   address payable _royaltiesRecipient;
 
   // Account that can deploy to the NFT address, other than its owner
@@ -49,22 +50,15 @@ contract Registrar is IERC2981Upgradeable, ERC721Upgradeable, OwnableUpgradeable
   /// @notice Initializes the registrar
   /// @dev Function is invoked by the proxy contract during main deployment
   /// @param mintPrice Price in wei to mint a new NFT address
-  /// @param royalties Sales royalties in basis points
-  /// @param royaltiesRecipient Royalties recipient address
   /// @param metaData IMetaData contract to handle metadata generation
   /// @param owner Contract's owner
   function initialize(
     uint256 mintPrice,
-    uint96 royalties,
-    address payable royaltiesRecipient,
     IMetaData metaData,
     address owner
   ) external initializer {
     __ERC721_init(_NAME, _SYMBOL);
-
     _mintPrice = mintPrice;
-    _royalties = royalties;
-    _royaltiesRecipient = royaltiesRecipient;
     _metaData = metaData;
 
     OwnableUpgradeable._transferOwnership(owner);
@@ -192,21 +186,6 @@ contract Registrar is IERC2981Upgradeable, ERC721Upgradeable, OwnableUpgradeable
     return uint256(uint160(address(deployedAddress)));
   }
 
-  /// @notice ERC-2981 implementation. Called with the sale price to determine how much royalty is
-  /// owed and to whom. The `tokenId` param is optional since the royalty amount is always the
-  /// same.
-  // @param tokenId NFT asset queried for royalty information
-  /// @param salePrice Sale price of the NFT asset specified by `tokenId`
-  /// @return receiver Address of who should be sent the royalty payment
-  /// @return royaltyAmount Royalty payment amount for `salePrice`
-  function royaltyInfo(
-    uint256 /*tokenId*/,
-    uint256 salePrice
-  ) external view override returns (address receiver, uint256 royaltyAmount) {
-    receiver = _royaltiesRecipient;
-    royaltyAmount = salePrice * uint256(_royalties) / 10000;
-  }
-
   /// @notice Set the contract used to generate metadata for the NFT addresses
   /// @param metaData IMetaData contract address
   function setMetaData(IMetaData metaData) external onlyOwner {
@@ -217,28 +196,6 @@ contract Registrar is IERC2981Upgradeable, ERC721Upgradeable, OwnableUpgradeable
   /// @param mintPrice Mint price in wei
   function setMintPrice(uint256 mintPrice) external onlyOwner {
     _mintPrice = mintPrice;
-  }
-
-  /// @notice Sets the sales royalties in basis points. (e.g. 500 = 5%)
-  /// @param royalties Sales royalties in basis points
-  function setRoyalties(uint96 royalties) external onlyOwner {
-    require(royalties <= 10000, Errors.INVALID_ROYALTIES);
-    _royalties = royalties;
-  }
-
-  /// @notice Sets the sales royalties recipient address.
-  /// @param recipient Sales royalties recipient address.
-  function setRoyaltiesRecipient(address payable recipient) external onlyOwner {
-    _royaltiesRecipient = recipient;
-  }
-
-  /// @dev Returns true if this contract implements the interface defined by
-  /// `interfaceId`. See
-  /// https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified
-  function supportsInterface(
-    bytes4 interfaceId
-  ) public view virtual override(ERC721Upgradeable, IERC165Upgradeable) returns (bool) {
-    return interfaceId == _INTERFACE_ID_ERC2981 || super.supportsInterface(interfaceId);
   }
 
   /// @notice Returns an URI for a given token ID. The URI is generated

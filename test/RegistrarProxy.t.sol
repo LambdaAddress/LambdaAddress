@@ -14,7 +14,6 @@ contract RegistrarProxyTest is Test {
   bytes32 internal constant _IMPLEMENTATION_SLOT =
     0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
   uint256 internal constant MINT_PRICE = 10000000000000000;
-  uint96 internal constant _ROYALTIES = 500;
 
   Registrar internal registrarLogic;
   MetaData internal metaData;
@@ -28,8 +27,6 @@ contract RegistrarProxyTest is Test {
     bytes memory data = abi.encodeWithSelector(
       registrar.initialize.selector,
       MINT_PRICE,
-      _ROYALTIES,
-      payable(address(this)),
       metaData,
       address(this)
     );

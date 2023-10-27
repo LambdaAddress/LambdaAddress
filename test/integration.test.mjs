@@ -21,8 +21,6 @@ describe("Integration tests", function () {
           const { registrar, proxy, nftAddressFactory } = await deployContracts({
             salt: '0x0000000000000000000000000000000000000000000000000000000000000001',
             mintPrice: MINT_PRICE,
-            royalties: '500',
-            royaltiesRecipient: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
             owner: owner.address,
             local: true
           }) 

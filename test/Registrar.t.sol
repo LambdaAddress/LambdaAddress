@@ -32,8 +32,6 @@ contract RegistrarTest is Test {
     bytes memory data = abi.encodeWithSelector(
       registrar.initialize.selector,
       MINT_PRICE,
-      _ROYALTIES,
-      payable(address(this)),
       metaData,
       address(this)
     );
@@ -188,8 +186,6 @@ contract RegistrarTest is Test {
 
   function testInitialize(
     uint256 mintPrice,
-    uint96 royalties,
-    address payable royaltiesRecipient,
     address metaDataTest
   ) public {
     console.log("Should set the right mint price, royalties, recipient and MetaData address");
@@ -197,8 +193,6 @@ contract RegistrarTest is Test {
     bytes memory data = abi.encodeWithSelector(
       registrar.initialize.selector,
       mintPrice,
-      royalties,
-      royaltiesRecipient,
       MetaData(metaDataTest),
       address(this)
     );
@@ -213,15 +207,7 @@ contract RegistrarTest is Test {
     // _metaData and _royalties are stored at slot 204
     bytes32 slot204Content = vm.load(address(reg), bytes32(uint256(204)));
     address storedMetaData = address(uint160(uint256(slot204Content)));
-    uint96 storedRoyalties = uint96(uint256(slot204Content >> 160));
     assertEq(storedMetaData, metaDataTest);
-    assertEq(storedRoyalties, royalties);
-
-    // _royaltiesRecipient is stored at slot 205
-    assertEq(
-      address(uint160(uint256(vm.load(address(reg), bytes32(uint256(205)))))),
-      royaltiesRecipient
-    );
   }
 
   function testMintWithInsufficientValue(uint256 value) public {
@@ -267,14 +253,6 @@ contract RegistrarTest is Test {
     registrar.mint{value: MINT_PRICE}(factory, salt);
   }
 
-  function testRoyaltyInfo(uint256 tokenId, uint256 salePrice) public {
-    console.log("Should return the correct royalty info");
-
-    (address receiver, uint256 royaltyAmount) = registrar.royaltyInfo(tokenId, salePrice);
-
-    assertEq(receiver, registrar.owner());
-    assertEq(royaltyAmount, (salePrice / 10000) * uint256(500));
-  }
 
   function testSetMetaData(address metaDataTest) public {
     console.log("Should set the correct MetaData address");
@@ -313,65 +291,6 @@ contract RegistrarTest is Test {
     registrar.setMintPrice(mintPrice);
   }
 
-  function testSetRoyalties(uint96 royalties) public {
-    console.log("Should set _royalties to the correct value.");
-
-    vm.assume(royalties <= 10000);
-    registrar.setRoyalties(royalties);
-
-    // _metaData and _royalties are stored at slot 204
-    bytes32 slot204Content = vm.load(address(registrar), bytes32(uint256(204)));
-    uint96 storedRoyalties = uint96(uint256(slot204Content >> 160));
-    assertEq(storedRoyalties, royalties);
-  }
-
-  function testSetRoyaltiesNotFromOwner(address from, uint96 royalties) public {
-    console.log("Should revert if not called by owner.");
-
-    vm.assume(royalties <= 10000);
-    vm.assume(from != address(this));
-    vm.deal(from, 1 ether);
-    vm.prank(from);
-    vm.expectRevert(abi.encodePacked("Ownable: caller is not the owner"));
-    registrar.setRoyalties(royalties);
-  }
-
-  function testSetRoyaltiesTooHigh(uint96 royalties) public {
-    console.log("Should revert if not called by owner.");
-
-    vm.assume(royalties > 10000);
-    vm.expectRevert(abi.encodePacked(Errors.INVALID_ROYALTIES));
-    registrar.setRoyalties(royalties);
-  }
-
-  function testSetRoyaltiesRecipient(address payable royaltiesRecipient) public {
-    console.log("Should set _royaltiesRecipient to the correct value.");
-
-    registrar.setRoyaltiesRecipient(royaltiesRecipient);
-
-    //_royaltiesRecipient are stored at slot 205
-    bytes32 slot205Content = vm.load(address(registrar), bytes32(uint256(205)));
-    assertEq(address(uint160(uint256(slot205Content))), royaltiesRecipient);
-  }
-
-  function testSetRoyaltiesRecipientNotFromOwner(
-    address from,
-    address payable royaltiesRecipient
-  ) public {
-    console.log("Should revert if not called by owner.");
-
-    vm.assume(from != address(this));
-    vm.deal(from, 1 ether);
-    vm.prank(from);
-    vm.expectRevert(abi.encodePacked("Ownable: caller is not the owner"));
-    registrar.setRoyaltiesRecipient(royaltiesRecipient);
-  }
-
-  function testSupportsInterfaceERC2981() public {
-    console.log("Should support ERC2981 interface.");
-    assertEq(registrar.supportsInterface(0x2a55205a), true);
-  }
-
   function testSupportsInterfaceERC721() public {
     console.log("Should support ERC721 interface.");
     assertEq(registrar.supportsInterface(0x5b5e139f), true);
@@ -392,7 +311,6 @@ contract RegistrarTest is Test {
     console.log("Should not support other interfaces.");
 
     vm.assume(interfaceId != 0);
-    vm.assume(interfaceId != 0x2a55205a); // ERC2981
     vm.assume(interfaceId != 0x5b5e139f); // ERC721
     vm.assume(interfaceId != type(IERC721Upgradeable).interfaceId);
     vm.assume(interfaceId != type(IERC165Upgradeable).interfaceId);

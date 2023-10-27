@@ -19,8 +19,6 @@ async function main() {
     const { registrar, proxy, nftAddressFactory, safeDeployer, ambireAccountDeployer } = await deployContracts({
       salt: '0x0000000000000000000000000000000000000000000000000000000000000004',
       mintPrice: '1000000000000', // 0.000001 ETH
-      royalties: '500', // 5%
-      royaltiesRecipient: '0x2F0cBd07f01862981b031eC7e0DC5A51109053aB',
       owner: owner.address,
       verbose: true
     })
