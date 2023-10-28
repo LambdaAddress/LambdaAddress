@@ -208,7 +208,7 @@ contract Registrar is ERC721Upgradeable, OwnableUpgradeable {
   /// @notice Withdraw `amount` of wei from this contract and transfer it to recipient `to`.
   /// @param amount Amount of wei to withdraw
   /// @param to Address of the recipient
-  function transferFunds(uint256 amount, address payable to) public onlyOwner {
+  function transferFunds(uint256 amount, address payable to) external onlyOwner {
     require(amount <= address(this).balance, Errors.INSUFFICIENT_FUNDS);
     (bool succeeded, ) = to.call{value: amount}("");
     require(succeeded, Errors.TRANSFER_FAILED);

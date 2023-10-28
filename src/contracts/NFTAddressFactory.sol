@@ -22,7 +22,7 @@ contract NFTAddressFactory is IFactory {
   /// @param nftAddress NFT address
   /// @param creationCode Smart contract bytecode (i.e. bytecode containing the constructor and
   /// initialization data)
-  function deploy(address nftAddress, bytes memory creationCode) public {
+  function deploy(address nftAddress, bytes memory creationCode) external {
     require(msg.sender == address(_registrar), Errors.NOT_REGISTRAR);
 
     address mintedBy = _registrar.getMintedBy(uint256(uint160(nftAddress)));
