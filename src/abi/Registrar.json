@@ -383,16 +383,6 @@
           "type": "uint256"
         },
         {
-          "internalType": "uint96",
-          "name": "royalties",
-          "type": "uint96"
-        },
-        {
-          "internalType": "address payable",
-          "name": "royaltiesRecipient",
-          "type": "address"
-        },
-        {
           "internalType": "contract IMetaData",
           "name": "metaData",
           "type": "address"
@@ -530,35 +520,6 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "salePrice",
-          "type": "uint256"
-        }
-      ],
-      "name": "royaltyInfo",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "receiver",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "royaltyAmount",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "address",
           "name": "from",
           "type": "address"
@@ -647,32 +608,6 @@
         }
       ],
       "name": "setMintPrice",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint96",
-          "name": "royalties",
-          "type": "uint96"
-        }
-      ],
-      "name": "setRoyalties",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address payable",
-          "name": "recipient",
-          "type": "address"
-        }
-      ],
-      "name": "setRoyaltiesRecipient",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
