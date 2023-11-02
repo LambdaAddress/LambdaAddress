@@ -41,7 +41,7 @@ contract Registrar is ERC721Upgradeable, OwnableUpgradeable {
   IMetaData private _metaData; // Contract used to generate metadata for the NFT addresses
 
   // _royalties and _royaltiesRecipient are not currently used
-  uint96 _royalties; 
+  uint96 _royalties;
   address payable _royaltiesRecipient;
 
   // Account that can deploy to the NFT address, other than its owner
@@ -52,11 +52,7 @@ contract Registrar is ERC721Upgradeable, OwnableUpgradeable {
   /// @param mintPrice Price in wei to mint a new NFT address
   /// @param metaData IMetaData contract to handle metadata generation
   /// @param owner Contract's owner
-  function initialize(
-    uint256 mintPrice,
-    IMetaData metaData,
-    address owner
-  ) external initializer {
+  function initialize(uint256 mintPrice, IMetaData metaData, address owner) external initializer {
     __ERC721_init(_NAME, _SYMBOL);
     _mintPrice = mintPrice;
     _metaData = metaData;

@@ -184,10 +184,7 @@ contract RegistrarTest is Test {
     );
   }
 
-  function testInitialize(
-    uint256 mintPrice,
-    address metaDataTest
-  ) public {
+  function testInitialize(uint256 mintPrice, address metaDataTest) public {
     console.log("Should set the right mint price, royalties, recipient and MetaData address");
 
     bytes memory data = abi.encodeWithSelector(
@@ -252,7 +249,6 @@ contract RegistrarTest is Test {
     vm.expectRevert(abi.encodePacked(Errors.ADDRESS_ALREADY_MINTED));
     registrar.mint{value: MINT_PRICE}(factory, salt);
   }
-
 
   function testSetMetaData(address metaDataTest) public {
     console.log("Should set the correct MetaData address");
