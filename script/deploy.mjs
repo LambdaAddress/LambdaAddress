@@ -1,5 +1,6 @@
 import hre from "hardhat"
 import createConfig from '../src/core/createConfig.mjs'
+import config from '../src/config/config.json' assert { type: "json" }
 import exportAbi from '../src/core/exportAbi.mjs'
 import deployContracts from "../src/core/deployContracts.mjs"
 import { deploy, send } from '../src/core/ethersHelpers.mjs'
@@ -10,13 +11,15 @@ import NFTAddressFactoryAbi from '../artifacts/src/contracts/NFTAddressFactory.s
 import SafeDeployerAbi from '../artifacts/src/contracts/deployers/SafeDeployer.sol/SafeDeployer.json' assert { type: "json" }
 import AmbireAccountDeployerAbi from '../artifacts/src/contracts/deployers/AmbireAccountDeployer/AmbireAccountDeployer.sol/AmbireAccountDeployer.json' assert { type: "json" }
 
+const { NFTAddressFactorySalt, RegistrarSalt} = config
 
 async function main() {
   try {
     const [owner] = await hre.ethers.getSigners()
 
     const { registrar, proxy, nftAddressFactory, safeDeployer, ambireAccountDeployer } = await deployContracts({
-      salt: '0x0000000000000000000000000000000000000000000000000000000000000001',
+      registrarSalt: RegistrarSalt, 
+      nftAddressFactorySalt: NFTAddressFactorySalt,
       mintPrice: '0',
       owner: owner.address,
       verbose: true

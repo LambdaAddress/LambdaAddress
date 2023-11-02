@@ -1,9 +1,10 @@
 import hre from "hardhat"
 import { create2Deploy, send, getCreate2Deployer } from "../src/core/ethersHelpers.mjs"
-import { RegistrarImplementationSalt } from "../src/config/config.json" assert { type: "json" }
+import config from "../src/config/config.json" assert { type: "json" }
+const { RegistrarImplementationSalt } = config
 
 const CREATE2_DEPLOYER_ADDRESS = '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2'
-const REGISTRAR_PROXY = '0x6CDc823896887F296f3f0B786F4c14EE4a40a713'
+const REGISTRAR_PROXY = '0x83Ba1110e1fBC9aB84102B7DF0d909e367Fad785'
 const SALT = RegistrarImplementationSalt
 
 async function main() {
