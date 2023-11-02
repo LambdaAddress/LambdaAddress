@@ -34,6 +34,7 @@
     "frontend:prettier:check": "prettier -c 'src/frontend/**/*.js'",
     "frontend:prettier:write": "prettier --write 'src/frontend/**/*.js'",
     "frontend:serve": "python3 -m http.server",
+    "generateSupportedNetworksDoc": "hardhat run script/generateSupportedNetworksDoc.mjs",
     "graph:codegen": "graph codegen graph/subgraph.yaml --output-dir=graph/generated",
     "graph:build": "graph build graph/subgraph.yaml --output-dir=graph/build",
     "graph:deploy:sepolia": "graph deploy lambdaaddress-sepolia graph/subgraph.sepolia.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
