@@ -40,7 +40,7 @@ async function create3Deploy(create2Deployer, factory, salt, args) {
     const initcode = factory.getDeployTransaction(...args)
   
     const computedContractAddress = await create3Deployer.computeAddress(salt)
-    await create3Deployer.deploy(0, salt, initcode.data)
+    await send(create3Deployer.deploy(0, salt, initcode.data))
   
     return factory.attach(computedContractAddress)
 }
