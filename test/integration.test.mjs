@@ -19,7 +19,8 @@ describe("Integration tests", function () {
           const sampleContract = await deploy(SampleContract, "6")
 
           const { registrar, proxy, nftAddressFactory } = await deployContracts({
-            salt: '0x0000000000000000000000000000000000000000000000000000000000000001',
+            registrarSalt: '0x0000000000000000000000000000000000000000000000000000000000000001', 
+            nftAddressFactorySalt: '0x0000000000000000000000000000000000000000000000000000000000000001',
             mintPrice: MINT_PRICE,
             owner: owner.address,
             local: true
