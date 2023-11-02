@@ -1,17 +1,19 @@
 import hre from "hardhat"
 import { create2Deploy, create3Deploy, deploy, getCreate2Deployer, send } from './ethersHelpers.mjs'
 
-const CREATE2_DEPLOYER_ADDRESS = '0x13b0D85CcB8bf860b6b79AF3029fCA081AE9beF2'
 
-export default async function deployContracts({ registrarSalt, nftAddressFactorySalt, mintPrice, owner, verbose = false, local = false}) {
-    const MetaData = await hre.ethers.getContractFactory("MetaData")
-    const Registrar = await hre.ethers.getContractFactory("Registrar")
-    const RegistrarProxy = await hre.ethers.getContractFactory("RegistrarProxy")
-    const NFTAddressFactory = await hre.ethers.getContractFactory("NFTAddressFactory")
+export default async function deployContracts({ registrarSalt, nftAddressFactorySalt, mintPrice, owner, signer, verbose = false, local = false}) {
+    if (!signer)
+      signer = (await hre.ethers.getSigners())[0]
+    
+    const MetaData = await hre.ethers.getContractFactory("MetaData", signer)
+    const Registrar = await hre.ethers.getContractFactory("Registrar", signer)
+    const RegistrarProxy = await hre.ethers.getContractFactory("RegistrarProxy", signer)
+    const NFTAddressFactory = await hre.ethers.getContractFactory("NFTAddressFactory", signer)
 
-    const SafeDeployer = await hre.ethers.getContractFactory("SafeDeployer")
-    const AmbireAccountDeployer = await hre.ethers.getContractFactory("AmbireAccountDeployer")
-    const deployer = await getCreate2Deployer(CREATE2_DEPLOYER_ADDRESS)
+    const SafeDeployer = await hre.ethers.getContractFactory("SafeDeployer", signer)
+    const AmbireAccountDeployer = await hre.ethers.getContractFactory("AmbireAccountDeployer", signer)
+    const deployer = await getCreate2Deployer(signer)
   
     verbose && process.stdout.write('Deploying MetaData... ')
 

@@ -15,13 +15,17 @@ const { NFTAddressFactorySalt, RegistrarSalt} = config
 
 async function main() {
   try {
-    const [owner] = await hre.ethers.getSigners()
+    const owner = "0x2F0cBd07f01862981b031eC7e0DC5A51109053aB"
+    await hre.network.provider.send("hardhat_setBalance", [owner, "0x1000000000000000000000000000000"])    
+    await hre.network.provider.send("hardhat_impersonateAccount", [owner])
+    const signer = await ethers.getSigner(owner)
 
     const { registrar, proxy, nftAddressFactory, safeDeployer, ambireAccountDeployer } = await deployContracts({
       registrarSalt: RegistrarSalt, 
       nftAddressFactorySalt: NFTAddressFactorySalt,
       mintPrice: '0',
-      owner: owner.address,
+      owner: signer.address,
+      signer,
       verbose: true
     })
 
