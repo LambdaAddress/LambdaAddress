@@ -23,8 +23,12 @@ export const MainContextProvider = ({ children }) => {
         setContracts({
           registrar: new ethers.Contract(networkInfo.contracts.Registrar, RegistrarAbi.abi, library.getSigner()),
           factories: [],
-          safeDeployer: new ethers.Contract(networkInfo.contracts.SafeDeployer, SafeDeployerAbi.abi, library.getSigner()),
-          ambireAccountDeployer: new ethers.Contract(networkInfo.contracts.AmbireAccountDeployer, AmbireAccountDeployerAbi.abi, library.getSigner()),
+          safeDeployer: networkInfo.contracts.SafeDeployer
+            ? new ethers.Contract(networkInfo.contracts.SafeDeployer, SafeDeployerAbi.abi, library.getSigner())
+            : null,
+          ambireAccountDeployer: networkInfo.contracts.AmbireAccountDeployer
+            ? new ethers.Contract(networkInfo.contracts.AmbireAccountDeployer, AmbireAccountDeployerAbi.abi, library.getSigner())
+            : null,
         })
         setNetwork(networkInfo) 
       }
