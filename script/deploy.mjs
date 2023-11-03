@@ -12,10 +12,11 @@ import SafeDeployerAbi from '../artifacts/src/contracts/deployers/SafeDeployer.s
 import AmbireAccountDeployerAbi from '../artifacts/src/contracts/deployers/AmbireAccountDeployer/AmbireAccountDeployer.sol/AmbireAccountDeployer.json' assert { type: "json" }
 
 const { NFTAddressFactorySalt, RegistrarSalt} = config
+const DEFAULT_SIGNER = "0x2F0cBd07f01862981b031eC7e0DC5A51109053aB"
 
 async function main() {
   try {
-    const owner = "0x2F0cBd07f01862981b031eC7e0DC5A51109053aB"
+    const owner = DEFAULT_SIGNER
     await hre.network.provider.send("hardhat_setBalance", [owner, "0x1000000000000000000000000000000"])    
     await hre.network.provider.send("hardhat_impersonateAccount", [owner])
     const signer = await ethers.getSigner(owner)
@@ -26,7 +27,8 @@ async function main() {
       mintPrice: '0',
       owner: signer.address,
       signer,
-      verbose: true
+      verbose: true,
+      deployers: true
     })
 
     process.stdout.write('Deploying GnosisSafe singleton... ')

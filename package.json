@@ -23,6 +23,7 @@
     "contracts:newMetadata:mumbai": "hardhat run script/newMetadata.mjs --network mumbai",
     "contracts:deploy:arbitrum_goerli": "hardhat run script/deploy.mjs --network arbitrum_goerli",
     "contracts:deploy:alpha": "hardhat run script/deployAlpha.mjs",
+    "contracts:deploy:beta": "hardhat run script/deployBeta.mjs",
     "contracts:deployGnosisSafeDeployer": "hardhat run script/deployGnosisSafeDeployer.mjs",
     "core:test": "hardhat test test/core.test.mjs",
     "integration:test": "hardhat test test/integration.test.mjs",
