@@ -33,7 +33,7 @@ constructor(contract Registrar registrar) public
 <font size="3">
 
 ```solidity
-function deploy(address nftAddress, bytes creationCode) public
+function deploy(address nftAddress, bytes creationCode) external
 ```
 </font>
 

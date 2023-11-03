@@ -53,6 +53,11 @@ module.exports = {
       chainId: 11155111,
       accounts: [KEY]
     },
+    holesky: {
+      url: NODE_URL || 'https://1rpc.io/holesky',
+      chainId: 17000,
+      accounts: [KEY]
+    },
     arbitrum_goerli: {
       url: NODE_URL || 'https://endpoints.omniatech.io/v1/arbitrum/goerli/public',
       chainId: 421613,

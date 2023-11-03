@@ -10,7 +10,7 @@ the Registrar should be made through this proxy.
 <font size="3">
 
 ```solidity
-constructor(address implementation) public
+constructor(address implementation, bytes data) public
 ```
 </font>
 
@@ -26,6 +26,7 @@ constructor(address implementation) public
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | **implementation** | `address` | Address of the Registrar |
+| **data** | `bytes` | Initialization call data |
 
 </details>
 </div>

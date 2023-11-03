@@ -68,7 +68,7 @@ Emitted when `owner` enables `approved` to deploy to the `tokenId` NFT address.
 <font size="3">
 
 ```solidity
-function initialize(uint256 mintPrice, uint96 royalties, address payable royaltiesRecipient, contract IMetaData metaData) external
+function initialize(uint256 mintPrice, contract IMetaData metaData, address owner) external
 ```
 </font>
 
@@ -88,9 +88,8 @@ Function is invoked by the proxy contract during main deployment
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | **mintPrice** | `uint256` | Price in wei to mint a new NFT address |
-| **royalties** | `uint96` |  |
-| **royaltiesRecipient** | `address payable` |  |
 | **metaData** | `contract IMetaData` | IMetaData contract to handle metadata generation |
+| **owner** | `address` | Contract's owner |
 
 </details>
 </div>
@@ -395,37 +394,6 @@ to the address.
 <font size="3">
 
 ```solidity
-function royaltyInfo(uint256, uint256 salePrice) external view returns (address receiver, uint256 royaltyAmount)
-```
-</font>
-
-<blockquote style="margin-top: -8px;">
-
-</blockquote>
-
-<div style="padding-left: 20px;">
-
-<details>
-<summary><i>Parameters</i></summary>
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| **** | `uint256` |  |
-| **salePrice** | `uint256` | Sale price of the NFT asset specified by `tokenId` |
-
-*Returns:*
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| **receiver** | `address` | Address of who should be sent the royalty payment |
-| **royaltyAmount** | `uint256` | Royalty payment amount for `salePrice` |
-
-</details>
-</div>
-
-<br />
-<font size="3">
-
-```solidity
 function setMetaData(contract IMetaData metaData) external
 ```
 </font>
@@ -478,79 +446,6 @@ Set the price of minting NFT addresses, in wei.
 <font size="3">
 
 ```solidity
-function setRoyalties(uint96 royalties) external
-```
-</font>
-
-<blockquote style="margin-top: -8px;">
-
-Sets the sales royalties in basis points. (e.g. 500 = 5%)
-
-</blockquote>
-
-<div style="padding-left: 20px;">
-
-<details>
-<summary><i>Parameters</i></summary>
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| **royalties** | `uint96` | Sales royalties in basis points |
-
-</details>
-</div>
-
-<br />
-<font size="3">
-
-```solidity
-function setRoyaltiesRecipient(address payable recipient) external
-```
-</font>
-
-<blockquote style="margin-top: -8px;">
-
-Sets the sales royalties recipient address.
-
-</blockquote>
-
-<div style="padding-left: 20px;">
-
-<details>
-<summary><i>Parameters</i></summary>
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| **recipient** | `address payable` | Sales royalties recipient address. |
-
-</details>
-</div>
-
-<br />
-<font size="3">
-
-```solidity
-function supportsInterface(bytes4 interfaceId) public view virtual returns (bool)
-```
-</font>
-
-<blockquote style="margin-top: -8px;">
-
-Returns true if this contract implements the interface defined by
-`interfaceId`. See
-https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified
-
-</blockquote>
-
-<div style="padding-left: 20px;">
-
-</details>
-</div>
-
-<br />
-<font size="3">
-
-```solidity
 function tokenURI(uint256 tokenId) public view returns (string)
 ```
 </font>
@@ -578,7 +473,7 @@ by [IMetaData](IMetaData.md).
 <font size="3">
 
 ```solidity
-function transferFunds(uint256 amount, address payable to) public
+function transferFunds(uint256 amount, address payable to) external
 ```
 </font>
 

@@ -18,7 +18,6 @@ contract NFTAddressFactoryTest is Test {
     hex"608060405234801561001057600080fd5b5060e58061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c8063c9482a5d146037578063e221818b146051575b600080fd5b603f60005481565b60405190815260200160405180910390f35b6060605c3660046071565b6062565b005b606b8160016089565b60005550565b600060208284031215608257600080fd5b5035919050565b8082018082111560a957634e487b7160e01b600052601160045260246000fd5b9291505056fea264697066735822122017ddbc8df9be6719ca6aea10225d9f2960b76806e3e22e63760fee306b7ec65c64736f6c63430008120033";
   bytes internal constant SAMPLE_BYTECODE_DEPLOYED =
     hex"6080604052348015600f57600080fd5b506004361060325760003560e01c8063c9482a5d146037578063e221818b146051575b600080fd5b603f60005481565b60405190815260200160405180910390f35b6060605c3660046071565b6062565b005b606b8160016089565b60005550565b600060208284031215608257600080fd5b5035919050565b8082018082111560a957634e487b7160e01b600052601160045260246000fd5b9291505056fea264697066735822122017ddbc8df9be6719ca6aea10225d9f2960b76806e3e22e63760fee306b7ec65c64736f6c63430008120033";
-  uint96 internal constant _ROYALTIES = 500;
 
   Registrar public registrarLogic;
   MetaData public metaData;
@@ -32,8 +31,6 @@ contract NFTAddressFactoryTest is Test {
     bytes memory data = abi.encodeWithSelector(
       registrar.initialize.selector,
       MINT_PRICE,
-      _ROYALTIES,
-      payable(address(this)),
       metaData,
       address(this)
     );
@@ -41,7 +38,6 @@ contract NFTAddressFactoryTest is Test {
     registrar = Registrar(address(proxy));
     factory = new NFTAddressFactory(registrar);
 
-    //registrar.initialize(MINT_PRICE, _ROYALTIES, payable(address(this)), metaData);
     registrar.allowFactory(factory, true);
   }
 
@@ -80,10 +76,6 @@ contract NFTAddressFactoryTest is Test {
 
     vm.expectRevert(abi.encodePacked(Errors.INVALID_ADDRESS_CREATED));
     factory.deploy(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, SAMPLE_BYTECODE);
-  }
-
-  function testGetAddress(address mintedBy, uint256 salt) public {
-    // TODO
   }
 
   function testMint(address mintedBy, uint256 salt) public {

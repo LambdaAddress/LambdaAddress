@@ -54,7 +54,8 @@ function getBytecode(address createdBy) internal pure returns (bytes)
 
 <blockquote style="margin-top: -8px;">
 
-Adds "PUSH20 `createdBy`" to solmate's CREATE3 deploy bytecode
+Adds "PUSH20 `createdBy`" and POP to solmate's CREATE3 deploy bytecode
+to prevent frontrunning.
 
 </blockquote>
 

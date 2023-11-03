@@ -1,5 +1,6 @@
 import hre from "hardhat"
 import createConfig from '../src/core/createConfig.mjs'
+import config from '../src/config/config.json' assert { type: "json" }
 import exportAbi from '../src/core/exportAbi.mjs'
 import deployContracts from "../src/core/deployContracts.mjs"
 import { deploy, send } from '../src/core/ethersHelpers.mjs'
@@ -10,17 +11,21 @@ import NFTAddressFactoryAbi from '../artifacts/src/contracts/NFTAddressFactory.s
 import SafeDeployerAbi from '../artifacts/src/contracts/deployers/SafeDeployer.sol/SafeDeployer.json' assert { type: "json" }
 import AmbireAccountDeployerAbi from '../artifacts/src/contracts/deployers/AmbireAccountDeployer/AmbireAccountDeployer.sol/AmbireAccountDeployer.json' assert { type: "json" }
 
+const { NFTAddressFactorySalt, RegistrarSalt} = config
 
 async function main() {
   try {
-    const [owner] = await hre.ethers.getSigners()
+    const owner = "0x2F0cBd07f01862981b031eC7e0DC5A51109053aB"
+    await hre.network.provider.send("hardhat_setBalance", [owner, "0x1000000000000000000000000000000"])    
+    await hre.network.provider.send("hardhat_impersonateAccount", [owner])
+    const signer = await ethers.getSigner(owner)
 
     const { registrar, proxy, nftAddressFactory, safeDeployer, ambireAccountDeployer } = await deployContracts({
-      salt: '0x0000000000000000000000000000000000000000000000000000000000000001',
+      registrarSalt: RegistrarSalt, 
+      nftAddressFactorySalt: NFTAddressFactorySalt,
       mintPrice: '0',
-      royalties: '500',
-      royaltiesRecipient: owner.address,
-      owner: owner.address,
+      owner: signer.address,
+      signer,
       verbose: true
     })
 

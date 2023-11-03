@@ -13,7 +13,6 @@ import {SafeDeployer} from "../src/contracts/deployers/SafeDeployer.sol";
 
 contract SafeeployerTest is Test {
   uint256 public constant _MINT_PRICE = 10000000000000000;
-  uint96 internal constant _ROYALTIES = 500;
 
   Registrar internal _registrarLogic;
   MetaData internal _metaData;
@@ -30,8 +29,6 @@ contract SafeeployerTest is Test {
     bytes memory data = abi.encodeWithSelector(
       _registrar.initialize.selector,
       _MINT_PRICE,
-      _ROYALTIES,
-      payable(address(this)),
       _metaData,
       address(this)
     );

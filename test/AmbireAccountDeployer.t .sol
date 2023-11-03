@@ -27,8 +27,6 @@ contract AmbireAccountDeployerTest is Test {
     bytes memory data = abi.encodeWithSelector(
       _registrar.initialize.selector,
       _MINT_PRICE,
-      _ROYALTIES,
-      payable(address(this)),
       _metaData,
       address(this)
     );
