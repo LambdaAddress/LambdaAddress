@@ -13,6 +13,7 @@ import AmbireAccountDeployerAbi from '../artifacts/src/contracts/deployers/Ambir
 
 const { NFTAddressFactorySalt, RegistrarSalt} = config
 const DEFAULT_SIGNER = "0x2F0cBd07f01862981b031eC7e0DC5A51109053aB"
+const MINT_PRICE = '0' 
 
 async function main() {
   try {
@@ -24,7 +25,7 @@ async function main() {
     const { registrar, proxy, nftAddressFactory, safeDeployer, ambireAccountDeployer } = await deployContracts({
       registrarSalt: RegistrarSalt, 
       nftAddressFactorySalt: NFTAddressFactorySalt,
-      mintPrice: '0',
+      mintPrice: MINT_PRICE,
       owner: signer.address,
       signer,
       verbose: true,
@@ -45,7 +46,8 @@ async function main() {
         NFTAddressFactory: nftAddressFactory.address,
         SafeDeployer: safeDeployer.address,
         AmbireAccountDeployer: ambireAccountDeployer.address,
-        GnosisSafeImpl: gnosisSafe.address
+        GnosisSafeImpl: gnosisSafe.address,
+        mintPrice: MINT_PRICE
       }
     })
     console.log('✅')
