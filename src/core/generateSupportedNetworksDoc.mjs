@@ -4,6 +4,9 @@ import * as url from 'url'
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 const SUPPORTED_NETWORKS = [{
+    name: 'Mainnet',
+    file: 'mainnet.json'
+},{
     name: 'Arbitrum',
     file: 'arbitrum.json'
 }, {
@@ -12,9 +15,6 @@ const SUPPORTED_NETWORKS = [{
 }, {
     name: 'Goerli',
     file: 'goerli.json'
-}, {
-    name: 'Sepolia',
-    file: 'sepolia.json'
 }]
 
 
@@ -43,6 +43,7 @@ function networkTemplate(networkName, contracts) {
     return `## ${networkName}
 
 ${Object.entries(contracts)
+    .filter(([name]) => name !== 'mintPrice')
     .map(([name, contract]) => `  - **${name}**: \`${contract}\``)
     .join('\n')}
 `

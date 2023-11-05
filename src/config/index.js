@@ -85,7 +85,10 @@ export function getNetworkInfo(chainId) {
     if (!isChainIdSupported(chainId))
         throw new Error(`Unsupported chainId: ${chainId}`)
 
-    return supportedNetworks[chainId]
+    return { 
+        ...supportedNetworks[chainId],
+        mintPrice: supportedNetworks[chainId].contracts.mintPrice
+     }
 }
 
 export function getSupportedNetworks() {
