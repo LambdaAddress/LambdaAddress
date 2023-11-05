@@ -22,7 +22,7 @@ const supportedNetworks = {
         blockExplorerUrls: ['https://etherscan.io/'],
         isTestnet: false,
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-ethereum/version/latest',
-        graphId: '',
+        graphId: 'QmV6uQZp1AkPTfvU7mZTm6bzpU41D2cNRo4ig7fpLri4gV',
         contracts: mainnet
     },
     10: {
