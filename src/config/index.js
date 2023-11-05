@@ -21,8 +21,8 @@ const supportedNetworks = {
         rpcUrls: ['https://ethereum.publicnode.com'],
         blockExplorerUrls: ['https://etherscan.io/'],
         isTestnet: false,
-        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-optimism/version/latest',
-        graphId: 'QmeZEc4pPjckedbuBeoABft9npEzpEEmEJC1oNnX9nAjvd',
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-ethereum/version/latest',
+        graphId: '',
         contracts: mainnet
     },
     10: {
