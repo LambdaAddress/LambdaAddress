@@ -43,7 +43,7 @@
     "graph:deploy:mumbai": "graph deploy lambdaaddress-mumbai graph/subgraph.mumbai.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
     "graph:deploy:optimism-goerli": "graph deploy lambdaaddress-optimism-goerli graph/subgraph.optimism-goerli.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
     "graph:deploy:optimism": "graph deploy lambdaaddress-optimism graph/subgraph.optimism.yaml --studio --network-file=graph/networks.json --output-dir=graph/build",
-    "graph:deploy:arbitrum": "graph deploy lambdaaddress-arbitrum graph/subgraph.arbitrum.yaml --studio --network-file=graph/networks.json --output-dir=graph/build"
+    "graph:deploy:ethereum": "graph deploy lambdaaddress-arbitrum graph/subgraph.ethereum.yaml --studio --network-file=graph/networks.json --output-dir=graph/build"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
