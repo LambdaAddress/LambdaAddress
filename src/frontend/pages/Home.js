@@ -123,7 +123,6 @@ export default function Home() {
             <p><a href={config.docUrl} target="_blank" rel="noreferrer">Learn more</a></p>
             <ButtonsContainer>
               <WhiteButton onClick={() => handleGetStartedClick(3)}>Get Started</WhiteButton>
-              <TextButton onClick={() => handleScrollClick(3)}>Keep reading</TextButton>
             </ButtonsContainer>
           </LeftSection>
           <RightSection>

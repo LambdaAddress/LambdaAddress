@@ -36,6 +36,11 @@ module.exports = {
     noColors: true
   },
   networks: {
+    mainnet: {
+      url: NODE_URL || 'https://eth.llamarpc.com',
+      chainId: 1,
+      accounts: [KEY]
+    },
     arbitrum: {
       url: NODE_URL || 'https://arb1.arbitrum.io/rpc',
       chainId: 42161,

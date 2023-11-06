@@ -1,4 +1,4 @@
-// Alpha version deployment script
+// Beta version deployment script
 
 import hre from "hardhat"
 import createConfig from '../src/core/createConfig.mjs'
@@ -14,7 +14,7 @@ import AmbireAccountDeployerAbi from '../artifacts/src/contracts/deployers/Ambir
 
 const { NFTAddressFactorySalt, RegistrarSalt} = config
 const LOCAL_SIGNER = "0x2F0cBd07f01862981b031eC7e0DC5A51109053aB"
-const MINT_PRICE = '1000000000000' // 0.000001 ETH
+const MINT_PRICE = '40000000000000000' // 0.04 ETH
 
 async function main() {
   try {    
@@ -31,10 +31,10 @@ async function main() {
       [signer] = await hre.ethers.getSigners()
     }
 
-    const { registrar, proxy, nftAddressFactory, safeDeployer, ambireAccountDeployer } = await deployContracts({
+    const { registrar, proxy, nftAddressFactory, metaData } = await deployContracts({
       registrarSalt: RegistrarSalt, 
       nftAddressFactorySalt: NFTAddressFactorySalt,
-      mintPrice: MINT_PRICE,
+      mintPrice: MINT_PRICE, 
       owner: signer.address,
       signer,
       verbose: true
@@ -42,11 +42,12 @@ async function main() {
 
     process.stdout.write('Creating config file... ')
     createConfig({
-      network: `${hre.network.name}_alpha`, 
+      network: `${hre.network.name}_beta`, 
       config: {
-        RegistrarImplementation: registrar.address,
         Registrar: proxy.address,
+        RegistrarImplementation: registrar.address,
         NFTAddressFactory: nftAddressFactory.address,
+        MetaData: metaData.address,
         mintPrice: MINT_PRICE
       }
     })

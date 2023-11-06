@@ -2,7 +2,7 @@ import hre from "hardhat"
 import { create2Deploy, create3Deploy, deploy, getCreate2Deployer, send } from './ethersHelpers.mjs'
 
 
-export default async function deployContracts({ registrarSalt, nftAddressFactorySalt, mintPrice, owner, signer, verbose = false, local = false}) {
+export default async function deployContracts({ registrarSalt, nftAddressFactorySalt, mintPrice, owner, signer, verbose = false, local = false, deployers = false}) {
     if (!signer)
       signer = (await hre.ethers.getSigners())[0]
     
@@ -62,14 +62,18 @@ export default async function deployContracts({ registrarSalt, nftAddressFactory
     verbose && process.stdout.write(`RegistrarProxy.allowFactory(${nftAddressFactory.address}, true)... `)
     await send(registrarProxy.allowFactory(nftAddressFactory.address, true, { gasLimit: 55000 }))
     verbose && console.log('✅')
+ 
+    let safeDeployer, ambireAccountDeployer
 
-    verbose && process.stdout.write('Deploying SafeDeployer... ')
-    const safeDeployer = await create2Deploy(deployer, SafeDeployer, registrarSalt, [proxy.address])
-    verbose && console.log(`${safeDeployer.address} ✅`)
+    if (deployers) {
+      verbose && process.stdout.write('Deploying SafeDeployer... ')
+      safeDeployer = await create2Deploy(deployer, SafeDeployer, registrarSalt, [proxy.address])
+      verbose && console.log(`${safeDeployer.address} ✅`)
 
-    verbose && process.stdout.write('Deploying AmbireAccountDeployer... ')
-    const ambireAccountDeployer = await create2Deploy(deployer, AmbireAccountDeployer, registrarSalt, [proxy.address])
-    verbose && console.log(`${ambireAccountDeployer.address} ✅`)
+      verbose && process.stdout.write('Deploying AmbireAccountDeployer... ')
+      ambireAccountDeployer = await create2Deploy(deployer, AmbireAccountDeployer, registrarSalt, [proxy.address])
+      verbose && console.log(`${ambireAccountDeployer.address} ✅`)
+    }
   
     return {
       registrar, proxy, nftAddressFactory, metaData, safeDeployer, ambireAccountDeployer

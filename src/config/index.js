@@ -1,5 +1,6 @@
 import arbitrum from './arbitrum'
 import development from './development'
+import mainnet from './mainnet'
 import sepolia from './sepolia'
 import mumbai from './mumbai'
 import goerli from './goerli'
@@ -11,6 +12,18 @@ const supportedNetworks = {
         chainId: 31337,
         isTestnet: true,
         contracts: development
+    },
+    1: {
+        chainId: 1,
+        name: 'Ethereum',
+        chainName: 'Ethereum',
+        nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+        rpcUrls: ['https://ethereum.publicnode.com'],
+        blockExplorerUrls: ['https://etherscan.io/'],
+        isTestnet: false,
+        graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-ethereum/version/latest',
+        graphId: 'QmV6uQZp1AkPTfvU7mZTm6bzpU41D2cNRo4ig7fpLri4gV',
+        contracts: mainnet
     },
     10: {
         chainId: 10,
@@ -39,7 +52,7 @@ const supportedNetworks = {
         graphUrl: 'https://api.studio.thegraph.com/query/47325/lambdaaddress-arbitrum/version/latest',
         graphId: 'QmPpf9fxmj8275pUFntu9F8NJjFBPqYNvoe8AA9wmseDnN',
         contracts: arbitrum
-    },
+    },/*
     11155111: { 
         name: 'Sepolia',
         chainId: 11155111,
@@ -85,7 +98,10 @@ export function getNetworkInfo(chainId) {
     if (!isChainIdSupported(chainId))
         throw new Error(`Unsupported chainId: ${chainId}`)
 
-    return supportedNetworks[chainId]
+    return { 
+        ...supportedNetworks[chainId],
+        mintPrice: supportedNetworks[chainId].contracts.mintPrice
+     }
 }
 
 export function getSupportedNetworks() {

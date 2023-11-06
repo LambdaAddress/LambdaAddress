@@ -71,7 +71,7 @@ export default function Mint() {
   // Is the address created?
   const [isCreated, setIsCreated] = useState(false)
   // Address of the owner for the NftAddress and network info
-  const { owner, network, contracts } = useContext(MainContext)
+  const { owner, network, contracts, mintPrice } = useContext(MainContext)
   // Contract addresses
   const { NFTAddressFactory } = network?.contracts || {}
   // Is a transaction pending?
@@ -124,7 +124,7 @@ export default function Mint() {
       try {
         setSendingTransaction(true)
         const tx = await contracts.registrar.mint(NFTAddressFactory, salt, {
-          value: config.mintPrice,
+          value: mintPrice,
           from: owner,
         })
         await tx.wait()

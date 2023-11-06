@@ -12,6 +12,7 @@ export const MainContextProvider = ({ children }) => {
   const [network, setNetwork] = useState()
   const [contracts, setContracts] = useState()
   const [isNetworkSupported, setIsNetworkSupported] = useState(true)
+  const [mintPrice, setMintPrice] = useState('0')
   const { account, chainId, library } = useWeb3React()
 
   useEffect(() => {
@@ -20,11 +21,16 @@ export const MainContextProvider = ({ children }) => {
     if (chainId !== undefined) {
       if (isChainIdSupported(chainId)) {
         const networkInfo = getNetworkInfo(chainId)
+        setMintPrice(networkInfo.mintPrice)
         setContracts({
           registrar: new ethers.Contract(networkInfo.contracts.Registrar, RegistrarAbi.abi, library.getSigner()),
           factories: [],
-          safeDeployer: new ethers.Contract(networkInfo.contracts.SafeDeployer, SafeDeployerAbi.abi, library.getSigner()),
-          ambireAccountDeployer: new ethers.Contract(networkInfo.contracts.AmbireAccountDeployer, AmbireAccountDeployerAbi.abi, library.getSigner()),
+          safeDeployer: networkInfo.contracts.SafeDeployer
+            ? new ethers.Contract(networkInfo.contracts.SafeDeployer, SafeDeployerAbi.abi, library.getSigner())
+            : null,
+          ambireAccountDeployer: networkInfo.contracts.AmbireAccountDeployer
+            ? new ethers.Contract(networkInfo.contracts.AmbireAccountDeployer, AmbireAccountDeployerAbi.abi, library.getSigner())
+            : null,
         })
         setNetwork(networkInfo) 
       }
@@ -32,5 +38,5 @@ export const MainContextProvider = ({ children }) => {
     }
   }, [account, chainId, library])
 
-  return <MainContext.Provider value={{ owner, setOwner, network, isNetworkSupported, contracts }}>{children}</MainContext.Provider>
+  return <MainContext.Provider value={{ owner, setOwner, network, isNetworkSupported, contracts, mintPrice }}>{children}</MainContext.Provider>
 }
