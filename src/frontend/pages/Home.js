@@ -97,7 +97,7 @@ export default function Home() {
             <SectionH2>An Ethereum address as an NFT</SectionH2>
             <p>Addresses are the identifiers of Ethereum. Each wallet and smart contract has its own.</p>
             <p>While every address is unique, some are more valuable than others. Like an address containing 10 consecutive "a".</p>
-            <p>A Lambda Address is an NFT representing a <strong>reservation for an Ethereum address.</strong> Deploy any dapp on it, create a smart contract wallet or sell it and earn royalties on each subsequent sale.</p>
+            <p>A Lambda Address is an NFT representing a <strong>reservation for an Ethereum address.</strong> Deploy any dapp on it, create a smart contract wallet or sell it on an exchange.</p>
             {isSmallScreen &&
               <AddressShuffle style={{ margin: '10px 0 28px 0' }} />
             }
