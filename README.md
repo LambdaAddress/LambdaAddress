@@ -1,9 +1,15 @@
-[![Build](https://github.com/LambdaAddress/LambdaAddress/actions/workflows/main.yml/badge.svg)](https://github.com/LambdaAddress/LambdaAddress/actions/workflows/main.yml) [![Coverage Status](https://coveralls.io/repos/github/LambdaAddress/LambdaAddress/badge.svg?branch=master)](https://coveralls.io/github/LambdaAddress/LambdaAddress?branch=master)
+[![Build](https://github.com/LambdaAddress/LambdaAddress/actions/workflows/main.yml/badge.svg)](https://github.com/LambdaAddress/LambdaAddress/actions/workflows/main.yml) [![Coverage Status](https://coveralls.io/repos/github/LambdaAddress/LambdaAddress/badge.svg?branch=master)](https://coveralls.io/github/LambdaAddress/LambdaAddress?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Documentation -  ](https://img.shields.io/badge/Documentation-_-2ea44f)](https://lambda-address.gitbook.io/lambda-address/)
 
 
 # <img src="src/frontend/images/logo.svg" height="34" style="vertical-align: bottom;" /> Lambda Address
 
 > **Important**: The smart contracts have not been audited yet. Please consider the app to be in an experimental state.
+
+# Overview
+
+A Lambda Address is a personalized Ethereum address (sometimes referred to as a vanity address) minted as an NFT. It can be used to deploy a smart contract or traded on exchanges such as OpenSea or Blur.
+
+Any smart contract can be deployed to a Lambda Address, and it will be identical to a contract deployed to a standard Ethereum address. See the [documentation](https://lambda-address.gitbook.io/lambda-address/) for more info.
 
 # Pre-requisites
 
@@ -116,10 +122,10 @@ export KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
 
 The following chains are currently supported: 
 
+- Ethereum Mainnet
 - Arbitrum
 - Optimism
 - Goerli
-- Sepolia
 
 A list of the corresponding contract addresses can be found [here](./src/config/README.md).
 
